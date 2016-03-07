@@ -80,13 +80,25 @@ gulp.task('create',function(){
     fs.stat('./'+res.component+'/'+res.component+'.js',function(err,stats){
       if(err)
       {
-        file('./'+res.component+".js","",{src:true})
+        var jsFile = "/* BUILD SECTION */\n/* END BUILD SECTION */\n\ndefine([],function(){\n\tfunction Create"+res.component+"(){\n\t\tfunction "+res.component+"(node){"
+        +"\n\t\t\tnode = (typeof node === 'string' ? document.querySelector(node) : (typeof node === 'object' ? node : null));\n\t\t\tif(!node)\n\t\t\t{\n\t\t\t\tconsole.error('you have passed an invalid node into "+res.component+": ',node);\n\t\t\t\treturn;\n\t\t\t}"
+        +"}\n\t\treturn "+res.component+";\n\t}\n\treturn Create"+res.component+";\n})";
+
+        var cssFile = "."+res.component+"{\n\n}";
+
+        file('./'+res.component+".js",jsFile,{src:true})
         .pipe(gulp.dest('./'+res.component));
 
-        file('./'+res.component+".css","",{src:true})
+        file('./'+res.component+".css",cssFile,{src:true})
         .pipe(gulp.dest('./'+res.component));
 
         file('./README.md',"",{src:true})
+        .pipe(gulp.dest('./'+res.component));
+
+        file('./Build/'+res.component+".js","",{src:true})
+        .pipe(gulp.dest('./'+res.component));
+
+        file('./Min/'+res.component+".min.js","",{src:true})
         .pipe(gulp.dest('./'+res.component));
 
       }
