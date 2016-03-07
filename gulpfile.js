@@ -23,7 +23,7 @@ gulp.task('Build', function(){
             return 1;
           }))
           , reD = /(define)(.*)(function\()(.*)(\))(.*)(?:{)/
-          , reE = /}\);(?![\s\S]*}\);)/m;
+          , reE = /}\)(?![\s\S]*}\))/m;
         gulp.src('./'+res.component+'/'+res.component+'.js')
         .pipe(inject(subFiles,{
           relative:true,
@@ -48,7 +48,7 @@ gulp.task('Build', function(){
           },
           ignorePath:ignorePath
         }))
-        .pipe(replace(reE,"}());"))
+        .pipe(replace(reE,"}())"))
         .pipe(replace(reD,("var Create"+res.component+" = (function(){")))
         .pipe(gulp.dest('./'+res.component+'/Build'));
 

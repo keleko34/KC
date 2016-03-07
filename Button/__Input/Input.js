@@ -112,4 +112,4 @@ define(['./__Content/Content'],function(CreateButton__Input__Content){
     return Button__Input;
   }
   return CreateButton__Input;
-})
+});

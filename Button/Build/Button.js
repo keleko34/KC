@@ -29,7 +29,8 @@ var CreateButton__Input__Content = (function(){
     return Button__Input__Content;
   }
   return CreateButton__Input__Content;
-}());
+}());;
+
 var CreateButton__Input = (function(){
   function CreateButton__Input(){
 
@@ -144,7 +145,8 @@ var CreateButton__Input = (function(){
     return Button__Input;
   }
   return CreateButton__Input;
-})
+}());;
+
 
 
 /* END BUILD SECTION */
