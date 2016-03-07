@@ -10,10 +10,10 @@ var CreateButton__Input__Content = (function(){
       var _content = node.querySelector('.Button__Input__Content');
       if(!_content)
       {
-        _content = selection.appendChild(document.createElement('div'));
+        _content = node.appendChild(document.createElement('div'));
       }
       _content.setAttribute('class','Button__Input__Content')
-      .html(Button__Input__Content.text());
+      _content.innHTML = Button__Input__Content.text();
     }
 
     Button__Input__Content.text = function(t)
@@ -87,7 +87,7 @@ var CreateButton__Input = (function(){
       if(t.constructor === Array)
       {
         _toggleText = t;
-        return BtnInput;
+        return Button__Input;
       }
       _text = (typeof t === 'string' ? t : _text);
       return Button__Input;
@@ -146,6 +146,7 @@ var CreateButton__Input = (function(){
   }
   return CreateButton__Input;
 }());;
+
 
 
 

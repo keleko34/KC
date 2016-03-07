@@ -9,10 +9,10 @@ define(function(){
       var _content = node.querySelector('.Button__Input__Content');
       if(!_content)
       {
-        _content = selection.appendChild(document.createElement('div'));
+        _content = node.appendChild(document.createElement('div'));
       }
-      _content.setAttribute('class','Button__Input__Content')
-      .html(Button__Input__Content.text());
+      _content.setAttribute('class','Button__Input__Content');
+      _content.innerHTML = Button__Input__Content.text();
     }
 
     Button__Input__Content.text = function(t)

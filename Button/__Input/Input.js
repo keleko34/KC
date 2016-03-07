@@ -6,7 +6,7 @@ define(['./__Content/Content'],function(CreateButton__Input__Content){
       , _content = CreateButton__Input__Content()
       , _toggle = 0
       , _type = 'click'
-      , _typeEnum = ['click','toggle']
+      , _typeEnum = ['click','toggle','text']
       , _onClick = function(){}
       , _disabled
 
@@ -54,7 +54,7 @@ define(['./__Content/Content'],function(CreateButton__Input__Content){
       if(t.constructor === Array)
       {
         _toggleText = t;
-        return BtnInput;
+        return Button__Input;
       }
       _text = (typeof t === 'string' ? t : _text);
       return Button__Input;

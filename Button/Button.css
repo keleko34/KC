@@ -1,4 +1,4 @@
-.button{
+.Button{
   width: 160px;
   height: 40px;
   line-height: 40px;
@@ -9,62 +9,66 @@
   color: #fff;
   cursor: pointer;
 }
-.button:active{
+.Button:active{
   border-bottom:0px;
   border-top: 1px solid #2F515D;
 }
 
-.button--disabled{
+.Button--disabled{
   background: #D9D9D9;
   border-bottom: 2px solid #707070;
   color:#888;
 }
 
-.button--disabled:active{
+.Button--disabled:active{
   border-bottom: 2px solid #707070;
   border-top:0px;
 }
 
-.button--typeclick{
+.Button--typeclick{
 
 }
 
-.button--typetoggle{
+.Button--typetoggle{
 
 }
 
-.button--typetext{
+.Button--typetext{
 
 }
 
-.button__btninput{
+.Button__Input{
 
 }
 
-.button__btninput--click{
+.Button__Input--typeclick{
 
 }
 
-.button__btninput--toggle{
+.Button__Input--typetoggle{
 
 }
 
-.button__btninput--toggled{
+.Button__Input--typetext{
 
 }
 
-.button__btninput--untoggled{
+.Button__Input--toggled{
 
 }
 
-.button__btninput__content{
+.Button__Input--untoggled{
 
 }
 
-.button__btninput--toggled .button__btninput__content{
+.Button__Inputt__Content{
 
 }
 
-.button__btninput--untoggled .button__btninput__content{
+.Button__Input--toggled .Button__Inputt__Content{
+
+}
+
+.Button__Input--untoggled .Button__Inputt__Content{
 
 }

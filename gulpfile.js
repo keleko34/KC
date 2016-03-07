@@ -3,6 +3,7 @@ var gulp = require('gulp')
   , inject = require('gulp-inject')
   , sort = require('sort-stream')
   , replace = require('gulp-replace')
+  , file = require('gulp-file')
   , closureCompiler = require('gulp-closure-compiler')
   , fs = require('fs')
 
@@ -81,3 +82,32 @@ gulp.task('Build', function(){
     });
   }));
 });
+
+gulp.task('Create',function(){
+  return gulp.src('*')
+  .pipe(prompt.prompt({
+    type: 'input',
+    name: 'component',
+    message: 'What would You like to name this component?'
+  },
+  function(res){
+    fs.stat('./'+res.component+'/'+res.component+'.js',function(err,stats){
+      if(err)
+      {
+        file('./'+res.component+".js","",{src:true})
+        .pipe(gulp.dest('./'+res.component));
+
+        file('./'+res.component+".css","",{src:true})
+        .pipe(gulp.dest('./'+res.component));
+
+        file('./README.md',"",{src:true})
+        .pipe(gulp.dest('./'+res.component));
+
+      }
+      else
+      {
+        console.error('\033[31mThere is already a component by the name:\033[37m ',res.component);
+      }
+    });
+  }));
+})
