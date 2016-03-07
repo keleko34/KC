@@ -7,7 +7,7 @@ var gulp = require('gulp')
   , closureCompiler = require('gulp-closure-compiler')
   , fs = require('fs')
 
-gulp.task('Build', function(){
+gulp.task('build', function(){
   return gulp.src('*')
   .pipe(prompt.prompt({
     type: 'input',
@@ -60,20 +60,6 @@ gulp.task('Build', function(){
           fileName:res.component+".min.js"
         }))
         .pipe(gulp.dest('./'+res.component+'/Min'));
-
-        /*
-        var filesToInject = {}
-          , getFiles = function(folder,base){
-            fs.readdir(folder,function(err,files){
-                if(!err)
-                {
-
-                }
-            });
-          }
-          getFiles('./'+res.component,filesToInject);
-          */
-
       }
       else
       {
@@ -83,7 +69,7 @@ gulp.task('Build', function(){
   }));
 });
 
-gulp.task('Create',function(){
+gulp.task('create',function(){
   return gulp.src('*')
   .pipe(prompt.prompt({
     type: 'input',
