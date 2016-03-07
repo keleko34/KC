@@ -14,6 +14,12 @@
   border-top: 1px solid #2F515D;
 }
 
+.Button--enabled{
+  background: #D9D9D9;
+  border-bottom: 2px solid #707070;
+  color:#888;
+}
+
 .Button--disabled{
   background: #D9D9D9;
   border-bottom: 2px solid #707070;

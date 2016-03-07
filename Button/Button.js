@@ -26,7 +26,7 @@ define(['./__Input/Input'],function(CreateButton__Input){
       {
         _button = node.appendChild(document.createElement('div'));
       }
-      _button.setAttribute('class','Button Button--type'+Button.type()+' Button--'+(Button.disabled() ? 'disabled' : ''));
+      _button.setAttribute('class','Button Button--type'+Button.type()+' Button--'+(Button.disabled() ? 'disabled' : 'enabled'));
 
       Button.btnInput()
       .type(Button.type())

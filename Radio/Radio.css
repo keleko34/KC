@@ -6,7 +6,7 @@
   margin-bottom:5px;
 }
 
-.checkbox__radio{
+.Radio__Input{
   position:absolute;
   left:40px;
   top:0px;
@@ -19,14 +19,14 @@
   cursor:pointer;
 }
 
-.checkbox__radio div{
+.Radio__Input div{
   background: #DA4735;
   width: 10px;
   height: 10px;
   border-radius: 20px;
 }
 
-.checkbox__text{
+.Radio__Text{
   position: absolute;
   left: 0px;
   top: 4px;
