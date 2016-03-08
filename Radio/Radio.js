@@ -94,8 +94,15 @@ define(['./__Input/Input','./__Text/Text'],function(CreateRadio__Input,CreateRad
         _title = (t.toString() === CreateRadio__Title().toString() ? t : _title);
         return Radio;
       }
-
-		return Radio;
+      return Radio;
 	}
+    if (typeof define === "function" && define.amd)
+    {
+      define('CreateRadio',CreateRadio);
+    }
+    else if (typeof module === "object" && module.exports)
+    {
+      module.exports = CreateRadio;
+    }
 	return CreateRadio;
 });
