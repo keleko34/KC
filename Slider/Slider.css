@@ -50,7 +50,7 @@
 {
   position:absolute;
   background:#FFFFFF;
-  border: 3px solid #D63234;
+  border: 3px solid #1092A0;
   z-index:1;
 }
 .Slider--disabled .Slider__Track__Thumb
@@ -93,7 +93,7 @@
 .Slider__Track__Progressbar
 {
   position:absolute;
-  background:#D63234;
+  background:#1092A0;
   border-radius:20px 20px 20px 20px;
   z-index:0;
 }
@@ -183,7 +183,7 @@
 }
 .Slider--disabled .Slider__TickGroup__Tick__Line--over
 {
-  background:#d9d9d9;
+  background:#1092A0;
 }
 .Slider__TickGroup__Tick__Line--vertical
 {
