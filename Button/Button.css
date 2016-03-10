@@ -43,7 +43,9 @@
 }
 
 .Button__Input{
-
+  display:block;
+  width:100%;
+  height:100%;
 }
 
 .Button__Input:hover{
