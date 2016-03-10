@@ -60,8 +60,8 @@ define(['./__Track/Track','./__TickGroup/TickGroup','./__IncrementGroup/Incremen
         .direction(Slider.direction())
         .disabled(Slider.disabled())
         .onMove(function(v){
-          Slider.value(v);
-          Slider.onMove()(v);
+          Slider.value(v.value());
+          Slider.onMove().call({},v);
           Slider.call(Slider,node);
         })
         .call(Slider.track(),_slider);

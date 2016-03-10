@@ -17,7 +17,7 @@ define([],function(){
         , _findPos = function(val){
             var p = (val-Slider__Track__Progressbar.min())/(Slider__Track__Progressbar.max()-Slider__Track__Progressbar.min())
               , offsetProp = ((Slider__Track__Progressbar.direction() === 'vertical') ? _thumb.clientHeight : _thumb.clientWidth);
-              return ((Slider__Track__Progressbar.direction() === 'vertical') ? ((_height-offsetProp)*p)+(offsetProp/2) : ((_width-offsetProp)*p)+(offsetProp/2))+'px';
+              return ((Slider__Track__Progressbar.direction() === 'vertical') ? ((_height-offsetProp)*p)+(offsetProp/2) : (((_width-offsetProp)*p)+(offsetProp/2)))+'px';
           }
 
       if(!_progressBar)
