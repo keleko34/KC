@@ -21,7 +21,9 @@
     </section>
 
     <section class="main-content">
-
+      <section>
+        <h4>D3 compatible, AMD compatible, Commonjs compatible</h4>
+      </section>
       <section>
         <h3>Button</h3>
         <div class="buttonContainer"></div>
@@ -32,14 +34,14 @@
       <section>
         <h3>Radio</h3>
         <div class="radioContainer"></div>
-        <div class="code">CreateRadio().text("Toggle");</div>
+        <div class="code">CreateRadio().text("Toggle");<br />.call({},document.querySelector(".radioContainer"));</div>
         <div class="edit"></div>
       </section>
 
       <section>
         <h3>Slider</h3>
         <div class="sliderContainer"></div>
-        <div class="code">CreateSlider().min(100)<br />.max(10000).direction("horizontal")<br />.step(100).ticks(4);</b>;</div>
+        <div class="code">CreateSlider().min(100)<br />.max(10000).direction("horizontal")<br />.step(100).ticks(4);<br />.call({},document.querySelector(".sliderContainer"));</div>
         <div class="edit"></div>
       </section>
 
