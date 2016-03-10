@@ -1,174 +1,4 @@
 /* BUILD SECTION */
-var CreateSlider__TickGroup__Tick = (function(){
-  function CreateSlider__TickGroup__Tick()
-  {
-    var _position = 0
-      , _direction = 'vertical'
-      , _directionEnum = ['vertical','horizontal']
-      , _text = ''
-      , _textOverLoad = function(v){return v;}
-      , _valuePosition = 'over'
-      , _valuePositionEnum = ['under','over']
-      , _disabled = false
-
-    function Slider__TickGroup__Tick(node)
-    {
-      var _tick = node.appendChild(document.createElement('div'))
-        , _tickLine = _tick.appendChild(document.createElement('div'))
-        , _tickText = _tick.appendChild(document.createElement('div'))
-
-
-      _tick.setAttribute('class','Slider__TickGroup__Tick Slider__TickGroup__Tick--'+Slider__TickGroup__Tick.direction());
-      _tick.style.top = (Slider__TickGroup__Tick.direction() === 'vertical' ? Slider__TickGroup__Tick.position() : 0)+'px';
-      _tick.style.left = (Slider__TickGroup__Tick.direction() === 'horizontal' ? Slider__TickGroup__Tick.position() : 0)+'px';
-
-      _tickLine.setAttribute('class','Slider__TickGroup__Tick__Line Slider__TickGroup__Tick__Line--'+Slider__TickGroup__Tick.direction()+' Slider__TickGroup__Tick__Line--'+Slider__TickGroup__Tick.valuePosition());
-
-      _tickText.setAttribute('class','Slider__TickGroup__Tick__Text Slider__TickGroup__Tick__Text--'+Slider__TickGroup__Tick.direction()+' Slider__TickGroup__Tick__Text--'+Slider__TickGroup__Tick.valuePosition());
-      _tickText.innerHTML = Slider__TickGroup__Tick.text();
-      _tickText.style.top = (Slider__TickGroup__Tick.direction() === 'vertical' ? '-'+((_tickText.clientHeight/2)-1) : '')+'px';
-      _tickText.style.left = (Slider__TickGroup__Tick.direction() === 'vertical' ? '' : '-'+((_tickText.clientWidth/2)-1))+'px';
-      _tickText.style.textAlign = (Slider__TickGroup__Tick.direction() === 'vertical' ? (Slider__TickGroup__Tick.valuePosition() === 'left' ? 'right' :'left') : '');
-    }
-
-    Slider__TickGroup__Tick.position = function(p){
-      if(p === undefined)
-      {
-        return _position;
-      }
-      _position = (typeof p === 'number' ? p : _position);
-      return Slider__TickGroup__Tick;
-    }
-
-    Slider__TickGroup__Tick.direction = function(d){
-      if(d === undefined)
-      {
-        return _direction;
-      }
-      _direction = ((_directionEnum.indexOf(d) > -1) ? d : _direction);
-      return Slider__TickGroup__Tick;
-    }
-
-    Slider__TickGroup__Tick.text = function(t){
-      if(t === undefined)
-      {
-        return _text;
-      }
-      if(typeof t === 'function')
-      {
-        _textOverLoad = t;
-      }
-      else
-      {
-        _text = _textOverLoad(t);
-      }
-      return Slider__TickGroup__Tick;
-    }
-
-    Slider__TickGroup__Tick.valuePosition = function(b){
-      if(b === undefined)
-      {
-        return _valuePosition;
-      }
-      _valuePosition = (_valuePositionEnum.indexOf(b) > -1 ? b : _valuePosition);
-      return Slider__TickGroup__Tick;
-    }
-
-    Slider__TickGroup__Tick.disabled = function(d){
-      if(d === undefined)
-      {
-        return _disabled;
-      }
-      _disabled = !!d;
-      return Slider__TickGroup__Tick;
-    }
-
-    return Slider__TickGroup__Tick;
-  }
-  return CreateSlider__TickGroup__Tick;
-}());
-
-var CreateSlider__Track__Progressbar = (function(){
-  function CreateSlider__Track__Progressbar()
-  {
-    var _max = 100
-      , _min = 0
-      , _value = 0
-      , _direction = 'vertical'
-      , _directionEnum = ['vertical','horizontal']
-      , _disabled = false
-
-    function Slider__Track__Progressbar(node)
-    {
-      var _progressBar = node.querySelector('.Slider__Track__Progressbar')
-        , _height = node.clientHeight
-        , _width = node.clientWidth
-        , _thumb = node.querySelector('.Slider__Track__Thumb')
-        , _findPos = function(val){
-            var p = (val-Slider__Track__Progressbar.min())/(Slider__Track__Progressbar.max()-Slider__Track__Progressbar.min())
-              , offsetProp = ((Slider__Track__Progressbar.direction() === 'vertical') ? _thumb.clientHeight : _thumb.clientWidth);
-              return ((Slider__Track__Progressbar.direction() === 'vertical') ? ((_height-offsetProp)*p)+(offsetProp/2) : ((_width-offsetProp)*p)+(offsetProp/2))+'px';
-          }
-
-      if(!_progressBar)
-      {
-        _progressBar = node.appendChild(document.createElement('div'));
-      }
-      _progressBar.setAttribute('class','Slider__Track__Progressbar Slider__Track__Progressbar--'+Slider__Track__Progressbar.direction());
-      _progressBar.style.height = (Slider__Track__Progressbar.direction() === 'vertical' ? (_findPos(Slider__Track__Progressbar.value())) : '');
-      _progressBar.style.width = (Slider__Track__Progressbar.direction() === 'horizontal' ? (_findPos(Slider__Track__Progressbar.value())) : '');
-    }
-
-    Slider__Track__Progressbar.max = function(m){
-      if(m === undefined)
-      {
-        return _max;
-      }
-      _max = (typeof m === 'number' ? m : _max);
-      return Slider__Track__Progressbar;
-    }
-
-    Slider__Track__Progressbar.min = function(m){
-      if(m === undefined)
-      {
-        return _min;
-      }
-      _min = (typeof m === 'number' ? m : _min);
-      return Slider__Track__Progressbar;
-    }
-
-    Slider__Track__Progressbar.value = function(v){
-      if(v === undefined)
-      {
-        return _value;
-      }
-      _value = (typeof v === 'number' ? v : _value);
-      return Slider__Track__Progressbar;
-    }
-
-    Slider__Track__Progressbar.direction = function(d){
-      if(d === undefined)
-      {
-        return _direction;
-      }
-      _direction = ((_directionEnum.indexOf(d) > -1) ? d : _direction);
-      return Slider__Track__Progressbar;
-    }
-
-    Slider__Track__Progressbar.disabled = function(d){
-      if(d === undefined)
-      {
-        return _disabled;
-      }
-      _disabled = !!d;
-      return Slider__Track__Progressbar;
-    }
-
-    return Slider__Track__Progressbar;
-  }
-  return CreateSlider__Track__Progressbar;
-}());;
-
 var CreateSlider__Track__Thumb = (function(){
   function CreateSlider__Track__Thumb()
   {
@@ -354,6 +184,176 @@ var CreateSlider__Track__Thumb = (function(){
   return CreateSlider__Track__Thumb;
 }());
 
+var CreateSlider__Track__Progressbar = (function(){
+  function CreateSlider__Track__Progressbar()
+  {
+    var _max = 100
+      , _min = 0
+      , _value = 0
+      , _direction = 'vertical'
+      , _directionEnum = ['vertical','horizontal']
+      , _disabled = false
+
+    function Slider__Track__Progressbar(node)
+    {
+      var _progressBar = node.querySelector('.Slider__Track__Progressbar')
+        , _height = node.clientHeight
+        , _width = node.clientWidth
+        , _thumb = node.querySelector('.Slider__Track__Thumb')
+        , _findPos = function(val){
+            var p = (val-Slider__Track__Progressbar.min())/(Slider__Track__Progressbar.max()-Slider__Track__Progressbar.min())
+              , offsetProp = ((Slider__Track__Progressbar.direction() === 'vertical') ? _thumb.clientHeight : _thumb.clientWidth);
+              return ((Slider__Track__Progressbar.direction() === 'vertical') ? ((_height-offsetProp)*p)+(offsetProp/2) : (((_width-offsetProp)*p)+(offsetProp/2)))+'px';
+          }
+
+      if(!_progressBar)
+      {
+        _progressBar = node.appendChild(document.createElement('div'));
+      }
+      _progressBar.setAttribute('class','Slider__Track__Progressbar Slider__Track__Progressbar--'+Slider__Track__Progressbar.direction());
+      _progressBar.style.height = (Slider__Track__Progressbar.direction() === 'vertical' ? (_findPos(Slider__Track__Progressbar.value())) : '');
+      _progressBar.style.width = (Slider__Track__Progressbar.direction() === 'horizontal' ? (_findPos(Slider__Track__Progressbar.value())) : '');
+    }
+
+    Slider__Track__Progressbar.max = function(m){
+      if(m === undefined)
+      {
+        return _max;
+      }
+      _max = (typeof m === 'number' ? m : _max);
+      return Slider__Track__Progressbar;
+    }
+
+    Slider__Track__Progressbar.min = function(m){
+      if(m === undefined)
+      {
+        return _min;
+      }
+      _min = (typeof m === 'number' ? m : _min);
+      return Slider__Track__Progressbar;
+    }
+
+    Slider__Track__Progressbar.value = function(v){
+      if(v === undefined)
+      {
+        return _value;
+      }
+      _value = (typeof v === 'number' ? v : _value);
+      return Slider__Track__Progressbar;
+    }
+
+    Slider__Track__Progressbar.direction = function(d){
+      if(d === undefined)
+      {
+        return _direction;
+      }
+      _direction = ((_directionEnum.indexOf(d) > -1) ? d : _direction);
+      return Slider__Track__Progressbar;
+    }
+
+    Slider__Track__Progressbar.disabled = function(d){
+      if(d === undefined)
+      {
+        return _disabled;
+      }
+      _disabled = !!d;
+      return Slider__Track__Progressbar;
+    }
+
+    return Slider__Track__Progressbar;
+  }
+  return CreateSlider__Track__Progressbar;
+}());;
+
+var CreateSlider__TickGroup__Tick = (function(){
+  function CreateSlider__TickGroup__Tick()
+  {
+    var _position = 0
+      , _direction = 'vertical'
+      , _directionEnum = ['vertical','horizontal']
+      , _text = ''
+      , _textOverLoad = function(v){return v;}
+      , _valuePosition = 'over'
+      , _valuePositionEnum = ['under','over']
+      , _disabled = false
+
+    function Slider__TickGroup__Tick(node)
+    {
+      var _tick = node.appendChild(document.createElement('div'))
+        , _tickLine = _tick.appendChild(document.createElement('div'))
+        , _tickText = _tick.appendChild(document.createElement('div'))
+
+
+      _tick.setAttribute('class','Slider__TickGroup__Tick Slider__TickGroup__Tick--'+Slider__TickGroup__Tick.direction());
+      _tick.style.top = (Slider__TickGroup__Tick.direction() === 'vertical' ? Slider__TickGroup__Tick.position() : 0)+'px';
+      _tick.style.left = (Slider__TickGroup__Tick.direction() === 'horizontal' ? Slider__TickGroup__Tick.position() : 0)+'px';
+
+      _tickLine.setAttribute('class','Slider__TickGroup__Tick__Line Slider__TickGroup__Tick__Line--'+Slider__TickGroup__Tick.direction()+' Slider__TickGroup__Tick__Line--'+Slider__TickGroup__Tick.valuePosition());
+
+      _tickText.setAttribute('class','Slider__TickGroup__Tick__Text Slider__TickGroup__Tick__Text--'+Slider__TickGroup__Tick.direction()+' Slider__TickGroup__Tick__Text--'+Slider__TickGroup__Tick.valuePosition());
+      _tickText.innerHTML = Slider__TickGroup__Tick.text();
+      _tickText.style.top = (Slider__TickGroup__Tick.direction() === 'vertical' ? '-'+((_tickText.clientHeight/2)-1) : '')+'px';
+      _tickText.style.left = (Slider__TickGroup__Tick.direction() === 'vertical' ? '' : '-'+((_tickText.clientWidth/2)-1))+'px';
+      _tickText.style.textAlign = (Slider__TickGroup__Tick.direction() === 'vertical' ? (Slider__TickGroup__Tick.valuePosition() === 'left' ? 'right' :'left') : '');
+    }
+
+    Slider__TickGroup__Tick.position = function(p){
+      if(p === undefined)
+      {
+        return _position;
+      }
+      _position = (typeof p === 'number' ? p : _position);
+      return Slider__TickGroup__Tick;
+    }
+
+    Slider__TickGroup__Tick.direction = function(d){
+      if(d === undefined)
+      {
+        return _direction;
+      }
+      _direction = ((_directionEnum.indexOf(d) > -1) ? d : _direction);
+      return Slider__TickGroup__Tick;
+    }
+
+    Slider__TickGroup__Tick.text = function(t){
+      if(t === undefined)
+      {
+        return _text;
+      }
+      if(typeof t === 'function')
+      {
+        _textOverLoad = t;
+      }
+      else
+      {
+        _text = _textOverLoad(t);
+      }
+      return Slider__TickGroup__Tick;
+    }
+
+    Slider__TickGroup__Tick.valuePosition = function(b){
+      if(b === undefined)
+      {
+        return _valuePosition;
+      }
+      _valuePosition = (_valuePositionEnum.indexOf(b) > -1 ? b : _valuePosition);
+      return Slider__TickGroup__Tick;
+    }
+
+    Slider__TickGroup__Tick.disabled = function(d){
+      if(d === undefined)
+      {
+        return _disabled;
+      }
+      _disabled = !!d;
+      return Slider__TickGroup__Tick;
+    }
+
+    return Slider__TickGroup__Tick;
+  }
+  return CreateSlider__TickGroup__Tick;
+}());
+
 var CreateSlider__IncrementGroup__IncrementBtn = (function(){
   function CreateSlider__IncrementGroup__IncrementBtn()
   {
@@ -501,6 +501,145 @@ var CreateSlider__IncrementGroup__IncrementBtn = (function(){
     return Slider__IncrementGroup__IncrementBtn;
   }
   return CreateSlider__IncrementGroup__IncrementBtn;
+}());;
+
+var CreateSlider__Track = (function(){
+  function CreateSlider__Track()
+  {
+    var _max = 100
+      , _min = 0
+      , _value = 0
+      , _step = 1
+      , _direction = 'vertical'
+      , _directionEnum = ['vertical','horizontal']
+      , _onChange = function(){}
+      , _thumb = CreateSlider__Track__Thumb()
+      , _progressBar = CreateSlider__Track__Progressbar()
+      , _disabled = false
+
+    function Slider__Track(node)
+    {
+      var _track = node.querySelector('.Slider__Track');
+      if(!_track)
+      {
+        _track = node.appendChild(document.createElement('div'));
+      }
+      _track.setAttribute('class','Slider__Track Slider__Track--'+Slider__Track.direction());
+
+      Slider__Track.thumb()
+      .max(Slider__Track.max())
+      .min(Slider__Track.min())
+      .value(Slider__Track.value())
+      .step(Slider__Track.step())
+      .direction(Slider__Track.direction())
+      .disabled(Slider__Track.disabled())
+      .onChange(Slider__Track.onChange())
+      .onMove(Slider__Track.onMove())
+      .call(Slider__Track.thumb(),_track);
+
+      Slider__Track.progressBar()
+      .max(Slider__Track.max())
+      .min(Slider__Track.min())
+      .value(Slider__Track.value())
+      .disabled(Slider__Track.disabled())
+      .direction(Slider__Track.direction())
+      .call(Slider__Track.progressBar(),_track);
+
+    }
+
+    Slider__Track.max = function(m){
+      if(m === undefined)
+      {
+        return _max;
+      }
+      _max = (typeof m === 'number' ? m : _max);
+      return Slider__Track;
+    }
+
+    Slider__Track.min = function(m){
+      if(m === undefined)
+      {
+        return _min;
+      }
+      _min = (typeof m === 'number' ? m : _min);
+      return Slider__Track;
+    }
+
+    Slider__Track.value = function(v){
+      if(v === undefined)
+      {
+        return _value;
+      }
+      _value = (typeof v === 'number' ? v : _value);
+      return Slider__Track;
+    }
+
+    Slider__Track.direction = function(d){
+      if(d === undefined)
+      {
+        return _direction;
+      }
+      _direction = ((_directionEnum.indexOf(d) > -1) ? d : _direction);
+      return Slider__Track;
+    }
+
+    Slider__Track.step = function(s){
+      if(s === undefined)
+      {
+        return _step;
+      }
+      _step = (typeof s === 'number' ? s : _step);
+      return Slider__Track;
+    }
+
+    Slider__Track.onChange = function(c){
+      if(c === undefined)
+      {
+        return _onChange;
+      }
+      _onChange = (typeof c === 'function' ? c : _onChange);
+      return Slider__Track;
+    }
+
+    Slider__Track.onMove = function(m){
+      if(m === undefined)
+      {
+        return _onMove;
+      }
+      _onMove = (typeof m === 'function' ? m : _onMove);
+      return Slider__Track;
+    }
+
+    Slider__Track.thumb = function(t){
+      if(t === undefined)
+      {
+        return _thumb;
+      }
+      _thumb = (t.toString() === CreateSlider__Track__Thumb().toString() ? t : _thumb);
+      return Slider__Track;
+    }
+
+    Slider__Track.progressBar = function(p){
+      if(p === undefined)
+      {
+        return _progressBar;
+      }
+      _progressBar = (p.toString() === CreateSlider__Track__Progressbar().toString() ? p : _progressBar);
+      return Slider__Track;
+    }
+
+    Slider__Track.disabled = function(d){
+      if(d === undefined)
+      {
+        return _disabled;
+      }
+      _disabled = !!d;
+      return Slider__Track;
+    }
+
+    return Slider__Track;
+  }
+  return CreateSlider__Track;
 }());;
 
 var CreateSlider__TickGroup = (function(){
@@ -657,145 +796,6 @@ var CreateSlider__TickGroup = (function(){
     return Slider__TickGroup;
   }
   return CreateSlider__TickGroup;
-}());;
-
-var CreateSlider__Track = (function(){
-  function CreateSlider__Track()
-  {
-    var _max = 100
-      , _min = 0
-      , _value = 0
-      , _step = 1
-      , _direction = 'vertical'
-      , _directionEnum = ['vertical','horizontal']
-      , _onChange = function(){}
-      , _thumb = CreateSlider__Track__Thumb()
-      , _progressBar = CreateSlider__Track__Progressbar()
-      , _disabled = false
-
-    function Slider__Track(node)
-    {
-      var _track = node.querySelector('.Slider__Track');
-      if(!_track)
-      {
-        _track = node.appendChild(document.createElement('div'));
-      }
-      _track.setAttribute('class','Slider__Track Slider__Track--'+Slider__Track.direction());
-
-      Slider__Track.thumb()
-      .max(Slider__Track.max())
-      .min(Slider__Track.min())
-      .value(Slider__Track.value())
-      .step(Slider__Track.step())
-      .direction(Slider__Track.direction())
-      .disabled(Slider__Track.disabled())
-      .onChange(Slider__Track.onChange())
-      .onMove(Slider__Track.onMove())
-      .call(Slider__Track.thumb(),_track);
-
-      Slider__Track.progressBar()
-      .max(Slider__Track.max())
-      .min(Slider__Track.min())
-      .value(Slider__Track.value())
-      .disabled(Slider__Track.disabled())
-      .direction(Slider__Track.direction())
-      .call(Slider__Track.progressBar(),_track);
-
-    }
-
-    Slider__Track.max = function(m){
-      if(m === undefined)
-      {
-        return _max;
-      }
-      _max = (typeof m === 'number' ? m : _max);
-      return Slider__Track;
-    }
-
-    Slider__Track.min = function(m){
-      if(m === undefined)
-      {
-        return _min;
-      }
-      _min = (typeof m === 'number' ? m : _min);
-      return Slider__Track;
-    }
-
-    Slider__Track.value = function(v){
-      if(v === undefined)
-      {
-        return _value;
-      }
-      _value = (typeof v === 'number' ? v : _value);
-      return Slider__Track;
-    }
-
-    Slider__Track.direction = function(d){
-      if(d === undefined)
-      {
-        return _direction;
-      }
-      _direction = ((_directionEnum.indexOf(d) > -1) ? d : _direction);
-      return Slider__Track;
-    }
-
-    Slider__Track.step = function(s){
-      if(s === undefined)
-      {
-        return _step;
-      }
-      _step = (typeof s === 'number' ? s : _step);
-      return Slider__Track;
-    }
-
-    Slider__Track.onChange = function(c){
-      if(c === undefined)
-      {
-        return _onChange;
-      }
-      _onChange = (typeof c === 'function' ? c : _onChange);
-      return Slider__Track;
-    }
-
-    Slider__Track.onMove = function(m){
-      if(m === undefined)
-      {
-        return _onMove;
-      }
-      _onMove = (typeof m === 'function' ? m : _onMove);
-      return Slider__Track;
-    }
-
-    Slider__Track.thumb = function(t){
-      if(t === undefined)
-      {
-        return _thumb;
-      }
-      _thumb = (t.toString() === CreateSlider__Track__Thumb().toString() ? t : _thumb);
-      return Slider__Track;
-    }
-
-    Slider__Track.progressBar = function(p){
-      if(p === undefined)
-      {
-        return _progressBar;
-      }
-      _progressBar = (p.toString() === CreateSlider__Track__Progressbar().toString() ? p : _progressBar);
-      return Slider__Track;
-    }
-
-    Slider__Track.disabled = function(d){
-      if(d === undefined)
-      {
-        return _disabled;
-      }
-      _disabled = !!d;
-      return Slider__Track;
-    }
-
-    return Slider__Track;
-  }
-  return CreateSlider__Track;
 }());;
 
 var CreateSlider__IncrementGroup = (function(){
@@ -984,8 +984,8 @@ var CreateSlider = (function(){
         .direction(Slider.direction())
         .disabled(Slider.disabled())
         .onMove(function(v){
-          Slider.value(v);
-          Slider.onMove()(v);
+          Slider.value(v.value());
+          Slider.onMove().call({},v);
           Slider.call(Slider,node);
         })
         .call(Slider.track(),_slider);
