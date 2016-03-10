@@ -12,8 +12,8 @@ var CreateButton__Input__Content = (function(){
       {
         _content = node.appendChild(document.createElement('div'));
       }
-      _content.setAttribute('class','Button__Input__Content')
-      _content.innHTML = Button__Input__Content.text();
+      _content.setAttribute('class','Button__Input__Content');
+      _content.innerHTML = Button__Input__Content.text();
     }
 
     Button__Input__Content.text = function(t)
@@ -39,7 +39,7 @@ var CreateButton__Input = (function(){
       , _content = CreateButton__Input__Content()
       , _toggle = 0
       , _type = 'click'
-      , _typeEnum = ['click','toggle']
+      , _typeEnum = ['click','toggle','text']
       , _onClick = function(){}
       , _disabled
 
@@ -177,7 +177,7 @@ var CreateButton = (function(){
       {
         _button = node.appendChild(document.createElement('div'));
       }
-      _button.setAttribute('class','Button Button--type'+Button.type()+' Button--'+(Button.disabled() ? 'disabled' : ''));
+      _button.setAttribute('class','Button Button--type'+Button.type()+' Button--'+(Button.disabled() ? 'disabled' : 'enabled'));
 
       Button.btnInput()
       .type(Button.type())
