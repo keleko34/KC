@@ -19,18 +19,18 @@ define([],function(){
         , _isDown = false
         , _startPos
         , _startPagePos
-        , _side = ((Thumb.direction() === 'vertical') ? 'top' : 'left')
+        , _side = ((Slider__Track__Thumb.direction() === 'vertical') ? 'top' : 'left')
         , _height = node.clientHeight
         , _width = node.clientWidth
         , _findPos = function(val){
-            var p = (val-Thumb.min())/(Thumb.max()-Thumb.min());
-            p = ((Thumb.direction() === 'vertical') ? (1-p) : p);
-            return ((Thumb.direction() === 'vertical') ? ((_height-_thumb.clientHeight)*p) : ((_width-_thumb.clientHeight)*p))+'px';
+            var p = (val-Slider__Track__Thumb.min())/(Slider__Track__Thumb.max()-Slider__Track__Thumb.min());
+            p = ((Slider__Track__Thumb.direction() === 'vertical') ? (1-p) : p);
+            return ((Slider__Track__Thumb.direction() === 'vertical') ? ((_height-_thumb.clientHeight)*p) : ((_width-_thumb.clientHeight)*p))+'px';
           }
         , _findValue = function(pos){
-              var p = parseInt(pos,10)/(Thumb.direction() === 'vertical' ? (_height-_thumb.clientHeight) : (_width-_thumb.clientWidth));
-              p = (Thumb.direction() === 'vertical' ? (1-p) : p);
-              return  ((Thumb.max()-Thumb.min())*(p))+Thumb.min();
+              var p = parseInt(pos,10)/(Slider__Track__Thumb.direction() === 'vertical' ? (_height-_thumb.clientHeight) : (_width-_thumb.clientWidth));
+              p = (Slider__Track__Thumb.direction() === 'vertical' ? (1-p) : p);
+              return  ((Slider__Track__Thumb.max()-Slider__Track__Thumb.min())*(p))+Slider__Track__Thumb.min();
           }
         , _mouseMove = function(e){
               e.preventDefault();
@@ -42,30 +42,30 @@ define([],function(){
               {
                 e = e.changedTouches[0]
               }
-              var change = (Thumb.direction() === 'vertical' ? (_startPagePos-e.pageY) : (_startPagePos-e.pageX))
+              var change = (Slider__Track__Thumb.direction() === 'vertical' ? (_startPagePos-e.pageY) : (_startPagePos-e.pageX))
                 , newPos = (_startPos-change)
-                , max = (Thumb.direction() === 'vertical' ? (_height-_thumb.clientHeight) : (_width-_thumb.clientHeight))
+                , max = (Slider__Track__Thumb.direction() === 'vertical' ? (_height-_thumb.clientHeight) : (_width-_thumb.clientHeight))
                 , min = 0
                 , setPos = (newPos <= max ? (newPos >= min ? newPos+'px' : min+'px') : max+'px')
                 , value = parseInt(_findValue(setPos),10)
 
-              if(value % Thumb.step() !== 0)
+              if(value % Slider__Track__Thumb.step() !== 0)
               {
-                value = Math.ceil(value/Thumb.step()) * Thumb.step();
+                value = Math.ceil(value/Slider__Track__Thumb.step()) * Slider__Track__Thumb.step();
               }
               _thumb.style[_side] = _findPos(value)+"px";
-              Thumb.value(value);
-              Thumb.onMove().call({},Thumb);
+              Slider__Track__Thumb.value(value);
+              Slider__Track__Thumb.onMove().call({},Slider__Track__Thumb);
           }
         , _mouseUp = function(){
               document.removeEventListener('mousemove',_mouseMove);
               document.removeEventListener('mouseup',_mouseUp);
               document.removeEventListener('touchmove',_mouseMove);
               document.removeEventListener('touchend',_mouseUp);
-              Thumb.onChange().call({},Thumb);
+              Slider__Track__Thumb.onChange().call({},Slider__Track__Thumb);
           }
         , _mouseDown = function(e){
-          if(!Thumb.disabled())
+          if(!Slider__Track__Thumb.disabled())
             {
               e.preventDefault();
               e.stopPropagation();
@@ -76,7 +76,7 @@ define([],function(){
               {
                 e = e.changedTouches[0]
               }
-              _startPagePos = (Thumb.direction() === 'vertical' ? e.pageY : e.pageX);
+              _startPagePos = (Slider__Track__Thumb.direction() === 'vertical' ? e.pageY : e.pageX);
               _startPos = parseInt(_thumb.style[_side],10);
               document.addEventListener('mousemove',_mouseMove);
               document.addEventListener('mouseup',_mouseUp);
@@ -90,7 +90,7 @@ define([],function(){
       {
         _thumb = node.appendChild(document.createElement('div'));
       }
-      _thumb.setAttribute('class','Slider__Track__Thumb Slider__Track__Thumb--'+Thumb.shape()+' Slider__Track__Thumb--'+Thumb.direction());
+      _thumb.setAttribute('class','Slider__Track__Thumb Slider__Track__Thumb--'+Slider__Track__Thumb.shape()+' Slider__Track__Thumb--'+Slider__Track__Thumb.direction());
       _thumb.addEventListener('mousedown',_mouseDown);
       _thumb.addEventListener('touchstart',_mouseDown);
     }
