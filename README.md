@@ -16,3 +16,7 @@ D3, Require(AMD), and Common compatable
 
 ###### Component READMES
 [Button](./Button/README.md);
+
+[Radio](./Radio/README.md);
+
+[Slider](./Slider/README.md);
