@@ -199,7 +199,7 @@
 
 .Slider__TickGroup__Tick__Line--under
 {
-    background:#D63234
+    background:#1092A0;
 }
 
 .Slider__TickGroup__Tick__Line--over
@@ -224,7 +224,7 @@
 }
 
 .Slider__TickGroup__Tick__Text--horizontal{
-  top:30px;
+  top:20px;
   text-align: center;
 }
 
