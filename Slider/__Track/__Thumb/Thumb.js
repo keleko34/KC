@@ -93,6 +93,8 @@ define([],function(){
         _thumb.addEventListener('touchstart',_mouseDown);
       }
       _thumb.setAttribute('class','Slider__Track__Thumb Slider__Track__Thumb--'+Slider__Track__Thumb.shape()+' Slider__Track__Thumb--'+Slider__Track__Thumb.direction());
+
+      _thumb.style[((Thumb.direction() === 'vertical') ? 'top' : 'left')] = _findPos(Thumb.value())+'px';
     }
 
     Slider__Track__Thumb.value = function(v){
