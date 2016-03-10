@@ -1,0 +1,35 @@
+{
+  "name": "KC",
+  "version": "0.0.1",
+  "description": "A series of chainable components for use in projects",
+  "keywords": [
+    "components"
+  ],
+  "homepage": "https://github.com/keleko34/KC",
+  "bugs": {
+    "url": "https://github.com/keleko34/KC",
+    "email": "Gregory.Guidero@Gmail.com"
+  },
+  "license": "(MIT OR Apache-2.0)",
+  "contributors": [
+    {
+      "name": "Gregory Guidero",
+      "email": "Gregory.Guidero@Gmail.com",
+      "url": "http://keleko.io"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/keleko34/KC"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-closure-compiler": "^0.4.0",
+    "gulp-file": "^0.2.0",
+    "gulp-inject": "^3.0.0",
+    "gulp-prompt": "^0.1.2",
+    "gulp-replace": "^0.5.4",
+    "sort-stream": "^1.0.1",
+    "vinyl-map": "^1.0.1"
+  }
+}
