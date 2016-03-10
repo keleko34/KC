@@ -46,6 +46,10 @@
 
 }
 
+.Button__Input:hover{
+  text-decoration:none !important;
+}
+
 .Button__Input--typeclick{
 
 }
@@ -66,14 +70,14 @@
 
 }
 
-.Button__Inputt__Content{
+.Button__Input__Content{
   color:#fff;
 }
 
-.Button__Input--toggled .Button__Inputt__Content{
+.Button__Input--toggled .Button__Input__Content{
 
 }
 
-.Button__Input--untoggled .Button__Inputt__Content{
+.Button__Input--untoggled .Button__Input__Content{
 
 }
