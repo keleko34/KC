@@ -94,7 +94,7 @@ define([],function(){
       }
       _thumb.setAttribute('class','Slider__Track__Thumb Slider__Track__Thumb--'+Slider__Track__Thumb.shape()+' Slider__Track__Thumb--'+Slider__Track__Thumb.direction());
 
-      _thumb.style[((Thumb.direction() === 'vertical') ? 'top' : 'left')] = _findPos(Thumb.value())+'px';
+      _thumb.style[((Slider__Track__Thumb.direction() === 'vertical') ? 'top' : 'left')] = _findPos(Slider__Track__Thumb.value())+'px';
     }
 
     Slider__Track__Thumb.value = function(v){
