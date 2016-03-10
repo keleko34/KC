@@ -7,28 +7,27 @@
 }
 
 .Radio__Input{
-  position:absolute;
-  left:40px;
-  top:0px;
+  float:left;
   background: #fff;
   width: 20px;
   height: 20px;
   padding: 3px;
   border-radius: 20px;
-  border: 2px solid #DA4735;
+  border: 2px solid #1092A0;
   cursor:pointer;
 }
 
 .Radio__Input div{
-  background: #DA4735;
+  background: #1092A0;
   width: 10px;
   height: 10px;
   border-radius: 20px;
 }
 
 .Radio__Text{
-  position: absolute;
-  left: 0px;
-  top: 4px;
-  color:#CCC;
+  line-height: 20px;
+  margin-left: 5px;
+  float: left;
+  font-size: 16px;
+  color: #82B1B4;
 }

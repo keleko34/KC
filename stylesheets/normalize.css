@@ -422,3 +422,8 @@ td,
 th {
   padding: 0;
 }
+
+h3{
+  margin-top:10px !important;
+  margin-bottom:5px !important;
+}

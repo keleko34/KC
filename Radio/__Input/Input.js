@@ -32,7 +32,7 @@ define([],function(){
         _input.querySelector('div').style.display = '';
       }
 
-      _input.setAttribute('class','Radio__Input Radio__Input--'+(Radio.value() ? 'checked' : 'unchecked'));
+      _input.setAttribute('class','Radio__Input Radio__Input--'+(Radio__Input.value() ? 'checked' : 'unchecked'));
       _input.onclick = _onClick;
     }
 
