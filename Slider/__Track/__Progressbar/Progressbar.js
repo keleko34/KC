@@ -15,7 +15,7 @@ define([],function(){
         , _width = node.clientWidth
         , _thumb = node.querySelector('.Slider__Track__Thumb')
         , _findPos = function(val){
-            var p = 1-(val-Slider__Track__Progressbar.min())/(Slider__Track__Progressbar.max()-Slider__Track__Progressbar.min())
+            var p = (val-Slider__Track__Progressbar.min())/(Slider__Track__Progressbar.max()-Slider__Track__Progressbar.min())
               , offsetProp = ((Slider__Track__Progressbar.direction() === 'vertical') ? _thumb.clientHeight : _thumb.clientWidth);
               return ((Slider__Track__Progressbar.direction() === 'vertical') ? ((_height-offsetProp)*p)+(offsetProp/2) : (((_width-offsetProp)*p)+(offsetProp/2)))+'px';
           }
@@ -27,6 +27,8 @@ define([],function(){
       _progressBar.setAttribute('class','Slider__Track__Progressbar Slider__Track__Progressbar--'+Slider__Track__Progressbar.direction());
       _progressBar.style.height = (Slider__Track__Progressbar.direction() === 'vertical' ? (_findPos(Slider__Track__Progressbar.value())) : '');
       _progressBar.style.width = (Slider__Track__Progressbar.direction() === 'horizontal' ? (_findPos(Slider__Track__Progressbar.value())) : '');
+      _progressBar.style.top = (Slider__Track__Progressbar.direction() === 'vertical' ? (_findPos((Slider__Track__Progressbar.max()-Slider__Track__Progressbar.value()))) : '');
+      _progressBar.style.left = (Slider__Track__Progressbar.direction() === 'horizontal' ? (_findPos((Slider__Track__Progressbar.max()-Slider__Track__Progressbar.value()))) : '');
     }
 
     Slider__Track__Progressbar.max = function(m){
