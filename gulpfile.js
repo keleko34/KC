@@ -82,7 +82,7 @@ gulp.task('create',function(){
       {
         var jsFile = "/* BUILD SECTION */\n/* END BUILD SECTION */\n\ndefine([],function(){\n\tfunction Create"+res.component+"(){\n\t\tfunction "+res.component+"(node){"
         +"\n\t\t\tnode = (typeof node === 'string' ? document.querySelector(node) : (typeof node === 'object' ? node : null));\n\t\t\tif(!node)\n\t\t\t{\n\t\t\t\tconsole.error('you have passed an invalid node into "+res.component+": ',node);\n\t\t\t\treturn;\n\t\t\t}"
-        +"}\n\t\treturn "+res.component+";\n\t}\n\treturn Create"+res.component+";\n})";
+        +"\n\t\t}\n\t\treturn "+res.component+";\n\t}\n\treturn Create"+res.component+";\n})";
 
         var cssFile = "."+res.component+"{\n\n}";
 
