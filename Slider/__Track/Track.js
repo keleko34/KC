@@ -21,14 +21,6 @@ define(['./__Progressbar/Progressbar','./__Thumb/Thumb'],function(CreateSlider__
       }
       _track.setAttribute('class','Slider__Track Slider__Track--'+Slider__Track.direction());
 
-      Slider__Track.progressBar()
-      .max(Slider__Track.max())
-      .min(Slider__Track.min())
-      .value(Slider__Track.value())
-      .disabled(Slider__Track.disabled())
-      .direction(Slider__Track.direction())
-      .call(Slider__Track.progressBar(),_track);
-
       Slider__Track.thumb()
       .max(Slider__Track.max())
       .min(Slider__Track.min())
@@ -39,6 +31,15 @@ define(['./__Progressbar/Progressbar','./__Thumb/Thumb'],function(CreateSlider__
       .onChange(Slider__Track.onChange())
       .onMove(Slider__Track.onMove())
       .call(Slider__Track.thumb(),_track);
+
+      Slider__Track.progressBar()
+      .max(Slider__Track.max())
+      .min(Slider__Track.min())
+      .value(Slider__Track.value())
+      .disabled(Slider__Track.disabled())
+      .direction(Slider__Track.direction())
+      .call(Slider__Track.progressBar(),_track);
+
     }
 
     Slider__Track.max = function(m){
