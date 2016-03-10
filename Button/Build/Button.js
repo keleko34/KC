@@ -71,7 +71,7 @@ var CreateButton__Input = (function(){
         }
       }
 
-      _btninput.setAttribute('class','button__input button__input--type'+Button__Input.type()+' button__input--'+(Button__Input.toggle() ? 'toggled' : 'untoggled'));
+      _btninput.setAttribute('class','Button__Input Button__Input--type'+Button__Input.type()+' Button__Input--'+(Button__Input.toggle() ? 'toggled' : 'untoggled'));
       if(Button__Input.link().length > 0)
       {
         _btninput.setAttribute('href',Button__Input.link());
