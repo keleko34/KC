@@ -183,7 +183,7 @@
 }
 .Slider--disabled .Slider__TickGroup__Tick__Line--over
 {
-  background:#1092A0;
+  background:#af9daa;
 }
 .Slider__TickGroup__Tick__Line--vertical
 {
@@ -199,7 +199,7 @@
 
 .Slider__TickGroup__Tick__Line--under
 {
-    background:#1092A0;
+    background:#CA1298;
 }
 
 .Slider__TickGroup__Tick__Line--over
