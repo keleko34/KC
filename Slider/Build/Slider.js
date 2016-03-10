@@ -984,7 +984,7 @@ var CreateSlider = (function(){
         .onMove(function(v){
           Slider.value(v);
           Slider.onMove()(v);
-          selection.call(Slider);
+          Slider.call(Slider,node);
         })
         .call(Slider.track(),_slider);
 
