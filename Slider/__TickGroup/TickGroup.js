@@ -18,6 +18,7 @@ define(['./__Tick/Tick'],function(CreateSlider__TickGroup__Tick){
       var _tickGroup = node.querySelector('.Slider__TickGroup')
         , _track = node.querySelector('.Slider__Track')
         , _tick
+        , x = 0
         , _thumb = node.querySelector('.Slider__Track__Thumb')
         , _findPos = function(val,tick){
 
@@ -52,7 +53,8 @@ define(['./__Tick/Tick'],function(CreateSlider__TickGroup__Tick){
 
       _tickGroup.innerHTML = "";
 
-      Slider__TickGroup.ticks().forEach(function(t,x){
+      for(x=0;x<Slider__TickGroup.ticks();x+=1)
+      {
         var value = _findValueFromCount(x);
 
           _tick = CreateTick().text(_tickTextOverload)
@@ -63,7 +65,7 @@ define(['./__Tick/Tick'],function(CreateSlider__TickGroup__Tick){
           .text(value);
 
           _tick.call(_tick,_tickGroup);
-      });
+      }
     }
 
     Slider__TickGroup.direction = function(d){
