@@ -13,7 +13,7 @@ define(['./__IncrementBtn/IncrementBtn'],function(CreateSlider__IncrementGroup__
     function Slider__IncrementGroup(node)
     {
       var _incrementGroup = node.querySelector('.Slider__IncrementGroup')
-        , _btns = IncrementGroup.buttons()
+        , _btns = Slider__IncrementGroup.buttons()
         , _btn;
 
       if(!_incrementGroup)

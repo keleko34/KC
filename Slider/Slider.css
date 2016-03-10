@@ -235,7 +235,7 @@
 {
 
 }
-.Slider__Incrementgroup__Incrementbtn{
+.Slider__Incrementgroup__IncrementBtn{
   position:absolute;
   cursor: pointer;
   width:25px;
@@ -245,33 +245,33 @@
   font-size: 18px;
   background:#2F515D;
 }
-.Slider--disabled .Slider__Incrementgroup__Incrementbtn
+.Slider--disabled .Slider__Incrementgroup__IncrementBtn
 {
   background:#707070;
 }
-.Slider__Incrementgroup__Incrementbtn:active{
+.Slider__Incrementgroup__IncrementBtn:active{
   box-shadow: 1px 0px 2px 1px #333 inset;
 }
 
-.Slider__Incrementgroup__Incrementbtn--up.Slider__Incrementgroup__Incrementbtn--vertical{
+.Slider__Incrementgroup__IncrementBtn--up.Slider__Incrementgroup__IncrementBtn--vertical{
     top: -35px;
     left: 50%;
     margin-left: -12.5px;
 }
 
-.Slider__Incrementgroup__Incrementbtn--up.Slider__Incrementgroup__Incrementbtn--horizontal{
+.Slider__Incrementgroup__IncrementBtn--up.Slider__Incrementgroup__IncrementBtn--horizontal{
     right: -35px;
     top: 50%;
     margin-top: -12.5px;
 }
 
-.Slider__Incrementgroup__Incrementbtn--down.Slider__Incrementgroup__Incrementbtn--vertical{
+.Slider__Incrementgroup__IncrementBtn--down.Slider__Incrementgroup__IncrementBtn--vertical{
     bottom: -35px;
     left: 50%;
     margin-left: -12.5px;
 }
 
-.Slider__Incrementgroup__Incrementbtn--down.Slider__Incrementgroup__Incrementbtn--horizontal{
+.Slider__Incrementgroup__IncrementBtn--down.Slider__Incrementgroup__IncrementBtn--horizontal{
     left: -35px;
     top: 50%;
     margin-top: -12.5px;
