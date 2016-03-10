@@ -53,7 +53,7 @@ define([],function(){
               {
                 value = Math.ceil(value/Slider__Track__Thumb.step()) * Slider__Track__Thumb.step();
               }
-              _thumb.style[_side] = _findPos(value)+"px";
+              _thumb.style[_side] = _findPos(value);
               Slider__Track__Thumb.value(value);
               Slider__Track__Thumb.onMove().call({},Slider__Track__Thumb);
           }
@@ -94,7 +94,7 @@ define([],function(){
       }
       _thumb.setAttribute('class','Slider__Track__Thumb Slider__Track__Thumb--'+Slider__Track__Thumb.shape()+' Slider__Track__Thumb--'+Slider__Track__Thumb.direction());
 
-      _thumb.style[((Slider__Track__Thumb.direction() === 'vertical') ? 'top' : 'left')] = _findPos(Slider__Track__Thumb.value())+'px';
+      _thumb.style[((Slider__Track__Thumb.direction() === 'vertical') ? 'top' : 'left')] = _findPos(Slider__Track__Thumb.value());
     }
 
     Slider__Track__Thumb.value = function(v){
