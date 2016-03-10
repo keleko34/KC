@@ -9,7 +9,12 @@ var _button = CreateButton()
 var _radio = CreateRadio()
 .text('Toggle');
 
-var _slider = CreateSlider().min(100).max(10000);
+var _slider = CreateSlider()
+.min(100)
+.max(10000)
+.direction("horizontal")
+.step(100)
+.ticks(4);
 
 _button.call(_button,buttonContainer);
 _radio.call(_radio,RadioContainer);
