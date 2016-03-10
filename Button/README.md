@@ -3,6 +3,9 @@
 ### Purpose
 User interaction, submit, click event, href linking
 
+### Examples
+[Button Demo](http://keleko34.github.io/KC/)
+
 ###### Commands
 
 * .text({ *type* **String**} || { *type* **Array**})
