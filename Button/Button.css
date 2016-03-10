@@ -1,13 +1,14 @@
 .Button{
   width: 160px;
-  height: 40px;
-  line-height: 40px;
+  height: 50px;
+  line-height: 50px;
   text-align: center;
   border-radius: 5px;
   background: #1092A0;
-  border-bottom: 3px solid #2F515D;
-  color: #fff;
+  border-bottom: 2px solid #2F515D;
+  color: #f2f2f2;
   cursor: pointer;
+  font-size:16px;
 }
 .Button:active{
   border-bottom:0px;
@@ -15,9 +16,7 @@
 }
 
 .Button--enabled{
-  background: #D9D9D9;
-  border-bottom: 2px solid #707070;
-  color:#888;
+
 }
 
 .Button--disabled{
@@ -44,7 +43,13 @@
 }
 
 .Button__Input{
+  display:block;
+  width:100%;
+  height:100%;
+}
 
+.Button__Input:hover{
+  text-decoration:none !important;
 }
 
 .Button__Input--typeclick{
@@ -67,14 +72,14 @@
 
 }
 
-.Button__Inputt__Content{
+.Button__Input__Content{
   color:#fff;
 }
 
-.Button__Input--toggled .Button__Inputt__Content{
+.Button__Input--toggled .Button__Input__Content{
 
 }
 
-.Button__Input--untoggled .Button__Inputt__Content{
+.Button__Input--untoggled .Button__Input__Content{
 
 }

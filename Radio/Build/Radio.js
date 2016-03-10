@@ -113,6 +113,7 @@ var CreateRadio = (function(){
       , _disabled = false
       , _text = ''
       , _onChange = function(){}
+      , _extend = function(){}
       , _input = CreateRadio__Input()
       , _title = CreateRadio__Text()
 
@@ -130,6 +131,8 @@ var CreateRadio = (function(){
             _radio = node.appendChild(document.createElement('div'));
           }
           _radio.setAttribute('class','Radio Radio--'+(Radio.disabled() ? 'disabled' : 'enabled'));
+
+          Radio.extend().call(Radio,_radio);
 
           Radio.input()
           .value(Radio.value())
@@ -167,6 +170,15 @@ var CreateRadio = (function(){
           return _onChange;
         }
         _onChange = (typeof c === 'function' ? c : _onChange);
+        return Radio;
+      }
+
+      Radio.extend = function(c){
+        if(c === undefined)
+        {
+          return _extend;
+        }
+        _extend = (typeof c === 'function' ? c : _extend);
         return Radio;
       }
 

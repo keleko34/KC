@@ -27,18 +27,19 @@ define(['./__Content/Content'],function(CreateButton__Input__Content){
 
       var onClick = function()
       {
+        console.log(Button__Input.disabled());
         if(!Button__Input.disabled())
         {
           if(Button__Input.type() === 'toggle')
           {
             Button__Input.toggle((Button__Input.toggle() ? 1 : 0));
           }
-          Button__Input.onClick()(Button__Input)
-          .call(Button__Input,_btninput);
+          Button__Input.onClick()(Button__Input);
+          Button__Input.call(Button__Input,node);
         }
       }
 
-      _btninput.setAttribute('class','button__input button__input--type'+Button__Input.type()+' button__input--'+(Button__Input.toggle() ? 'toggled' : 'untoggled'));
+      _btninput.setAttribute('class','Button__Input Button__Input--type'+Button__Input.type()+' Button__Input--'+(Button__Input.toggle() ? 'toggled' : 'untoggled'));
       if(Button__Input.link().length > 0)
       {
         _btninput.setAttribute('href',Button__Input.link());
@@ -48,7 +49,7 @@ define(['./__Content/Content'],function(CreateButton__Input__Content){
         _btninput.removeAttribute('href');
       }
 
-      _btninput.onClick = onClick;
+      _btninput.onclick = onClick;
 
       Button__Input.content()
       .text(Button__Input.text())

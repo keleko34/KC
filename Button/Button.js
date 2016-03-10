@@ -10,6 +10,7 @@ define(['./__Input/Input'],function(CreateButton__Input){
       , _type = 'click'
       , _typeEnum = ['click','toggle','text']
       , _disabled = false
+      , _extend = function(){}
       , _btnInput = CreateButton__Input()
       , _link = ''
 
@@ -28,6 +29,8 @@ define(['./__Input/Input'],function(CreateButton__Input){
         _button = node.appendChild(document.createElement('div'));
       }
       _button.setAttribute('class','Button Button--type'+Button.type()+' Button--'+(Button.disabled() ? 'disabled' : 'enabled'));
+
+      Button.extend().call(Button,_button);
 
       Button.btnInput()
       .type(Button.type())
@@ -95,6 +98,24 @@ define(['./__Input/Input'],function(CreateButton__Input){
         return _link;
       }
       _link = (typeof l === 'string' ? l : _link);
+      return Button;
+    }
+
+    Button.extend = function(e)
+    {
+      if(e === undefined)
+      {
+        return _extend;
+      }
+      _extend = (typeof e === 'function' ? e : _extend);
+      return Button;
+    }
+
+    Button.addType = function(t){
+      if(typeof t === 'string')
+      {
+        _typeEnum.push(t);
+      }
       return Button;
     }
 
