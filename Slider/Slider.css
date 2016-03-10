@@ -1,0 +1,278 @@
+.Slider
+{
+  color:#FFF;
+  position: relative;
+}
+.Slider--disabled
+{
+
+}
+.Slider--vertical
+{
+  width:40px;
+  height:340px;
+  margin-bottom:40px;
+}
+.Slider--horizontal
+{
+  width:300px;
+  height:40px;
+  margin-bottom:40px;
+}
+
+.Slider__Track
+{
+  position:absolute;
+  background:#CCC;
+  z-index:1;
+  border-radius: 20px;
+  cursor:pointer;
+}
+.Slider--disabled .Slider__Track
+{
+  background:#d9d9d9;
+}
+.Slider__Track--vertical
+{
+  height:100%;
+  width:10px;
+  left:50%;
+  margin-left:-5px;
+}
+.Slider__Track--horizontal
+{
+  height:10px;
+  width:100%;
+  top:50%;
+  margin-top:-5px;
+}
+.Slider__Track__Thumb
+{
+  position:absolute;
+  background:#FFFFFF;
+  border: 3px solid #D63234;
+  z-index:1;
+}
+.Slider--disabled .Slider__Track__Thumb
+{
+  border-color:#707070;
+}
+.Slider__Track__Thumb--vertical
+{
+  margin-left:-8px;
+}
+.Slider__Track__Thumb--horizontal
+{
+  margin-top:-8px;
+}
+.Slider__Track__Thumb--circle
+{
+  width:26px;
+  height:26px;
+  border-radius:20px;
+}
+
+.Slider__Track__Thumb--square
+{
+  width:26px;
+  height:26px;
+}
+
+.Slider__Track__Thumb--rectangle.Slider__Track__Thumb--vertical
+{
+  width:22px;
+  height:26px;
+}
+
+.Slider__Track__Thumb--rectangle.Slider__Track__Thumb--horizontal
+{
+  width:26px;
+  height:22px;
+}
+
+.Slider__Track__Progressbar
+{
+  position:absolute;
+  background:#D63234;
+  border-radius:20px 20px 20px 20px;
+  z-index:0;
+}
+.Slider--disabled .Slider__Track__Progressbar
+{
+  background:#707070;
+}
+.Slider__Track__Progressbar--vertical
+{
+  width:10px;
+}
+
+.Slider__Track__Progressbar--horizontal
+{
+  height:10px;
+}
+
+.Slider__TickGroup
+{
+  position:absolute;
+  z-index:0;
+}
+.Slider--disabled .Slider__TickGroup
+{
+  color:#707070;
+}
+.Slider__TickGroup--vertical
+{
+  height:100%;
+  width:20px;
+}
+
+.Slider__TickGroup--horizontal
+{
+  width:100%;
+  height:20px;
+}
+
+.Slider__TickGroup--left.Slider__TickGroup--vertical
+{
+  left:0px
+}
+
+.Slider__TickGroup--left.Slider__TickGroup--horizontal
+{
+  bottom:0px;
+}
+
+.Slider__TickGroup--center.Slider__TickGroup--vertical
+{
+  left:50%;
+  margin-left:-10px;
+}
+
+.Slider__TickGroup--center.Slider__TickGroup--horizontal
+{
+  top:50%;
+  margin-top:-10px;
+}
+
+.Slider__TickGroup--right.Slider__TickGroup--vertical
+{
+  right:0px;
+}
+
+.Slider__TickGroup--right.Slider__TickGroup--horizontal
+{
+  top:0px;
+}
+
+.Slider__TickGroup__Tick
+{
+  position:absolute;
+}
+.Slider--disabled .Slider__TickGroup__Tick
+{
+
+}
+
+.Slider__TickGroup__Tick__Line
+{
+
+}
+.Slider--disabled .Slider__TickGroup__Tick__Line--under
+{
+  background:#707070;
+}
+.Slider--disabled .Slider__TickGroup__Tick__Line--over
+{
+  background:#d9d9d9;
+}
+.Slider__TickGroup__Tick__Line--vertical
+{
+  width:20px;
+  height:2px;
+}
+
+.Slider__TickGroup__Tick__Line--horizontal
+{
+  height:20px;
+  width:2px;
+}
+
+.Slider__TickGroup__Tick__Line--under
+{
+    background:#D63234
+}
+
+.Slider__TickGroup__Tick__Line--over
+{
+    background:#CCC;
+}
+
+.Slider__TickGroup__Tick__Text{
+  position:absolute;
+  font-size:10px;
+  color:#000000;
+  white-space: nowrap;
+  margin-left:5px;
+}
+.Slider--disabled .Slider__TickGroup__Tick__Text
+{
+  color:#707070;
+}
+
+.Slider__TickGroup__Tick__Text--vertical{
+  left:30px;
+}
+
+.Slider__TickGroup__Tick__Text--horizontal{
+  top:30px;
+  text-align: center;
+}
+
+.Slider__Incrementgroup{
+  height:100%;
+}
+.Slider--disabled .Slider__Incrementgroup
+{
+
+}
+.Slider__Incrementgroup__Incrementbtn{
+  position:absolute;
+  cursor: pointer;
+  width:25px;
+  height:25px;
+  text-align: center;
+  line-height: 25px;
+  font-size: 18px;
+  background:#2F515D;
+}
+.Slider--disabled .Slider__Incrementgroup__Incrementbtn
+{
+  background:#707070;
+}
+.Slider__Incrementgroup__Incrementbtn:active{
+  box-shadow: 1px 0px 2px 1px #333 inset;
+}
+
+.Slider__Incrementgroup__Incrementbtn--up.Slider__Incrementgroup__Incrementbtn--vertical{
+    top: -35px;
+    left: 50%;
+    margin-left: -12.5px;
+}
+
+.Slider__Incrementgroup__Incrementbtn--up.Slider__Incrementgroup__Incrementbtn--horizontal{
+    right: -35px;
+    top: 50%;
+    margin-top: -12.5px;
+}
+
+.Slider__Incrementgroup__Incrementbtn--down.Slider__Incrementgroup__Incrementbtn--vertical{
+    bottom: -35px;
+    left: 50%;
+    margin-left: -12.5px;
+}
+
+.Slider__Incrementgroup__Incrementbtn--down.Slider__Incrementgroup__Incrementbtn--horizontal{
+    left: -35px;
+    top: 50%;
+    margin-top: -12.5px;
+}
