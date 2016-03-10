@@ -8,7 +8,8 @@ define(['./__Content/Content'],function(CreateButton__Input__Content){
       , _type = 'click'
       , _typeEnum = ['click','toggle','text']
       , _onClick = function(){}
-      , _disabled
+      , _disabled = false
+      , _link = ''
 
     function Button__Input(node)
     {
@@ -16,7 +17,7 @@ define(['./__Content/Content'],function(CreateButton__Input__Content){
       var _btninput = node.querySelector('.Button__Input');
       if(!_btninput)
       {
-        _btninput = node.appendChild(document.createElement('div'));
+        _btninput = node.appendChild(document.createElement('a'));
       }
 
       if(Button__Input.type() === 'toggle')
@@ -38,6 +39,8 @@ define(['./__Content/Content'],function(CreateButton__Input__Content){
       }
 
       _btninput.setAttribute('class','button__input button__input--type'+Button__Input.type()+' button__input--'+(Button__Input.toggle() ? 'toggled' : 'untoggled'));
+      _btninput.setAttribute('href',Button__Input.link());
+
       _btninput.onClick = onClick;
 
       Button__Input.content()
@@ -67,6 +70,16 @@ define(['./__Content/Content'],function(CreateButton__Input__Content){
         return _content;
       }
       _content = (c.toString() === CreateButton__Input__Content().toString() ? c : _text);
+      return Button__Input;
+    }
+
+    Button__Input.link = function(l)
+    {
+      if(l === undefined)
+      {
+        return _link;
+      }
+      _link = (typeof l === 'string' ? l : _link);
       return Button__Input;
     }
 

@@ -65,7 +65,7 @@ var CreateRadio__Input = (function(){
         _input.querySelector('div').style.display = '';
       }
 
-      _input.setAttribute('class','Radio__Input Radio__Input--'+(Radio.value() ? 'checked' : 'unchecked'));
+      _input.setAttribute('class','Radio__Input Radio__Input--'+(Radio__Input.value() ? 'checked' : 'unchecked'));
       _input.onclick = _onClick;
     }
 
@@ -129,16 +129,16 @@ var CreateRadio = (function(){
           {
             _radio = node.appendChild(document.createElement('div'));
           }
-          _radio.setAttribute('class','Radio Radio--'+(CheckBox.disabled() ? 'disabled' : 'enabled'));
+          _radio.setAttribute('class','Radio Radio--'+(Radio.disabled() ? 'disabled' : 'enabled'));
 
           Radio.input()
-          .value(CheckBox.value())
-          .disabled(CheckBox.disabled())
-          .onChange(CheckBox.onChange())
+          .value(Radio.value())
+          .disabled(Radio.disabled())
+          .onChange(Radio.onChange())
           .call(Radio.input(),_radio);
 
           Radio.title()
-          .text(CheckBox.text())
+          .text(Radio.text())
           .call(Radio.title(),_radio);
 
         }
@@ -199,8 +199,15 @@ var CreateRadio = (function(){
         _title = (t.toString() === CreateRadio__Title().toString() ? t : _title);
         return Radio;
       }
-
-		return Radio;
+      return Radio;
 	}
+    if (typeof define === "function" && define.amd)
+    {
+      define('CreateRadio',CreateRadio);
+    }
+    else if (typeof module === "object" && module.exports)
+    {
+      module.exports = CreateRadio;
+    }
 	return CreateRadio;
 }());
