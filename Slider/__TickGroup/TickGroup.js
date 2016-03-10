@@ -57,7 +57,7 @@ define(['./__Tick/Tick'],function(CreateSlider__TickGroup__Tick){
       {
         var value = _findValueFromCount(x);
 
-          _tick = CreateTick().text(_tickTextOverload)
+          _tick = CreateSlider__TickGroup__Tick().text(_tickTextOverload)
           .direction(Slider__TickGroup.direction())
           .position(parseInt(_findPos(value),10))
           .disabled(Slider__TickGroup.disabled())
