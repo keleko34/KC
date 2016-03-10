@@ -89,10 +89,10 @@ define([],function(){
       if(!_thumb)
       {
         _thumb = node.appendChild(document.createElement('div'));
+        _thumb.onmousedown = _mouseDown;
+        _thumb.addEventListener('touchstart',_mouseDown);
       }
       _thumb.setAttribute('class','Slider__Track__Thumb Slider__Track__Thumb--'+Slider__Track__Thumb.shape()+' Slider__Track__Thumb--'+Slider__Track__Thumb.direction());
-      _thumb.addEventListener('mousedown',_mouseDown);
-      _thumb.addEventListener('touchstart',_mouseDown);
     }
 
     Slider__Track__Thumb.value = function(v){
