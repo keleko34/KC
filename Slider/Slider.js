@@ -260,5 +260,13 @@ define(['./__Track/Track','./__TickGroup/TickGroup','./__IncrementGroup/Incremen
 
       return Slider;
 	}
+    if (typeof define === "function" && define.amd)
+    {
+      define('CreateSlider',CreateSlider);
+    }
+    else if (typeof module === "object" && module.exports)
+    {
+      module.exports = CreateSlider;
+    }
 	return CreateSlider;
 })
