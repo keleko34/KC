@@ -9,7 +9,7 @@ define(function(){
       var _content = node.querySelector('.Button__Input__Content');
       if(!_content)
       {
-        _content = node.appendChild(document.createElement('div'));
+        _content = node.appendChild(document.createElement('span'));
       }
       _content.setAttribute('class','Button__Input__Content');
       _content.innerHTML = Button__Input__Content.text();

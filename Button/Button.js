@@ -11,6 +11,7 @@ define(['./__Input/Input'],function(CreateButton__Input){
       , _typeEnum = ['click','toggle','text']
       , _disabled = false
       , _btnInput = CreateButton__Input()
+      , _link = ''
 
     function Button(node)
     {
@@ -34,6 +35,7 @@ define(['./__Input/Input'],function(CreateButton__Input){
       .text(Button.text())
       .onClick(Button.onClick())
       .disabled(Button.disabled())
+      .link(Button.link())
       .call(Button.btnInput(),_button);
     }
 
@@ -84,6 +86,15 @@ define(['./__Input/Input'],function(CreateButton__Input){
         return _btnInput;
       }
       _btnInput = (b.toString() === CreateBtnInput().toString() ? b : _btnInput);
+      return Button;
+    }
+
+    Button.link = function(l){
+      if(l === undefined)
+      {
+        return _link;
+      }
+      _link = (typeof l === 'string' ? l : _link);
       return Button;
     }
 

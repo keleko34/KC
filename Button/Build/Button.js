@@ -10,7 +10,7 @@ var CreateButton__Input__Content = (function(){
       var _content = node.querySelector('.Button__Input__Content');
       if(!_content)
       {
-        _content = node.appendChild(document.createElement('div'));
+        _content = node.appendChild(document.createElement('span'));
       }
       _content.setAttribute('class','Button__Input__Content');
       _content.innerHTML = Button__Input__Content.text();
@@ -41,7 +41,8 @@ var CreateButton__Input = (function(){
       , _type = 'click'
       , _typeEnum = ['click','toggle','text']
       , _onClick = function(){}
-      , _disabled
+      , _disabled = false
+      , _link = ''
 
     function Button__Input(node)
     {
@@ -49,7 +50,7 @@ var CreateButton__Input = (function(){
       var _btninput = node.querySelector('.Button__Input');
       if(!_btninput)
       {
-        _btninput = node.appendChild(document.createElement('div'));
+        _btninput = node.appendChild(document.createElement('a'));
       }
 
       if(Button__Input.type() === 'toggle')
@@ -71,6 +72,8 @@ var CreateButton__Input = (function(){
       }
 
       _btninput.setAttribute('class','button__input button__input--type'+Button__Input.type()+' button__input--'+(Button__Input.toggle() ? 'toggled' : 'untoggled'));
+      _btninput.setAttribute('href',Button__Input.link());
+
       _btninput.onClick = onClick;
 
       Button__Input.content()
@@ -100,6 +103,16 @@ var CreateButton__Input = (function(){
         return _content;
       }
       _content = (c.toString() === CreateButton__Input__Content().toString() ? c : _text);
+      return Button__Input;
+    }
+
+    Button__Input.link = function(l)
+    {
+      if(l === undefined)
+      {
+        return _link;
+      }
+      _link = (typeof l === 'string' ? l : _link);
       return Button__Input;
     }
 
@@ -162,6 +175,7 @@ var CreateButton = (function(){
       , _typeEnum = ['click','toggle','text']
       , _disabled = false
       , _btnInput = CreateButton__Input()
+      , _link = ''
 
     function Button(node)
     {
@@ -185,6 +199,7 @@ var CreateButton = (function(){
       .text(Button.text())
       .onClick(Button.onClick())
       .disabled(Button.disabled())
+      .link(Button.link())
       .call(Button.btnInput(),_button);
     }
 
@@ -235,6 +250,15 @@ var CreateButton = (function(){
         return _btnInput;
       }
       _btnInput = (b.toString() === CreateBtnInput().toString() ? b : _btnInput);
+      return Button;
+    }
+
+    Button.link = function(l){
+      if(l === undefined)
+      {
+        return _link;
+      }
+      _link = (typeof l === 'string' ? l : _link);
       return Button;
     }
 
