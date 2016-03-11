@@ -786,6 +786,11 @@ a {
   color: #1d3e81;
 }
 
+.logo-box{
+  border:2px solid white;
+  padding: 0px 5px;
+}
+
 h3{
   font-size:24px;
   margin-bottom:10px !important;
