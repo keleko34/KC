@@ -5,6 +5,7 @@ define(['./__Popup/Popup'],function(CreateInput__Helper__Popup){
       , _onClick = function(){}
       , _helperText = 'i'
       , _disabled = false
+      , _popupOpen = false
       , _popupDisabled = false
       , _popupType = 'hover'
       , _popupTypeEnum = ['hover','inline']
@@ -17,11 +18,13 @@ define(['./__Popup/Popup'],function(CreateInput__Helper__Popup){
           {
             if(!_disabled)
             {
+              _popupOpen = !_popupOpen;
               _onClick(Input__Helper);
               if(!_popupDisabled)
               {
                 _popup.type(_popupType)
                 .text(_popupText)
+                .isOpen(_popupOpen)
                 .active(_active);
                 _popup.call({},_helper);
               }
@@ -32,9 +35,16 @@ define(['./__Popup/Popup'],function(CreateInput__Helper__Popup){
       {
         _helper = node.appendChild(document.createElement('div'));
       }
+
       _helper.setAttribute('class','Input__Helper Input__Helper--'+(_active ? 'visible' : 'hidden'));
       _helper.innerHTML = _helperText;
       _helper.onclick = _onClkEv;
+
+      if(!_active)
+      {
+        node.removeChild(_helper);
+        _popup.active(_active).call({},node);
+      }
     }
 
     Input__Helper.active = function(v)
@@ -74,6 +84,16 @@ define(['./__Popup/Popup'],function(CreateInput__Helper__Popup){
         return _helperText;
       }
       _helperText = (typeof v === 'string' ? v : _helperText);
+      return Input__Helper;
+    }
+
+    Input__Helper.popupOpen = function(v)
+    {
+      if(v === undefined)
+      {
+        return _popupOpen;
+      }
+      _popupOpen = !!v;
       return Input__Helper;
     }
 
