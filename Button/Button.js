@@ -1,8 +1,8 @@
-/* BUILD SECTION */
-/* END BUILD SECTION */
-
 define(['./__Input/Input'],function(CreateButton__Input){
   function CreateButton(){
+
+    /* BUILD SECTION */
+    /* END BUILD SECTION */
 
     var _text = ''
       , _toggleText = ['','']

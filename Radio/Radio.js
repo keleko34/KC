@@ -1,8 +1,8 @@
-/* BUILD SECTION */
-/* END BUILD SECTION */
-
 define(['./__Input/Input','./__Text/Text'],function(CreateRadio__Input,CreateRadio__Text){
 	function CreateRadio(){
+
+      /* BUILD SECTION */
+      /* END BUILD SECTION */
 
       var _value = false
       , _disabled = false

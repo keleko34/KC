@@ -6,6 +6,7 @@ define(['./__Popup/Popup'],function(CreateInput__Helper__Popup){
       , _helperText = 'i'
       , _disabled = false
       , _popupOpen = false
+      , _popupCloseOnClick = false
       , _popupDisabled = false
       , _popupType = 'hover'
       , _popupTypeEnum = ['hover','inline']
@@ -94,6 +95,16 @@ define(['./__Popup/Popup'],function(CreateInput__Helper__Popup){
         return _popupOpen;
       }
       _popupOpen = !!v;
+      return Input__Helper;
+    }
+
+    Input__Helper.popupCloseOnClick = function(v)
+    {
+      if(v === undefined)
+      {
+        return _popupCloseOnClick;
+      }
+      _popupCloseOnClick = !!v;
       return Input__Helper;
     }
 

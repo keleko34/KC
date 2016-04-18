@@ -1,8 +1,8 @@
-/* BUILD SECTION */
-/* END BUILD SECTION */
-
 define(['./__Track/Track','./__TickGroup/TickGroup','./__IncrementGroup/IncrementGroup'],function(CreateSlider__Track,CreateSlider__TickGroup,CreateSlider__IncrementGroup){
 	function CreateSlider(){
+
+      /* BUILD SECTION */
+      /* END BUILD SECTION */
 
       var _max = 100
         , _min = 0

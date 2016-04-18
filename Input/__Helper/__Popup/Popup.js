@@ -29,7 +29,7 @@ define(function(){
         }
         _popup.style.position = 'absolute';
         _popup.style.top = _field.clientHeight+'px';
-        if(_message.style.position !== undefined)
+        if(_message && _message.style.position !== undefined)
         {
           _message.style.top = (_isOpen ? (_field.clientHeight+_popup.clientHeight) : _field.clientHeight)+'px';
         }
