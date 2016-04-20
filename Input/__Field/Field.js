@@ -62,6 +62,12 @@ define(function(){
       {
         _field.removeAttribute('disabled');
       }
+
+      if(_focused)
+      {
+        _field.focus();
+      }
+
       _field.value = _value;
       _field.oninput = _onInpEv;
       _field.onchange = _onChgEv;
