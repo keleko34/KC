@@ -11,6 +11,8 @@ define(function(){
       , _onChange = function(){}
       , _onFocus = function(){}
       , _onBlur = function(){}
+      , _onEnter = function(){}
+      , _onTab = function(){}
       , _focused = false
       , _error = false
       , _valid = true
@@ -44,6 +46,22 @@ define(function(){
             _focused = false;
             _onBlur(Input__Field);
           }
+        , _keyEv = function(e)
+          {
+            var keyCode = e.which || e.keyCode;
+            if(keyCode === 0 || keyCode === 229)
+            {
+              keyCode = this.value.charCodeAt(this.value.length-1);
+            }
+            if(keyCode === 13)
+            {
+              _onEnter(Input__Field,_field);
+            }
+            else if(keyCode === 9)
+            {
+              _onTab(Input__Field,_field);
+            }
+          }
 
       if(!_field)
       {
@@ -73,6 +91,18 @@ define(function(){
       _field.onchange = _onChgEv;
       _field.onfocus = _onFcsEv;
       _field.onBlur = _onBlEv;
+      _field.onkeyup = _keyEv;
+      _field.onkeypress = function(e){
+        var keyCode = e.which || e.keyCode;
+            if(keyCode === 0 || keyCode === 229)
+            {
+              keyCode = this.value.charCodeAt(this.value.length-1);
+            }
+            if(keyCode === 13 || keyCode === 9)
+            {
+              return false;
+            }
+      }
     }
 
     Input__Field.value = function(v)
@@ -152,6 +182,36 @@ define(function(){
         return _onFocus;
       }
       _onFocus = (typeof v === 'function' ? v : _onFocus);
+      return Input__Field;
+    }
+
+    Input__Field.onBlur = function(v)
+    {
+      if(v === undefined)
+      {
+        return _onBlur;
+      }
+      _onBlur = (typeof v === 'function' ? v : _onBlur);
+      return Input__Field;
+    }
+
+    Input__Field.onEnter = function(v)
+    {
+      if(v === undefined)
+      {
+        return _onEnter;
+      }
+      _onEnter = (typeof v === 'function' ? v : _onEnter);
+      return Input__Field;
+    }
+
+    Input__Field.onTab = function(v)
+    {
+      if(v === undefined)
+      {
+        return _onTab;
+      }
+      _onTab = (typeof v === 'function' ? v : _onTab);
       return Input__Field;
     }
 
