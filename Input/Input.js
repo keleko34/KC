@@ -1,4 +1,4 @@
-define(['./__Field/Field','./__Helper/Helper','./__Message/Message','./__Title/Title'],function(CreateInput__Field,CreateInput__Helper,CreateInput__Message,CreateInput__Title){
+define(['./__Field/Field'],function(CreateInput__Field){
 	function CreateInput(){
 
       /* BUILD SECTION */
@@ -13,28 +13,12 @@ define(['./__Field/Field','./__Helper/Helper','./__Message/Message','./__Title/T
           , _placeholder = ''
           , _onInput = function(){}
           , _onChange = function(){}
-
-          , _Helper = CreateInput__Helper()
-          , _hasHelper = false
-          , _helperOnClick = function(){}
-          , _helperText = 'i'
-          , _helperPopup = true
-          , _helperPopupType = 'hover'
-          , _helperPopupTypeEnum = ['hover','inline']
-          , _helperPopupText = ''
-          , _helperPopupCloseOnClick = false
-
-          , _Title = CreateInput__Title()
-          , _hasTitle = false
-          , _titlePosition = 'top'
-
-          , _Message = CreateInput__Message()
-          , _hasMessage = false
-          , _message = ''
-          , _isMessageOpen = false
-          , _messageType = 'error'
-          , _messagePositionType = 'hover'
-          , _messageCloseOnClick = false
+          , _onFocus = function(){}
+          , _focused = false
+          , _error = false
+          , _validation = function(){}
+          , _valid = true
+          , _required = false
 
 
 		function Input(node){
@@ -45,6 +29,51 @@ define(['./__Field/Field','./__Helper/Helper','./__Message/Message','./__Title/T
               console.error('stack: ',new Error().stack);
               return;
           }
+
+          var _input = node.querySelector('.Input');
+          if(!_input)
+          {
+            _input = node.appendChild(document.createElement('div'));
+          }
+          _input.setAttribute('class','Input Input--'+(_disabled ? 'disabled' : 'enabled')+' Input--'+(_valid ? 'valid' : 'invalid')+' Input--'+(_focused ? 'focused' : 'blured')+' Input--'+_type);
+
+          _Field.type(_type)
+          .disabled(_disabled)
+          .title(_title)
+          .placeholder(_placeholder)
+          .onInput(function(f){
+            _value = f.value();
+            _onInput(f);
+            Input.call(f,node);
+          })
+          .onChange(function(f){
+            _value = f.value();
+            _validation(f);
+            _onChange(f);
+            if(_required)
+            {
+              if(_valid && _value.length < 1)
+              {
+                _valid = false;
+              }
+            }
+            Input.call(f,node);
+          })
+          .onFocus(function(f){
+            _focused = true;
+            _onFocus(f);
+          })
+          .onBlur(function(f){
+            _focused = false;
+            _onBlur(f);
+          })
+          .focused(_focused)
+          .value(_value)
+          .error(_error)
+          .valid(_valid)
+          .disabled(_disabled);
+
+          _Field.call(Input,_input);
 		}
 
         Input.value = function(v)
@@ -127,105 +156,66 @@ define(['./__Field/Field','./__Helper/Helper','./__Message/Message','./__Title/T
           return Input;
         }
 
-        Input.Helper = function(v)
+        Input.onFocus = function(v)
         {
           if(v === undefined)
           {
-            return _Helper;
+            return _onFocus;
           }
-          _Helper = (v.toString() === CreateInput__Helper().toString() ? v : _Helper);
+          _onFocus = (typeof v === 'function' ? v : _onFocus);
           return Input;
         }
 
-        Input.hasHelper = function(v)
+        Input.focused = function(v)
         {
           if(v === undefined)
           {
-            return _hasHelper;
+            return _focused;
           }
-          _hasHelper = !!v;
-          return Input
-        }
-
-        Input.helperOnClick = function(v)
-        {
-          if(v === undefined)
-          {
-            return _helperOnClick;
-          }
-          _helperOnClick = (typeof v === 'function' ? v : _helperOnClick);
-          return Input
-        }
-
-        Input.helperText = function(v)
-        {
-          if(v === undefined)
-          {
-            return _helperText;
-          }
-          _helperText = (typeof v === 'string' ? v : _helperText);
+          _focused = !!v;
           return Input;
         }
 
-        Input.helperPopup = function(v)
+        Input.error = function(v)
         {
           if(v === undefined)
           {
-            return _helperPopup;
+            return _error;
           }
-          _helperPopup = !!v;
-          return Input
-        }
-
-        Input.helperPopupType = function(v)
-        {
-          if(v === undefined)
-          {
-            return _helperPopupType;
-          }
-          _helperPopupType = (_helperPopupTypeEnum.indexOf(v) > -1 ? v : _helperPopupType);
+          _error = !!v;
           return Input;
         }
 
-        Input.helperPopupText = function(v)
+        Input.validation = function(v)
         {
           if(v === undefined)
           {
-            return _helperPopupText;
+            return _validation;
           }
-          _helperPopupText = (typeof v === 'string' ? v : _helperPopupText);
+          _validation = (typeof v === 'function' ? v : _validation);
           return Input;
         }
 
-        Input.helperPopupCloseOnClick = function(v)
+        Input.valid = function(v)
         {
           if(v === undefined)
           {
-            return _helperPopupCloseOnClick;
+            return _valid;
           }
-          _helperPopupCloseOnClick = !!v;
-          return Input
-        }
-
-        Input.Title = function(v)
-        {
-          if(v === undefined)
-          {
-            return _Title;
-          }
-          _Title = (v.toString() === CreateInput__Title().toString() ? v : _Title);
+          _valid = !!v;
           return Input;
         }
 
-        Input.hasTitle = function(v)
+        Input.required = function(v)
         {
           if(v === undefined)
           {
-            return _hasTitle;
+            return _required;
           }
-          _hasTitle = !!v;
-          return Input
+          _required = !!v;
+          return Input;
         }
+
 
 		return Input;
 	}

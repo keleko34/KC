@@ -9,6 +9,11 @@ define(function(){
       , _placeholder = ''
       , _onInput = function(){}
       , _onChange = function(){}
+      , _onFocus = function(){}
+      , _onBlur = function(){}
+      , _focused = false
+      , _error = false
+      , _valid = true
 
     function Input__Field(node)
     {
@@ -19,7 +24,6 @@ define(function(){
             {
               _value = this.value;
               _onInput(Input__Field);
-              Input__Field.call({},node);
             }
           }
         , _onChgEv = function()
@@ -28,8 +32,17 @@ define(function(){
             {
               _value = this.value;
               _onChange(Input__Field);
-              Input__Field.call({},node);
             }
+          }
+        , _onFcsEv = function()
+          {
+            _focused = true;
+            _onFocus(Input__Field);
+          }
+        , _onBlEv = function()
+          {
+            _focused = false;
+            _onBlur(Input__Field);
           }
 
       if(!_field)
@@ -52,6 +65,8 @@ define(function(){
       _field.value = _value;
       _field.oninput = _onInpEv;
       _field.onchange = _onChgEv;
+      _field.onfocus = _onFcsEv;
+      _field.onBlur = _onBlEv;
     }
 
     Input__Field.value = function(v)
@@ -123,6 +138,57 @@ define(function(){
       _onChange = (typeof v === 'function' ? v : _onChange);
       return Input__Field;
     }
+
+    Input__Field.onFocus = function(v)
+    {
+      if(v === undefined)
+      {
+        return _onFocus;
+      }
+      _onFocus = (typeof v === 'function' ? v : _onFocus);
+      return Input__Field;
+    }
+
+    Input__Field.onBlur = function(v)
+    {
+      if(v === undefined)
+      {
+        return _onBlur;
+      }
+      _onBlur = (typeof v === 'function' ? v : _onBlur);
+      return Input__Field;
+    }
+
+    Input__Field.focused = function(v)
+    {
+      if(v === undefined)
+      {
+        return _focused;
+      }
+      _focused = !!v;
+      return Input__Field;
+    }
+
+    Input__Field.error = function(v)
+    {
+      if(v === undefined)
+      {
+        return _error;
+      }
+      _error = !!v;
+      return Input__Field;
+    }
+
+    Input__Field.valid = function(v)
+    {
+      if(v === undefined)
+      {
+        return _valid;
+      }
+      _valid = !!v;
+      return Input__Field;
+    }
+
     return Input__Field;
   }
   return CreateInput__Field;
