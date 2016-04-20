@@ -1,5 +1,8 @@
-/* BUILD SECTION */
-var CreateRadio__Text = (function(){
+var CreateRadio = (function(){
+	function CreateRadio(){
+
+      /* BUILD SECTION */
+      var CreateRadio__Text = (function(){
   function CreateRadio__Text()
   {
     var _text = '';
@@ -31,7 +34,7 @@ var CreateRadio__Text = (function(){
   return CreateRadio__Text;
 }());;
 
-var CreateRadio__Input = (function(){
+      var CreateRadio__Input = (function(){
   function CreateRadio__Input()
   {
     var _value = false
@@ -104,10 +107,7 @@ var CreateRadio__Input = (function(){
 
 
 
-/* END BUILD SECTION */
-
-var CreateRadio = (function(){
-	function CreateRadio(){
+      /* END BUILD SECTION */
 
       var _value = false
       , _disabled = false

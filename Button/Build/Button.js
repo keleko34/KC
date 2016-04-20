@@ -1,5 +1,8 @@
-/* BUILD SECTION */
-var CreateButton__Input__Content = (function(){
+var CreateButton = (function(){
+  function CreateButton(){
+
+    /* BUILD SECTION */
+    var CreateButton__Input__Content = (function(){
   function CreateButton__Input__Content(){
 
     var _text = ''
@@ -31,7 +34,7 @@ var CreateButton__Input__Content = (function(){
   return CreateButton__Input__Content;
 }());;
 
-var CreateButton__Input = (function(){
+    var CreateButton__Input = (function(){
   function CreateButton__Input(){
 
     var _text = ''
@@ -171,10 +174,7 @@ var CreateButton__Input = (function(){
 
 
 
-/* END BUILD SECTION */
-
-var CreateButton = (function(){
-  function CreateButton(){
+    /* END BUILD SECTION */
 
     var _text = ''
       , _toggleText = ['','']

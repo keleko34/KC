@@ -1,5 +1,8 @@
-/* BUILD SECTION */
-var CreateSlider__Track__Thumb = (function(){
+var CreateSlider = (function(){
+	function CreateSlider(){
+
+      /* BUILD SECTION */
+      var CreateSlider__Track__Thumb = (function(){
   function CreateSlider__Track__Thumb()
   {
     var _value = 0
@@ -184,7 +187,7 @@ var CreateSlider__Track__Thumb = (function(){
   return CreateSlider__Track__Thumb;
 }());
 
-var CreateSlider__Track__Progressbar = (function(){
+      var CreateSlider__Track__Progressbar = (function(){
   function CreateSlider__Track__Progressbar()
   {
     var _max = 100
@@ -266,7 +269,7 @@ var CreateSlider__Track__Progressbar = (function(){
   return CreateSlider__Track__Progressbar;
 }());;
 
-var CreateSlider__TickGroup__Tick = (function(){
+      var CreateSlider__TickGroup__Tick = (function(){
   function CreateSlider__TickGroup__Tick()
   {
     var _position = 0
@@ -355,7 +358,7 @@ var CreateSlider__TickGroup__Tick = (function(){
   return CreateSlider__TickGroup__Tick;
 }());
 
-var CreateSlider__IncrementGroup__IncrementBtn = (function(){
+      var CreateSlider__IncrementGroup__IncrementBtn = (function(){
   function CreateSlider__IncrementGroup__IncrementBtn()
   {
     var _value = 0
@@ -504,7 +507,7 @@ var CreateSlider__IncrementGroup__IncrementBtn = (function(){
   return CreateSlider__IncrementGroup__IncrementBtn;
 }());;
 
-var CreateSlider__Track = (function(){
+      var CreateSlider__Track = (function(){
   function CreateSlider__Track()
   {
     var _max = 100
@@ -643,7 +646,7 @@ var CreateSlider__Track = (function(){
   return CreateSlider__Track;
 }());;
 
-var CreateSlider__TickGroup = (function(){
+      var CreateSlider__TickGroup = (function(){
   function CreateSlider__TickGroup()
   {
     var _direction = 'vertical'
@@ -799,7 +802,7 @@ var CreateSlider__TickGroup = (function(){
   return CreateSlider__TickGroup;
 }());;
 
-var CreateSlider__IncrementGroup = (function(){
+      var CreateSlider__IncrementGroup = (function(){
   function CreateSlider__IncrementGroup()
   {
     var _value = 0
@@ -924,10 +927,7 @@ var CreateSlider__IncrementGroup = (function(){
 
 
 
-/* END BUILD SECTION */
-
-var CreateSlider = (function(){
-	function CreateSlider(){
+      /* END BUILD SECTION */
 
       var _max = 100
         , _min = 0
@@ -1185,5 +1185,13 @@ var CreateSlider = (function(){
 
       return Slider;
 	}
+    if (typeof define === "function" && define.amd)
+    {
+      define('CreateSlider',CreateSlider);
+    }
+    else if (typeof module === "object" && module.exports)
+    {
+      module.exports = CreateSlider;
+    }
 	return CreateSlider;
 }())
