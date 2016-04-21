@@ -297,18 +297,24 @@ var CreateProperty = (function(){
 
         Property.typearray = function(v) //Pure
         {
-          return {isValid:(typeof v === 'object' && v.constructor.toString() === Array.toString()),value:v}
+          return {isValid:(typeof v === 'object' && v.constructor.toString() === Array.toString()),value:v};
         }
 
         Property.typeclass = function(v) //Pure
         {
-          return {isValid:(v.toString() === _typeClass.toString()),value:v}
+          return {isValid:(v.toString() === _typeClass.toString()),value:v};
+        }
+
+        Property.typepath = function(v)
+        {
+          return {isValid:(typeof v === 'string' && (v.indexOf('/') === 0 || v.indexOf(':') === 1)),value:v};
         }
 
         return Property;
     }
     return CreateProperty;
 }());;
+
 
 
 
