@@ -7,11 +7,9 @@ var config = global.gulp.config;
 
 module.exports = function(){
 
-  var _component,
-      _description;
+  var _component;
 
-  return gulp
-  .src('*')
+  return gulp.src('*')
   .pipe(prompt.prompt({
     type: 'input',
     name: 'component',
