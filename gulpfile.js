@@ -1,3 +1,8 @@
+/* Globals */
+global.gulp = {};
+global.gulp.config = require('./.gulp/config.js')
+
+/* Gulp Processing Modules */
 var gulp = require('gulp')
   , prompt = require('gulp-prompt')
   , inject = require('gulp-inject')
@@ -6,6 +11,9 @@ var gulp = require('gulp')
   , file = require('gulp-file')
   , closureCompiler = require('gulp-closure-compiler')
   , fs = require('fs');
+
+/* Gulp Task Modules */
+var Create = require('./.gulp/Create/Create')
 
 gulp.task('build', function(){
   return gulp.src('*')
@@ -69,43 +77,4 @@ gulp.task('build', function(){
   }));
 });
 
-gulp.task('create',function(){
-  return gulp.src('*')
-  .pipe(prompt.prompt({
-    type: 'input',
-    name: 'component',
-    message: 'What would You like to name this component?'
-  },
-  function(res){
-    fs.stat('./Components/'+res.component+'/'+res.component+'.js',function(err,stats){
-      if(err)
-      {
-        var jsFile = "/* BUILD SECTION */\n/* END BUILD SECTION */\n\ndefine([],function(){\n\tfunction Create"+res.component+"(){\n\t\tfunction "+res.component+"(node){"
-        +"\n\t\t\tnode = (typeof node === 'string' ? document.querySelector(node) : (typeof node === 'object' ? node : null));\n\t\t\tif(!node)\n\t\t\t{\n\t\t\t\tconsole.error('you have passed an invalid node into "+res.component+": ',node);\n\t\t\t\treturn;\n\t\t\t}"
-        +"\n\t\t}\n\t\treturn "+res.component+";\n\t}\n\treturn Create"+res.component+";\n})";
-
-        var cssFile = "."+res.component+"{\n\n}";
-
-        file('./'+res.component+".js",jsFile,{src:true})
-        .pipe(gulp.dest('./'+res.component));
-
-        file('./'+res.component+".css",cssFile,{src:true})
-        .pipe(gulp.dest('./'+res.component));
-
-        file('./README.md',"",{src:true})
-        .pipe(gulp.dest('./'+res.component));
-
-        file('./Build/'+res.component+".js","",{src:true})
-        .pipe(gulp.dest('./'+res.component));
-
-        file('./Min/'+res.component+".min.js","",{src:true})
-        .pipe(gulp.dest('./'+res.component));
-
-      }
-      else
-      {
-        console.error('\033[31mThere is already a component by the name:\033[37m ',res.component);
-      }
-    });
-  }));
-})
+gulp.task('create',Create);
