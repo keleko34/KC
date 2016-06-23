@@ -1,4 +1,4 @@
-define(['./__Property/Property'],function(CreateProperty){
+define([],function(){
 	function CreateModule(moduleName,module){
 
       /* BUILD SECTION */
@@ -387,15 +387,7 @@ define(['./__Property/Property'],function(CreateProperty){
         }
 
         return Module;
+
 	}
-    if (typeof define === "function" && define.amd)
-    {
-      define('KM',CreateModule); //global KM define in browser
-      define([],CreateModule); //define if file refrenced
-    }
-    else if (typeof module === "object" && module.exports)
-    {
-      module.exports = CreateModule;
-    }
 	return CreateModule;
 })
