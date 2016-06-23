@@ -5,7 +5,7 @@ var gulp = require('gulp')
   , replace = require('gulp-replace')
   , file = require('gulp-file')
   , closureCompiler = require('gulp-closure-compiler')
-  , fs = require('fs')
+  , fs = require('fs');
 
 gulp.task('build', function(){
   return gulp.src('*')
@@ -15,7 +15,7 @@ gulp.task('build', function(){
     message: 'Which component would you like to build?'
   },
   function(res){
-    fs.stat('./'+res.component+'/'+res.component+'.js',function(err,stats){
+    fs.stat('./Components/'+res.component+'/'+res.component+'.js',function(err,stats){
       if(!err && stats.isFile())
       {
         console.log('\033[36mStarting to compile component:\033[37m',res.component);
@@ -25,7 +25,7 @@ gulp.task('build', function(){
           }))
           , reD = /(define)(.*)(function\()(.*)(\))(.*)(?:{)/
           , reE = /}\)(?![\s\S]*}\))/m;
-        gulp.src('./'+res.component+'/'+res.component+'.js')
+        gulp.src('./Components/'+res.component+'/'+res.component+'.js')
         .pipe(inject(subFiles,{
           relative:true,
           starttag: '/* BUILD SECTION */',
@@ -51,15 +51,15 @@ gulp.task('build', function(){
         }))
         .pipe(replace(reE,"}())"))
         .pipe(replace(reD,("var Create"+res.component+" = (function(){")))
-        .pipe(gulp.dest('./'+res.component+'/Build'));
+        .pipe(gulp.dest('./Components/'+res.component+'/Build'));
 
         console.log('\033[36mRunning clojure compiler minification:\033[37m');
-        gulp.src('./'+res.component+'/Build/'+res.component+'.js')
+        gulp.src('./Components/'+res.component+'/Build/'+res.component+'.js')
         .pipe(closureCompiler({
           compilerPath:"./compiler.jar",
           fileName:res.component+".min.js"
         }))
-        .pipe(gulp.dest('./'+res.component+'/Min'));
+        .pipe(gulp.dest('./Components/'+res.component+'/Min'));
       }
       else
       {
@@ -77,7 +77,7 @@ gulp.task('create',function(){
     message: 'What would You like to name this component?'
   },
   function(res){
-    fs.stat('./'+res.component+'/'+res.component+'.js',function(err,stats){
+    fs.stat('./Components/'+res.component+'/'+res.component+'.js',function(err,stats){
       if(err)
       {
         var jsFile = "/* BUILD SECTION */\n/* END BUILD SECTION */\n\ndefine([],function(){\n\tfunction Create"+res.component+"(){\n\t\tfunction "+res.component+"(node){"

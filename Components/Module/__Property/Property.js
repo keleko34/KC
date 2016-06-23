@@ -57,7 +57,7 @@ define([],function(){
               return _scopeValue;
             }
 
-            if(_typeCheck.isValid)
+            if(_typeCheck.isValid && _writable)
             {
               _scopeName = Property.propertyName();
               _scopeSharedModules = Property.sharedModules();

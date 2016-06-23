@@ -29,7 +29,6 @@
     "gulp-inject": "^3.0.0",
     "gulp-prompt": "^0.1.2",
     "gulp-replace": "^0.5.4",
-    "sort-stream": "^1.0.1",
-    "vinyl-map": "^1.0.1"
+    "sort-stream": "^1.0.1"
   }
 }
