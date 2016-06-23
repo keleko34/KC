@@ -19,7 +19,7 @@ User interaction, submit, click event, href linking
 * .type(*type* **String**) 
 
   This is the state of the button type that will be used, whether a simple 'click' or a 'toggle' or a primitive 'text' button
-
+pro
 * .disabled(*type* **Boolean**) 
 
   This is the state saying whether the button should be displayed disabled, if disabled the onclick event will never fire.
