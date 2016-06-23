@@ -76,10 +76,22 @@ module.exports = function(){
     file('./README.md',readmeFile,{src:true})
     .pipe(gulp.dest('./'+ config.components.base + '/' + res.component));
 
-    file('./Build/'+res.component+".js","",{src:true})
+    /* This stage we strip away require and inline the html and css and inline concat the viewmodel */
+    file('./dev/'+res.component+".js","",{src:true})
     .pipe(gulp.dest('./'+ config.components.base + '/' + res.component));
 
-    file('./Min/'+res.component+".min.js","",{src:true})
+    /* This stage we minify and have dev for easy debug testing */
+    file('./qa/'+res.component+".js","",{src:true})
+    .pipe(gulp.dest('./'+ config.components.base + '/' + res.component));
+    file('./qa/'+res.component+".min.js","",{src:true})
+    .pipe(gulp.dest('./'+ config.components.base + '/' + res.component));
+
+    /* This stage is pure minified version for final check, auto documentation is made for methods and properties to fill */
+    file('./stage/'+res.component+".min.js","",{src:true})
+    .pipe(gulp.dest('./'+ config.components.base + '/' + res.component));
+
+    /* This stage is the final minified product, Hooray! */
+    file('./prod/'+res.component+".min.js","",{src:true})
     .pipe(gulp.dest('./'+ config.components.base + '/' + res.component));
   };
 };
