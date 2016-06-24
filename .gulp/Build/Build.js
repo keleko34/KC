@@ -98,9 +98,45 @@ module.exports = function(){
             return _g;
         },
 
-        /* This stage is pure minified version for final check, auto documentation is made for methods and properties to fill */
-        stage:function(res){
+        /* This stage is pure minified version for final check, auto documentation is made for methods and properties to fill, and css is minified */
+        stage:function(res,cb){
+          var _file = './' + config.components.base + '/'+res.component+'/qa/'+res.component+'.min.js',
+              _docsFile = './' + config.components.base + '/'+res.component+'/README.md',
+              _docrFile = './' + config.components.base + '/'+res.component+'/qa/'+res.component+'.js';
 
+          var _g = gulp.src(_file)
+          .pipe(gulp.dest('./' + config.components.base + '/' + res.component + '/'  + res.environment));
+
+          _g = gulp.src(_docsFile)
+          .pipe(inject(gulp.src(_docrFile),{
+              relative:true,
+              starttag: '###### Properties',
+              endtag: '*End Properties*',
+              transform: function(filepath,file,i,len){
+                console.log('\033[36mCreating Property Docs:\033[37m');
+                var __contents = file.contents.toString('utf8');
+
+                return "";
+              }
+          }))
+          .pipe(replace('*End Properties*',''))
+          .pipe(inject(gulp.src(_docrFile),{
+              relative:true,
+              starttag: '###### Methods',
+              endtag: '*End Methods*',
+              transform: function(filepath,file,i,len){
+                console.log('\033[36mCreating Method Docs:\033[37m');
+                var __contents = file.contents.toString('utf8');
+
+                return "";
+              }
+          }))
+          .pipe(replace('*End Methods*',''))
+          .pipe(gulp.dest('./' + config.components.base + '/' + res.component + '/'  + res.environment));
+
+          _g.on('end',cb);
+
+          return _g;
         },
 
         /* This stage is the final minified product, Hooray! */
