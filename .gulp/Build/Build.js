@@ -1,13 +1,16 @@
-/* Need to inject viewmodel and template */
-
+/* Gulp Modules */
 var gulp = require('gulp')
   , prompt = require('gulp-prompt')
   , file = require('gulp-file')
   , inject = require('gulp-inject')
-  , sort = require('sort-stream')
   , replace = require('gulp-replace')
   , file = require('gulp-file')
   , closureCompiler = require('gulp-closure-compiler')
+  , cssmin = require('gulp-cssmin')
+  , rename = require('gulp-rename')
+
+  /* File and Stream Modules */
+  , sort = require('sort-stream')
   , fs = require('fs');
 
 var config = global.gulp.config;
@@ -102,9 +105,11 @@ module.exports = function(){
         stage:function(res,cb){
           var _file = './' + config.components.base + '/'+res.component+'/qa/'+res.component+'.min.js',
               _docsFile = './' + config.components.base + '/'+res.component+'/README.md',
-              _docrFile = './' + config.components.base + '/'+res.component+'/qa/'+res.component+'.js';
+              _docrFile = './' + config.components.base + '/'+res.component+'/qa/'+res.component+'.js',
+              _cssFile = './' + config.components.base + '/'+res.component+'/' + res.component + '.css'
 
           var _g = gulp.src(_file)
+          .pipe(replace(res.component + '.css',res.component + '.min.css'))
           .pipe(gulp.dest('./' + config.components.base + '/' + res.component + '/'  + res.environment));
 
           _g = gulp.src(_docsFile)
@@ -132,7 +137,12 @@ module.exports = function(){
               }
           }))
           .pipe(replace('*End Methods*',''))
-          .pipe(gulp.dest('./' + config.components.base + '/' + res.component + '/'  + res.environment));
+          .pipe(gulp.dest('./' + config.components.base + '/' + res.component));
+
+          _g = gulp.src(_cssFile)
+          .pipe(cssmin())
+          .pipe(rename({suffix: '.min'}))
+          .pipe(gulp.dest('./' + config.components.base + '/' + res.component));
 
           _g.on('end',cb);
 
@@ -141,7 +151,9 @@ module.exports = function(){
 
         /* This stage is the final minified product, Hooray! */
         prod:function(res){
-
+          var _file = './' + config.components.base + '/'+res.component+'/stage/'+res.component+'.min.js'
+          gulp.src(_file)
+          .pipe(gulp.dest('./' + config.components.base + '/' + res.component + '/'  + res.environment));
         }
       };
 
@@ -190,57 +202,5 @@ module.exports = function(){
     return env[res.environment](res,function(){
       console.log('\033[36mFinished compiling \033[37m',res.component,' \033[36mfor \033[37m',res.environment);
     });
-  }
-
-  function Command(res){
-
-    /*
-    var ignore = [
-          './'+res.component+'.js',
-          './Build/'+res.component+'.js',
-          './Min/'+res.component+'.min.js']*/
-      //, subFiles = gulp.src(['./' + config.components.base + res.component + '/**/*.js']).pipe(sort(function(a,b){
-      /*  return 1;
-      }))
-      , reD = /(define)(.*)(function\()(.*)(\))(.*)(?:{)/
-      , reE = /}\)(?![\s\S]*}\))/m;
-
-    gulp.src('./' + config.components.base + '/'+res.component+'/'+res.component+'.js')
-    .pipe(inject(subFiles,{
-      relative:true,*/
-      //starttag: '/* BUILD SECTION */',
-      //endtag: '/* END BUILD SECTION */',
-      /*transform: function(filepath,file,i,length){
-        if(ignore.indexOf('./'+filepath) < 0)
-        {
-          console.log('\033[36mInjecting File:\033[37m',filepath);
-          var contents = file.contents.toString('utf8'),
-              re = /(function Create)(.*)(\()/,
-              module = 'Create'+re.exec(contents)[2];
-
-          contents = contents.replace(reE,"}());");
-          contents = contents.replace(reD,"var "+module+" = (function(){");
-          return contents;
-        }
-        else
-        {
-          return "";
-        }
-      },
-      ignorePath:ignore
-    }))
-    .pipe(replace(reE,"}())"))
-    .pipe(replace(reD,("var Create"+res.component+" = (function(){")))
-    .pipe(gulp.dest('./' + config.components.base + '/'+res.component+'/Build'));
-
-    console.log('\033[36mRunning clojure compiler minification:\033[37m');
-
-    gulp.src('./' + config.components.base + '/'+res.component+'/Build/'+res.component+'.js')
-    .pipe(closureCompiler({
-      compilerPath:"./compiler.jar",
-      fileName:res.component+".min.js"
-    }))
-    .pipe(gulp.dest('./' + config.components.base + '/'+res.component+'/Min'));
-  */
   }
 }
