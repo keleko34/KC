@@ -27,59 +27,75 @@ module.exports = function(){
               _temFile = _file.replace('.js','.html'),
               _cssHtml = './' + config.tasks.Build.base + '/Templates/ComponentStyles.js';
 
-          return gulp.src(_file)
-                .pipe(inject(gulp.src(_vmFile),{
-                  relative:true,
-                  starttag: '/* BUILD SECTION */',
-                  endtag: '/* END BUILD SECTION */',
-                  transform: function(filepath,file,i,len){
-                    console.log('\033[36mInjecting ViewModel:\033[37m',filepath);
-                    var __contents = file.contents.toString('utf8');
-                    __contents = __contents.replace(_regexDefineEnd,"}());");
-                    __contents = __contents.replace(_regexDefine,"\r\n/* HTML Include */\r\n/* End HTML Include */\r\nvar viewmodel = (function(){");
-                    __contents = __contents.replace(/\r\n/g,'\r\n'+Array(13).join(' '));
-                    return __contents;
-                  }
-                }))
-                .pipe(inject(gulp.src(_temFile),{
-                  relative:true,
-                  starttag: '/* HTML Include */',
-                  endtag: '/* End HTML Include */',
-                  transform: function(filepath,file,i,len){
-                    console.log('\033[36mInjecting Template:\033[37m',filepath);
-                    var __contents = file.contents.toString('utf8');
-                    __contents.replace(/\r\n/g,'');
-                    __contents = '/* CSS Include */\r\n/* End CSS Include */\r\n' + Array(13).join(' ') + 'var template = "' + __contents + '";';
-                    return __contents;
-                  }
-                }))
-                .pipe(inject(gulp.src(_cssHtml),{
-                  relative:true,
-                  starttag: '/* CSS Include */',
-                  endtag: '/* End CSS Include */',
-                  transform: function(filepath,file,i,len){
-                    console.log('\033[36mInjecting CSS include Code:\033[37m',filepath);
-                    var __contents = file.contents.toString('utf8');
-                    __contents = '\r\n' + __contents;
-                    __contents = __contents.replace(/(\$Component)/g,res.component);
-                    __contents = __contents.replace(/\r\n/g,'\r\n' + Array(13).join(' '));
-                    return __contents;
-                  }
-                }))
-                .pipe(replace(_regexDefineEnd,"}())"))
-                .pipe(replace(_regexDefine,("var Create"+res.component+" = (function(){")))
-                .pipe(replace('/* HTML Include */',''))
-                .pipe(replace('/* End HTML Include */',''))
-                .pipe(replace('/* CSS Include */',''))
-                .pipe(replace('/* End CSS Include */',''))
-                .pipe(replace(/^\s*[\r\n]/gm,''))
-                .pipe(gulp.dest('./' + config.components.base + '/'+res.component+'/' + res.environment))
-                .on('end',cb);
+          var _g = gulp.src(_file)
+            .pipe(inject(gulp.src(_vmFile),{
+              relative:true,
+              starttag: '/* BUILD SECTION */',
+              endtag: '/* END BUILD SECTION */',
+              transform: function(filepath,file,i,len){
+                console.log('\033[36mInjecting ViewModel:\033[37m',filepath);
+                var __contents = file.contents.toString('utf8');
+                __contents = __contents.replace(_regexDefineEnd,"}());");
+                __contents = __contents.replace(_regexDefine,"\r\n/* HTML Include */\r\n/* End HTML Include */\r\nvar viewmodel = (function(){");
+                __contents = __contents.replace(/\r\n/g,'\r\n'+Array(13).join(' '));
+                return __contents;
+              }
+            }))
+            .pipe(inject(gulp.src(_temFile),{
+              relative:true,
+              starttag: '/* HTML Include */',
+              endtag: '/* End HTML Include */',
+              transform: function(filepath,file,i,len){
+                console.log('\033[36mInjecting Template:\033[37m',filepath);
+                var __contents = file.contents.toString('utf8');
+                __contents.replace(/\r\n/g,'');
+                __contents = '/* CSS Include */\r\n/* End CSS Include */\r\n' + Array(13).join(' ') + 'var template = "' + __contents + '";';
+                return __contents;
+              }
+            }))
+            .pipe(inject(gulp.src(_cssHtml),{
+              relative:true,
+              starttag: '/* CSS Include */',
+              endtag: '/* End CSS Include */',
+              transform: function(filepath,file,i,len){
+                console.log('\033[36mInjecting CSS include Code:\033[37m',filepath);
+                var __contents = file.contents.toString('utf8');
+                __contents = '\r\n' + __contents;
+                __contents = __contents.replace(/(\$Component)/g,res.component);
+                __contents = __contents.replace(/\r\n/g,'\r\n' + Array(13).join(' '));
+                return __contents;
+              }
+            }))
+            .pipe(replace(_regexDefineEnd,"}())"))
+            .pipe(replace(_regexDefine,("var Create"+res.component+" = (function(){")))
+            .pipe(replace('/* HTML Include */',''))
+            .pipe(replace('/* End HTML Include */',''))
+            .pipe(replace('/* CSS Include */',''))
+            .pipe(replace('/* End CSS Include */',''))
+            .pipe(replace(/^\s*[\r\n]/gm,''))
+            .pipe(gulp.dest('./' + config.components.base + '/'+res.component+'/' + res.environment));
+
+            _g.on('end',cb);
+
+            return _g;
         },
 
         /* This stage we minify and have dev for easy debug testing */
-        qa:function(res){
+        qa:function(res,cb){
+            var _file = './' + config.components.base + '/'+res.component+'/dev/'+res.component+'.js';
 
+            console.log('\033[36mStarting compiler for:\033[37m',res.component);
+            var _g =  gulp.src(_file)
+            .pipe(gulp.dest('./' + config.components.base + '/'+res.component + '/' + res.environment))
+            .pipe(closureCompiler({
+              compilerPath:"./compiler.jar",
+              fileName:res.component+".min.js"
+            }))
+            .pipe(gulp.dest('./' + config.components.base + '/' + res.component + '/'  + res.environment));
+
+            _g.on('end',cb);
+
+            return _g;
         },
 
         /* This stage is pure minified version for final check, auto documentation is made for methods and properties to fill */

@@ -1,5 +1,5 @@
-define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.css'],function(ko,template,viewmodel){
-	function CreateComponent(){
+define(['knockout', 'text!./Cool.html','./Cool.vm','css!./Cool.css'],function(ko,template,viewmodel){
+	function CreateCool(){
 
         if(ko !== undefined)
         {
@@ -8,7 +8,7 @@ define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.cs
 
             /* Add Private _variables here */
 
-            function Component(node){
+            function Cool(node){
               if(node){
                 node = (typeof node === 'string' ? document.querySelector(node) : (typeof node === 'object' && node.parentElement !== undefined ? node : null));
                 if(!node)
@@ -18,7 +18,7 @@ define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.cs
                     return;
                 }
                 var fragment = document.createDocumentFragment();
-                fragment.appendChild(document.createElement('Component'));
+                fragment.appendChild(document.createElement('Cool'));
                 node.appendChild(fragment);
               }
 
@@ -29,16 +29,16 @@ define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.cs
 
             /* add methods for updating and type checking viewmodel properties */
 
-            if(!ko.components.isRegistered('Component'))
+            if(!ko.components.isRegistered('Cool'))
             {
-              ko.components.register('Component',{viewModel:viewmodel,template:template});
+              ko.components.register('Cool',{viewModel:viewmodel,template:template});
             }
 
-            return Component;
+            return Cool;
         }
         else
         {
-          console.error('\033[31mThe ko variable for knockout does not exist, make sure its loaded before calling this component:\033[37m Componnt');
+          console.error('\033[31mThe ko variable for knockout does not exist, make sure its loaded before calling this component:\033[37m ');
           console.error('stack: ',new Error().stack);
         }
         return null;
@@ -46,11 +46,11 @@ define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.cs
 
     if (typeof define === "function" && define.amd)
     {
-        define('CreateComponent',CreateComponent);
+        define('CreateCool',CreateCool);
     }
     else if (typeof module === "object" && module.exports)
     {
-        module.exports = CreateComponent;
+        module.exports = CreateCool;
     }
-	return CreateComponent;
+	return CreateCool;
 });
