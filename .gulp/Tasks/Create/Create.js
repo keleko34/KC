@@ -1,0 +1,52 @@
+var gulp = require('gulp')
+  , file = require('gulp-file')
+  , fs = require('fs')
+  , base = require('./../../Base');
+
+var config = global.gulp.config;
+
+module.exports = function(){
+
+  return base.filter(function(res,key){
+    if(res.Type !== undefined && key === 'Name'){
+      Exists(res);
+    }
+  })
+  .command(Command)
+  .call();
+
+  function Exists(res){
+    try
+    {
+      var exists = fs.statSync('./' + config[res.Type].base + '/' + res.Name + '/' + res.Name + '.js');
+      if(exists){
+        console.error('\033[31mThere is already a component by the name: \033[37m',res.Name);
+        process.exit(1);
+      }
+    }
+    catch(e)
+    {
+      if(e.code !== 'ENOENT'){
+        console.error(e);
+        process.exit(1);
+      }
+    }
+  }
+
+  function Command(res){
+    fs.readdirSync('./.gulp/Tasks/Create/Templates/'+res.Type).forEach(function(f,i){
+      var template = fs.readFileSync('./.gulp/Tasks/Create/Templates/' + res.Type + '/'+f,'utf8'),
+          resKeys = Object.keys(res);
+
+      for(var x=0;x<resKeys.length;x++){
+        var k = resKeys[x],
+            reg = new RegExp("(\\$" + k + ")",'g');
+
+        template = template.replace(reg,res[k]);
+      }
+
+      file('./'+f,template,{src:true})
+      .pipe(gulp.dest('./'+ config[res.Type].base + '/' + res.Name));
+    });
+  };
+};

@@ -3,7 +3,7 @@ var includeCSS = (function(){
         _styleNode = document.getElementById('ComponentStyles');
     if(!_styleNode){
         var frag = document.createDocumentFragment();
-        frag.innerHTML = _styleTemplate;
+        frag.appendChild(_styleTemplate);
         document.head.appendChild(frag);
         _styleNode = document.getElementById('ComponentStyles');
     }

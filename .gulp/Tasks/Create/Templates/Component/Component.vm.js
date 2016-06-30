@@ -1,6 +1,6 @@
 define(['knockout'],function(ko){
-  function Component_vm(){
-    this.Node_Type = 'Component';
+  function $Name_vm(){
+    this.Node_Type = '$Name';
 
     /* Place Properties Here */
 
@@ -10,11 +10,11 @@ define(['knockout'],function(ko){
 
   if (typeof define === "function" && define.amd)
   {
-    define('CreateComponent',Component_vm);
+    define('Create$Name',$Name_vm);
   }
   else if (typeof module === "object" && module.exports)
   {
-    module.exports = Component_vm;
+    module.exports = $Name_vm;
   }
-  return Component_vm;
+  return $Name_vm;
 })

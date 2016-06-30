@@ -1,5 +1,11 @@
-define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.css'],function(ko,template,viewmodel){
-	function CreateComponent(){
+/*********************************
+ *  $Name
+ *  Created by $Author
+ *  $Description
+ ********************************/
+
+define(['knockout', 'text!./$Name.html','./$Name.vm','css!./$Name.css'],function(ko,template,viewmodel){
+	function Create$Name(){
 
         if(ko !== undefined)
         {
@@ -8,7 +14,7 @@ define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.cs
 
             /* Add Private _variables here */
 
-            function Component(node){
+            function $Name(node){
               if(node){
                 node = (typeof node === 'string' ? document.querySelector(node) : (typeof node === 'object' && node.parentElement !== undefined ? node : null));
                 if(!node)
@@ -18,7 +24,7 @@ define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.cs
                     return;
                 }
                 var fragment = document.createDocumentFragment();
-                fragment.appendChild(document.createElement('Component'));
+                fragment.appendChild(document.createElement('$Name'));
                 node.appendChild(fragment);
               }
 
@@ -29,12 +35,12 @@ define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.cs
 
             /* add methods for updating and type checking viewmodel properties */
 
-            if(!ko.components.isRegistered('Component'))
+            if(!ko.components.isRegistered('$Name'))
             {
-              ko.components.register('Component',{viewModel:viewmodel,template:template});
+              ko.components.register('$Name',{viewModel:viewmodel,template:template});
             }
 
-            return Component;
+            return $Name;
         }
         else
         {
@@ -46,11 +52,11 @@ define(['knockout', 'text!./Component.html','./Component.vm','css!./Component.cs
 
     if (typeof define === "function" && define.amd)
     {
-        define('CreateComponent',CreateComponent);
+        define('Create$Name',Create$Name);
     }
     else if (typeof module === "object" && module.exports)
     {
-        module.exports = CreateComponent;
+        module.exports = Create$Name;
     }
-	return CreateComponent;
+	return Create$Name;
 });
