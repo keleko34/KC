@@ -196,7 +196,7 @@ module.exports = function(){
 
 
   return base.task('Build')
-  .editChoices(listComponents)
+  .editPrompts(listComponents)
   .filter(Exists)
   .command(Command)
   .call();

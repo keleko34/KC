@@ -1,3 +1,5 @@
+process.argv.push('--silent');
+
 var fs = require('fs'),
     gulp = require('gulp'),
     tasks = [];
@@ -7,7 +9,7 @@ var fs = require('fs'),
    All gulp config data for routes and tasks is located in the global gulp.config scope
 */
 global.gulp = {};
-global.gulp.config = require('./.gulp/Config/Config.js')
+global.gulp.config = require('./.gulp/Config/Config.js');
 
 /* Gulp Task Modules
 

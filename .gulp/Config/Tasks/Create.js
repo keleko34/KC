@@ -28,7 +28,7 @@ module.exports = {
           },
           prompt:{
             type:'input',
-            message:'Please write a brief description of what this component does'
+            message:'Please write a brief description of this element'
           }
         },
         Author:{
@@ -38,7 +38,7 @@ module.exports = {
           },
           prompt:{
             type:'input',
-            message:'Initial Author of this Component?'
+            message:'Initial Author of this Element?'
           }
         }
       }

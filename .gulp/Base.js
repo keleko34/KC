@@ -9,7 +9,7 @@ module.exports = (function(){
       _commands,
       _commandKeys,
       _command = function(){},
-      _editChoices = function(){},
+      _editPrompts = function(){},
       _values = {},
       _gulp = gulp.src('*'),
       _prompts = {};
@@ -37,7 +37,7 @@ module.exports = (function(){
           if(i !== (_commandKeys.length-1)){
             return function(res){
               _values[k] = res[k];
-              _editChoices(_values,k,_prompts);
+              _editPrompts(_values,k,_prompts);
               _filter(_values,k);
             }
           }
@@ -83,11 +83,11 @@ module.exports = (function(){
     return Base;
   }
 
-  Base.editChoices = function(v){
+  Base.editPrompts = function(v){
     if(v === undefined){
-      return _editChoices;
+      return _editPrompts;
     }
-    _editChoices = (typeof v === 'function' ? v : _editChoices);
+    _editPrompts = (typeof v === 'function' ? v : _editPrompts);
     return Base;
   }
 
@@ -95,8 +95,12 @@ module.exports = (function(){
     return _values;
   }
 
-  Base.gulp = function(){
-    return _gulp;
+  Base.gulp = function(v){
+    if(v === undefined){
+      return _gulp;
+    }
+    _gulp = v;
+    return Base;
   }
 
   return Base;

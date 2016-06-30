@@ -2,14 +2,15 @@ module.exports = {
   Component: {
     base: 'Components'
   },
-  Section:{
+  Section: {
     base: 'Sections'
   },
   Page: {
     base: 'Pages'
   },
   Tasks: {
-    Create: require('./Create'),
-    Build: require('./Build')
+    Task: require('./Tasks/Task'),
+    Create: require('./Tasks/Create'),
+    Build: require('./Tasks/Build')
   }
 }
