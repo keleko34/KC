@@ -23,9 +23,9 @@
     "url": "https://github.com/keleko34/KC"
   },
   "scripts": {
-    "task": "gulp task --silent",
-    "create": "gulp create --silent",
-    "build": "gulp build --silent"
+    "task": "node_modules\\.bin\\gulp task --silent",
+    "create": "node_modules\\.bin\\gulp create --silent",
+    "build": "node_modules\\.bin\\gulp build --silent"
   },
   "devDependencies": {
     "commander": "^2.9.0",
