@@ -7,28 +7,22 @@ var config = global.gulp.config;
 
 module.exports = function(){
 
-  return base.filter(function(res,key){
+  function Exists(res,key){
     if(res.Type !== undefined && key === 'Name'){
-      Exists(res);
-    }
-  })
-  .command(Command)
-  .call();
-
-  function Exists(res){
-    try
-    {
-      var exists = fs.statSync('./' + config[res.Type].base + '/' + res.Name + '/' + res.Name + '.js');
-      if(exists){
-        console.error('\033[31mThere is already a component by the name: \033[37m',res.Name);
-        process.exit(1);
+      try
+      {
+        var exists = fs.statSync('./' + config[res.Type].base + '/' + res.Name + '/' + res.Name + '.js');
+        if(exists){
+          console.error('\033[31mThere is already a component by the name: \033[37m',res.Name);
+          process.exit(1);
+        }
       }
-    }
-    catch(e)
-    {
-      if(e.code !== 'ENOENT'){
-        console.error(e);
-        process.exit(1);
+      catch(e)
+      {
+        if(e.code !== 'ENOENT'){
+          console.error(e);
+          process.exit(1);
+        }
       }
     }
   }
@@ -43,10 +37,15 @@ module.exports = function(){
             reg = new RegExp("(\\$" + k + ")",'g');
 
         template = template.replace(reg,res[k]);
+        f = f.replace(reg,res[k]);
       }
-
       file('./'+f,template,{src:true})
       .pipe(gulp.dest('./'+ config[res.Type].base + '/' + res.Name));
     });
   };
+
+  return base.task('Create')
+  .filter(Exists)
+  .command(Command)
+  .call();
 };

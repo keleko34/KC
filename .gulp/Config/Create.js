@@ -1,5 +1,4 @@
 module.exports = {
-      base: '.gulp/Create',
       commands:{
         Type:{
           cmd:{
