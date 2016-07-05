@@ -67,6 +67,7 @@ module.exports = (function(){
         }
       }
     }
+    cli.option('-o, --options','Displays helper for options',cli.help.bind(cli)).parse(process.argv);
 
     return _gulp;
   }
