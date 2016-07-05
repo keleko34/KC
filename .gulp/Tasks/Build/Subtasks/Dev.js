@@ -34,6 +34,7 @@ module.exports = function(res,cb){
         var __contents = file.contents.toString('utf8');
         __contents = __contents.replace(/\r\n/g,'');
         __contents = __contents.replace(/\n/g,'');
+        __contents = __contents.replace(/(")/g,'\\"')
         __contents = '/* CSS Include */\r\n/* End CSS Include */\r\n' + Array(13).join(' ') + 'var template = "' + __contents + '";';
         return __contents;
       }
