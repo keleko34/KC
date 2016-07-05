@@ -21,7 +21,7 @@ global.gulp.appPath = process.cwd().replace(/\\/,"/");
 try{
   tasks = fs.readdirSync('./.gulp/Tasks');
   if(tasks.length < 1){
-    console.error('\033[31You have no tasks to use, please create tasks in a way as: task/task.js \033[37m');
+    console.error('\033[31You have no tasks to use, please create tasks under .gulp/Tasks/ in a way as: task/task.js \033[37m');
     return;
   }
 }

@@ -11,9 +11,9 @@ module.exports = function(){
     if(res.Type !== undefined && key === 'Name'){
       try
       {
-        var exists = fs.statSync('./' + config[res.Type].base + '/' + res.Name + '/' + res.Name + '.js');
+        var exists = fs.statSync('./' + config[res.Type].base + '/' + res.Name);
         if(exists){
-          console.error('\033[31mThere is already a component by the name: \033[37m',res.Name);
+          console.error('\033[31mThere is already something by the name: \033[37m',res.Name,' in ',config[res.Type].base);
           process.exit(1);
         }
       }
