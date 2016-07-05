@@ -5,7 +5,8 @@
  ********************************/
 
 var base = require('./../../Base'),
-    gulp = require('gulp');
+    gulp = require('gulp'),
+    child_process = require('child_process');
 
 module.exports = function(){
 
@@ -21,6 +22,16 @@ module.exports = function(){
   */
   function command(res){
 
+    /* add bower component to requirejs.config after install */
+    console.log('\033[36mStarting to install:\033[37m',res.Library);
+    child_process.exec('bower install '+res.Library+' --save',function(err,stdout,stderr){
+      if (err) {
+        console.error('\033[31mERR!! \033[37m',err);
+        return;
+      }
+      console.log('\033[36mBower Logs: \033[37m ',stdout);
+      console.log('\033[36mBower Errors: \033[37m ',stderr);
+    });
   }
 
   return base.task('Bower')

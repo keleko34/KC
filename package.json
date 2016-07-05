@@ -24,6 +24,7 @@
   },
   "scripts": {
     "task": "node_modules\\.bin\\gulp task --silent",
+    "bower": "node_modules\\.bin\\gulp bower --silent",
     "create": "node_modules\\.bin\\gulp create --silent",
     "build": "node_modules\\.bin\\gulp build --silent"
   },
