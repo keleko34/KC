@@ -1,5 +1,6 @@
-var gulp = require('gulp')
-  , prompt = require('gulp-prompt');
+var gulp = require('gulp'),
+    cli = require('commander'),
+    prompt = require('gulp-prompt');
 
 var config = global.gulp.config;
 
@@ -14,6 +15,8 @@ module.exports = (function(){
       _gulp = gulp.src('*'),
       _prompts = {};
 
+  cli = cli.version('0.0.1')
+
   function Base(){
     if(!_commandKeys){
       console.error('Task name: '+_task+' config does not exist, please create');
@@ -27,28 +30,54 @@ module.exports = (function(){
           name:k
         },
         _promptKeys = Object.keys(_commands[k].prompt);
+        if(_commands[k].cmd){
+          cli = cli.option.apply(cli,Base.parseCli(_commands[k]).concat(method(k,true)));
+          cli.parse(process.argv);
+        }
 
         for(var x=0;x<_promptKeys.length;x++){
           var p = _promptKeys[x];
           _prompts[k][p] = _commands[k].prompt[p];
         }
 
-        function method(k){
+        function method(k,c){
+          if(c && _commands[k].prompt.type === 'list'){
+            if(i !== (_commandKeys.length-1)){
+              return function(res){
+                if(_commands[k].prompt.choices.indexOf((c ? res : res[k])) > -1){
+                  _values[k] = (c ? res : res[k]);
+                  _editPrompts(_values,k,_prompts);
+                  _filter(_values,k);
+                }
+              }
+            }
+            else{
+              return function(res){
+                if(_commands[k].prompt.choices.indexOf((c ? res : res[k])) > -1){
+                  _values[k] = (c ? res : res[k]);
+                  _command(_values,k);
+                }
+              }
+            }
+          }
+
           if(i !== (_commandKeys.length-1)){
             return function(res){
-              _values[k] = res[k];
+              _values[k] = (c ? res : res[k]);
               _editPrompts(_values,k,_prompts);
               _filter(_values,k);
             }
           }
           else{
             return function(res){
-              _values[k] = res[k];
+              _values[k] = (c ? res : res[k]);
               _command(_values,k);
             }
           }
         }
-        _gulp = _gulp.pipe(prompt.prompt(_prompts[k],method(k)));
+        if(!_values[k] || _values[k].length < 1){
+          _gulp = _gulp.pipe(prompt.prompt(_prompts[k],method(k)));
+        }
       }
     }
 
@@ -101,6 +130,15 @@ module.exports = (function(){
     }
     _gulp = v;
     return Base;
+  }
+
+  Base.parseCli = function(c){
+    var args = [];
+    /* command acceptance */
+    args.push((c.cmd.short ? c.cmd.short+', ' : '')+c.cmd.long + ' [value]');
+    /* command help message */
+    args.push((c.cmd.help ? c.cmd.help : c.prompt.message));
+    return args;
   }
 
   return Base;

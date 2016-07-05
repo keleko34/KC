@@ -12,10 +12,6 @@ module.exports = {
       }
     },
     Name:{
-      cmd:{
-        short:'-n',
-        long:'--name'
-      },
       prompt:{
         type:'list',
         message:'Which element would you like to build?',
