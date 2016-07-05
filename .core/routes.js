@@ -1,10 +1,4 @@
 var routes = {
-  Components:[
-
-  ],
-  Sections:[
-
-  ],
   Pages:[
 
   ]
