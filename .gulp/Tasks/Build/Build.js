@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     base = require('./../../Base')
 
   /* File and Stream Modules */
-  , fs = require('fs');
+  , fs = require('fs'),
+    currentEnv = 0;
 
 var config = global.gulp.config;
 
@@ -21,6 +22,24 @@ module.exports = function(){
       .filter(function(k,i){
         return k !== '.gitkeep';
       });
+    }
+  }
+
+  function finished(res){
+    return function(){
+      console.log('\033[36mFinished compiling \033[37m',res.Name,' \033[36mfor \033[37m',res.Environment);
+    }
+  }
+
+  function commandCallback(res){
+    return function(){
+      currentEnv += 1;
+      if(Object.keys(env)[currentEnv] === res.Environment){
+        env[Object.keys(env)[currentEnv]](res,finished(res))
+      }
+      else{
+        env[Object.keys(env)[currentEnv]](res,commandCallback(res));
+      }
     }
   }
 
@@ -47,10 +66,7 @@ module.exports = function(){
 
   function Command(res){
     console.log('\033[36mStarting to compile:\033[37m',res.Name,' \033[36mFor \033[37m',res.Environment,' \033[36menvironment\033[37m');
-    console.log(res.Environment);
-    return env[res.Environment](res,function(){
-      console.log('\033[36mFinished compiling \033[37m',res.Name,' \033[36mfor \033[37m',res.Environment);
-    });
+    return env[Object.keys(env)[currentEnv]](res,(Object.keys(env)[currentEnv] === res.Environment ? finished(res) : commandCallback(res)));
   }
 
 

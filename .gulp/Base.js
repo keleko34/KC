@@ -40,39 +40,26 @@ module.exports = (function(){
           _prompts[k][p] = _commands[k].prompt[p];
         }
 
+        function addValue(k,c,res){
+          _values[k] = (c ? res : res[k]);
+          _editPrompts(_values,k,_prompts);
+          _filter(_values,k);
+          if(Object.keys(_values).length === Object.keys(_commands).length){
+            _command(_values,k);
+          }
+        }
+
         function method(k,c){
           if(c && _commands[k].prompt.type === 'list'){
-            if(i !== (_commandKeys.length-1)){
-              return function(res){
-                if(_commands[k].prompt.choices.indexOf((c ? res : res[k])) > -1){
-                  _values[k] = (c ? res : res[k]);
-                  _editPrompts(_values,k,_prompts);
-                  _filter(_values,k);
-                }
-              }
-            }
-            else{
-              return function(res){
-                if(_commands[k].prompt.choices.indexOf((c ? res : res[k])) > -1){
-                  _values[k] = (c ? res : res[k]);
-                  _command(_values,k);
-                }
+            return function(res){
+              if(_commands[k].prompt.choices.indexOf((c ? res : res[k])) > -1){
+                addValue(k,c,res);
               }
             }
           }
 
-          if(i !== (_commandKeys.length-1)){
-            return function(res){
-              _values[k] = (c ? res : res[k]);
-              _editPrompts(_values,k,_prompts);
-              _filter(_values,k);
-            }
-          }
-          else{
-            return function(res){
-              _values[k] = (c ? res : res[k]);
-              _command(_values,k);
-            }
+          return function(res){
+            addValue(k,c,res);
           }
         }
         if(!_values[k] || _values[k].length < 1){
