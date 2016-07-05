@@ -52,7 +52,8 @@ define(['knockout', 'text!./$Name.html','./$Name.vm','css!./$Name.css'],function
 
     if (typeof define === "function" && define.amd)
     {
-        define('Create$Name',Create$Name);
+        define('Create$Name',function(){return Create$Name;});
+        define([],function(){return Create$Name;})
     }
     else if (typeof module === "object" && module.exports)
     {
