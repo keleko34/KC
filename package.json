@@ -37,10 +37,9 @@
     "gulp-prompt": "^0.1.2",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
-    "sort-stream": "^1.0.1"
-  },
-  "dependencies": {
+    "gulp-search": "^1.0.0",
     "gulp-util": "^3.0.7",
     "js-beautify": "^1.6.3"
-  }
+  },
+  "dependencies": {}
 }

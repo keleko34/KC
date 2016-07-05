@@ -9,12 +9,10 @@ $Description
 [$Name Demo](http://keleko34.github.io/KC/)
 
 ###### Properties
-
-*End Properties*
+<!-- endinject -->
 
 ###### Methods
-
-*End Methods*
+<!-- endinject -->
 
 
 [npm-image]: https://img.shields.io/badge/NPM-0.0.1-green.svg?style=flat-square
