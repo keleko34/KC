@@ -9,6 +9,7 @@ module.exports = {
     base: 'Pages'
   },
   Tasks: {
+    Bower: require('./Tasks/Bower'),
     Task: require('./Tasks/Task'),
     Create: require('./Tasks/Create'),
     Build: require('./Tasks/Build')
