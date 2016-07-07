@@ -17,7 +17,7 @@ define(['crossroads','hasher','text!routes.json'],function(crossroads,hasher,rou
     this.bindings = {};
 
     Object.keys(routes).forEach(function(k,i){
-      self.bindings[k] = ko.observable(self.fetchRoute(k,''));
+      self.bindings[k] = ko.observable(self.fetchRoute(k,'').params);
     });
 
     // Configure Crossroads route handlers
@@ -28,15 +28,11 @@ define(['crossroads','hasher','text!routes.json'],function(crossroads,hasher,rou
 
         conf.forEach(function(route,x){
 
-          /* Set initial page if not set */
-          if(route.url.length < 1){
-            observer(route.params);
-          }
-
           crossroads.addRoute(route.url, function(requestParams){
+
               self.filterRoutes(key,route.url,function(keyRoute,keyName){
                   if(keyRoute){
-                    self.bindings[keyName](ko.utils.extend(requestParams, keyRoute.params));
+                    self.bindings[keyName](ko.utils.extend(JSON.parse(JSON.stringify(requestParams)), keyRoute.params));
                   }
               });
               observer(ko.utils.extend(requestParams, route.params));

@@ -1,7 +1,7 @@
 {
   "Header":[
-    { "url": "", "params": { "page": "progressbar"}},
-    { "url": "progressbar",    "params": { "page": "progressbar" } }
+    { "url": "", "params": { "page": "test"}},
+    { "url": "progressbar",    "params": { "page": "test" } }
   ],
   "Content":[
     { "url": "",    "params": { "page": "progressbar" } },
@@ -9,6 +9,6 @@
   ],
   "Footer":[
     { "url":"", "params": { "page": "progressbar"}},
-    { "url": "progressbar",    "params": { "page": "progressbar" } }
+    { "url": "progressbar",    "params": { "page": "test" } }
   ]
 }
