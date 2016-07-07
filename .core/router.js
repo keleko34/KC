@@ -7,23 +7,67 @@
 // Knockout that requires or even knows about this technique. It's just one of
 // many possible ways of setting up client-side routes.
 
-define(['crossroads','hasher','./routes'],function(crossroads,hasher,routes){
+define(['crossroads','hasher','text!routes.json'],function(crossroads,hasher,routes){
+  routes = JSON.parse(routes);
   function Router(config){
-    this.currentRoute = ko.observable({});
+    var self = this,
+        keys = Object.keys(config);
+
+    this.routes = config;
+    this.bindings = {};
+
+    Object.keys(routes).forEach(function(k,i){
+      self.bindings[k] = ko.observable(self.fetchRoute(k,''));
+    });
 
     // Configure Crossroads route handlers
-    ko.utils.arrayForEach(config.Pages, (function(route){
-        crossroads.addRoute(route.url, (function(requestParams){
-            this.currentRoute(ko.utils.extend(requestParams, route.params));
-        }).bind(this));
-    }).bind(this));
+    keys.forEach(function(key,i){
+      var conf = config[key],
+          observer = self.bindings[key];
 
-    // Activate Crossroads
+
+        conf.forEach(function(route,x){
+
+          /* Set initial page if not set */
+          if(route.url.length < 1){
+            observer(route.params);
+          }
+
+          crossroads.addRoute(route.url, function(requestParams){
+              self.filterRoutes(key,route.url,function(keyRoute,keyName){
+                  if(keyRoute){
+                    self.bindings[keyName](ko.utils.extend(requestParams, keyRoute.params));
+                  }
+              });
+              observer(ko.utils.extend(requestParams, route.params));
+          });
+        });
+    });
+
     crossroads.normalizeFn = crossroads.NORM_AS_OBJECT;
     hasher.initialized.add(hash => crossroads.parse(hash));
     hasher.changed.add(hash => crossroads.parse(hash));
     hasher.init();
   }
+
+  Router.prototype.fetchRoute = function(type,url){
+    for(var x=0;x<this.routes[type].length;x++){
+      if(this.routes[type][x].url === url){
+        return this.routes[type][x];
+      }
+    }
+  }
+
+  Router.prototype.filterRoutes = function(currentRoute,url,cb){
+    var self = this;
+    Object.keys(this.routes).filter(function(k,i){
+      return k !== currentRoute;
+    }).forEach(function(k,i){
+      var route = self.fetchRoute(k,url);
+      cb(route,k);
+    })
+  }
+
 
   // Create and export router instance
   return new Router(routes);

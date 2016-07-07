@@ -1,0 +1,14 @@
+{
+  "Header":[
+    { "url": "", "params": { "page": "progressbar"}},
+    { "url": "progressbar",    "params": { "page": "progressbar" } }
+  ],
+  "Content":[
+    { "url": "",    "params": { "page": "progressbar" } },
+    { "url": "progressbar",    "params": { "page": "progressbar" } }
+  ],
+  "Footer":[
+    { "url":"", "params": { "page": "progressbar"}},
+    { "url": "progressbar",    "params": { "page": "progressbar" } }
+  ]
+}

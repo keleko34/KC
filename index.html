@@ -12,15 +12,15 @@
   </head>
 
   <body>
-    <nav-bar params="route: route"></nav-bar>
-    <div id="page" class="container" data-bind="component: { name: route().page, params: route }"></div>
-
+    <div id="Header" data-bind="component: { name: Header().page, params: Header }"></div>
+    <div id="Content" data-bind="component: { name: Content().page, params: Content }"></div>
+    <div id="Footer" data-bind="component: { name: Footer().page, params: Footer }"></div>
     <!-- build:js -->
       <script src="/.core/require.config.js"></script>
       <script src="/Assets/bower_modules/knockout/dist/knockout.js"></script>
       <script data-main="./.core/init.js" src="/Assets/bower_modules/requirejs/require.js"></script>
     <!-- endbuild -->
-      <a href="#ProgressBar">ProgressBar</a>
+      <a href="#progressbar">ProgressBar</a>
       <progressbar></progressbar>
   </body>
 </html>
