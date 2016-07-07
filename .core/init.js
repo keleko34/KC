@@ -1,6 +1,6 @@
-define(['./overrides', './router'],function(overrides, router){
+define(['./override', './router'],function(override, router){
 
-  overrides.loader();
+  override.loader();
   /* Here we should require the main page */
   require(['Components/ProgressBar/ProgressBar'],function(ProgressBar){
     ko.applyBindings({ route: router.currentRoute });

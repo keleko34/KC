@@ -10,18 +10,29 @@ define(['./ProgressBar.bp', './ProgressBar.vm', 'text!./ProgressBar.html', 'css!
       /* BUILD SECTION */
       /* END BUILD SECTION */
 
+      var vm = {};
       /* Add Private _variables here */
       var _disabled = false,
           _status = '';
 
       function ProgressBar(){
-        /* 'this' in the constructor refers to the viewmodel
+        /* 'vm' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
         /* Update viewmodel properties here */
-        this.mainclass('ProgressBar'
+        vm.mainclass('ProgressBar'
         +(_disabled ? ' ProgressBar--disabled' : '')
         + (_status.length > 0 ? ' ProgressBar--'+_status : ''));
+
+        return ProgressBar;
+      }
+
+      ProgressBar.viewmodel = function(v){
+        if(v === undefined){
+          return vm;
+        }
+        vm = (v instanceof viewmodel ? v : vm);
+        return ProgressBar;
       }
 
       ProgressBar.disabled = function(v){
@@ -36,7 +47,7 @@ define(['./ProgressBar.bp', './ProgressBar.vm', 'text!./ProgressBar.html', 'css!
         if(v === undefined){
           return _status;
         }
-        _status = (typeof v === 'sting' ? v : _status);
+        _status = (typeof v === 'string' ? v : _status);
         return ProgressBar;
       }
 

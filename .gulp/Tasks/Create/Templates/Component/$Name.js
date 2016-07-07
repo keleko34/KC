@@ -13,6 +13,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css'],func
       /* BUILD SECTION */
       /* END BUILD SECTION */
 
+      var vm = {};
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -21,16 +22,24 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css'],func
         */
 
       function $Name(){
-        /* 'this' in the constructor refers to the viewmodel
+        /* 'vm' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
         /* Update viewmodel properties here */
 
         /* ex: updates the class attr with a changed state
          *
-         *   this.mainclass('$Name' + (_example ? ' $Name--'+_example : ''));
+         *   vm.mainclass('$Name' + (_example ? ' $Name--'+_example : ''));
         */
 
+      }
+
+      $Name.viewmodel = function(v){
+        if(v === undefined){
+          return vm;
+        }
+        vm = (v instanceof viewmodel ? v : vm);
+        return $Name;
       }
 
       /* add methods for updating and type checking viewmodel properties */
