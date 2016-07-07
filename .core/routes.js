@@ -1,6 +1,7 @@
 var routes = {
   Pages:[
-
+    { url: '',    params: { page: 'progressbar' } },
+    { url: 'progressbar',    params: { page: 'progressbar' } }
   ]
 }
 

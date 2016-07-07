@@ -1,5 +1,3 @@
-process.argv.push('--silent');
-
 var fs = require('fs'),
     gulp = require('gulp'),
     tasks = [];

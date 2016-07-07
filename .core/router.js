@@ -7,16 +7,16 @@
 // Knockout that requires or even knows about this technique. It's just one of
 // many possible ways of setting up client-side routes.
 
-define(['knockout','crossroads','hasher','./routes'],function(ko,crossroads,hasher,routes){
+define(['crossroads','hasher','./routes'],function(crossroads,hasher,routes){
   function Router(config){
     this.currentRoute = ko.observable({});
 
     // Configure Crossroads route handlers
-    ko.utils.arrayForEach(config.Pages, (route) => {
-        crossroads.addRoute(route.url, (requestParams) => {
+    ko.utils.arrayForEach(config.Pages, (function(route){
+        crossroads.addRoute(route.url, (function(requestParams){
             this.currentRoute(ko.utils.extend(requestParams, route.params));
-        });
-    });
+        }).bind(this));
+    }).bind(this));
 
     // Activate Crossroads
     crossroads.normalizeFn = crossroads.NORM_AS_OBJECT;
@@ -24,6 +24,13 @@ define(['knockout','crossroads','hasher','./routes'],function(ko,crossroads,hash
     hasher.changed.add(hash => crossroads.parse(hash));
     hasher.init();
   }
+  ko.components.register('progressbar',{
+        viewModel:{
+          require: './../Components/ProgressBar/ProgressBar.vm.js'
+        },
+        template:{
+          require: 'text!./../Components/ProgressBar/ProgressBar.html'
+        }});
 
   // Create and export router instance
   return new Router(routes);

@@ -4,6 +4,8 @@ var gulp = require('gulp'),
     config = global.gulp.config;
 
 module.exports = function(res,cb){
+  console.log('\033[36mStarting Dev Build\033[37m');
+
   var _regexDefine = /(define)(.*)(function\()(.*)(\))(.*)(?:{)/,
       _regexDefineEnd = /}\)(?![\s\S]*}\))/m,
       _file = './' + config[res.Type].base + '/'+res.Name+'/'+res.Name+'.js',

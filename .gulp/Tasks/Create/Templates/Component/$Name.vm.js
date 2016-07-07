@@ -1,6 +1,13 @@
-define(['knockout'],function(ko){
+define([],function(){
   function $Name_vm(){
     this.Node_Type = '$Name';
+
+    this.classMain = ko.pureComputed({
+      read:function(){
+        return this.Node_Type; //ad custom classes here
+      },
+      owner:this
+    });
 
     /* Place Properties Here */
 

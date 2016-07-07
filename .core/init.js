@@ -1,3 +1,3 @@
-define(['knockout','./router'],function(ko,router){
+define(['./router'],function(router){
   ko.applyBindings({ route: router.currentRoute });
 });

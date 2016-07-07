@@ -1,18 +1,18 @@
 /*********************************
- *  $Name
- *  Created by $Author
- *  $Description
+ *  ProgressBar
+ *  Created by Keleko34
+ *  Shows the progress of a given event
  ********************************/
 
-define(['text!./$Name.html','./$Name.vm','css!./$Name.css'],function(template,viewmodel){
-	function Create$Name(){
+define(['text!./ProgressBar.html','./ProgressBar.vm','css!./ProgressBar.css'],function(template,viewmodel){
+	function CreateProgressBar(){
 
       /* BUILD SECTION */
       /* END BUILD SECTION */
 
       /* Add Private _variables here */
 
-      function $Name(node){
+      function ProgressBar(node){
         if(node){
           node = (typeof node === 'string' ? document.querySelector(node) : (typeof node === 'object' && node.parentElement !== undefined ? node : null));
           if(!node)
@@ -22,7 +22,7 @@ define(['text!./$Name.html','./$Name.vm','css!./$Name.css'],function(template,vi
               return;
           }
           var fragment = document.createDocumentFragment();
-          fragment.appendChild(document.createElement('$Name'));
+          fragment.appendChild(document.createElement('ProgressBar'));
           node.appendChild(fragment);
         }
 
@@ -33,22 +33,22 @@ define(['text!./$Name.html','./$Name.vm','css!./$Name.css'],function(template,vi
 
       /* add methods for updating and type checking viewmodel properties */
 
-      if(!this.ko.components.isRegistered('$Name'))
+      if(!this.ko.components.isRegistered('ProgressBar'))
       {
-        this.ko.components.register('$Name',{viewModel:viewmodel,template:template});
+        this.ko.components.register('ProgressBar',{viewModel:viewmodel,template:template});
       }
 
-      return $Name;
+      return ProgressBar;
 	}
 
     if (typeof define === "function" && define.amd)
     {
-        define('Create$Name',['knockout'],function(ko){return Create$Name.bind({ko:ko});});
-        define(['knockout'],function(ko){return Create$Name.bind({ko:ko});})
+        define('CreateProgressBar',['knockout'],function(ko){return CreateProgressBar.bind({ko:ko});});
+        define(['knockout'],function(ko){return CreateProgressBar.bind({ko:ko});})
     }
     else if (typeof module === "object" && module.exports)
     {
-        module.exports = Create$Name;
+        module.exports = CreateProgressBar;
     }
-	return Create$Name;
+	return CreateProgressBar;
 });

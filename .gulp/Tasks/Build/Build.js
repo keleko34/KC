@@ -1,15 +1,13 @@
 /* Gulp Modules */
 var gulp = require('gulp'),
-    env = {
-      dev:require('./Subtasks/Dev'),
-      qa:require('./Subtasks/Qa'),
-      stage:require('./Subtasks/Stage'),
-      prod:require('./Subtasks/Prod')
-    },
-    base = require('./../../Base')
-
-  /* File and Stream Modules */
-  , fs = require('fs'),
+    env = [
+      {name:'dev',task:require('./Subtasks/Dev')},
+      {name:'qa',task:require('./Subtasks/Qa')},
+      {name:'stage',task:require('./Subtasks/Stage')},
+      {name:'prod',task:require('./Subtasks/Prod')},
+    ],
+    base = require('./../../Base'),
+    fs = require('fs'),
     currentEnv = 0;
 
 var config = global.gulp.config;
@@ -31,14 +29,20 @@ module.exports = function(){
     }
   }
 
+  function filterEnv(e){
+    return env.filter(function(k,i){
+      return (k.name === e);
+    });
+  }
+
   function commandCallback(res){
     return function(){
       currentEnv += 1;
-      if(Object.keys(env)[currentEnv] === res.Environment){
-        env[Object.keys(env)[currentEnv]](res,finished(res))
+      if(env[currentEnv].name === res.Environment){
+        filterEnv(env[currentEnv].name)[0].task(res,finished(res));
       }
       else{
-        env[Object.keys(env)[currentEnv]](res,commandCallback(res));
+        filterEnv(env[currentEnv].name)[0].task(res,commandCallback(res));
       }
     }
   }
@@ -66,7 +70,7 @@ module.exports = function(){
 
   function Command(res){
     console.log('\033[36mStarting to compile:\033[37m',res.Name,' \033[36mFor \033[37m',res.Environment,' \033[36menvironment\033[37m');
-    return env[Object.keys(env)[currentEnv]](res,(Object.keys(env)[currentEnv] === res.Environment ? finished(res) : commandCallback(res)));
+    return filterEnv(env[currentEnv].name)[0].task(res,(env[currentEnv].name === res.Environment ? finished(res) : commandCallback(res)));
   }
 
 

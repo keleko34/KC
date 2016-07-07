@@ -16,9 +16,11 @@
     <div id="page" class="container" data-bind="component: { name: route().page, params: route }"></div>
 
     <!-- build:js -->
-      <script src="../.core/require.config.js"></script>
-      <script data-main="./../.core/init.js" src="../Assets/bower_modules/requirejs/require.js"></script>
+      <script src="/.core/require.config.js"></script>
+      <script src="/Assets/bower_modules/knockout/dist/knockout.js"></script>
+      <script data-main="./.core/init.js" src="/Assets/bower_modules/requirejs/require.js"></script>
     <!-- endbuild -->
       <a href="#ProgressBar">ProgressBar</a>
+      <progressbar></progressbar>
   </body>
 </html>
