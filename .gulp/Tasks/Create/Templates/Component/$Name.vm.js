@@ -1,27 +1,19 @@
 define([],function(){
   function $Name_vm(){
     this.Node_Type = '$Name';
-
-    this.classMain = ko.pureComputed({
-      read:function(){
-        return this.Node_Type; //ad custom classes here
-      },
-      owner:this
-    });
+    this.mainclass = ko.observable('$Name');
 
     /* Place Properties Here */
 
+    /* important! this is what ties this viewmodel to the main class,
+     * whenever a new vm is made it calls its constructor which is the
+     * main class constructor */
+    this.methods = this.constructor();
+
+    this.methods.call();
   }
 
   /* Place Prototypes here */
 
-  if (typeof define === "function" && define.amd)
-  {
-    define('Create$Name',$Name_vm);
-  }
-  else if (typeof module === "object" && module.exports)
-  {
-    module.exports = $Name_vm;
-  }
   return $Name_vm;
 })

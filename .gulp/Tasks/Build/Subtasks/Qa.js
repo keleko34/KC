@@ -12,7 +12,8 @@ module.exports = function(res,cb){
     .pipe(gulp.dest('./' + config[res.Type].base + '/'+res.Name + '/' + res.Environment))
     .pipe(closureCompiler({
       compilerPath:"./compiler.jar",
-      fileName:res.Name+".min.js"
+      fileName:res.Name+".min.js",
+      warning_level: 'QUIET'
     }))
     .pipe(gulp.dest('./' + config[res.Type].base + '/' + res.Name + '/'  + res.Environment));
 

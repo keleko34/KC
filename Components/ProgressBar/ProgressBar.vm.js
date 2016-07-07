@@ -1,41 +1,16 @@
 define([],function(){
-
   function ProgressBar_vm(){
-    var _disabled = false,
-        _status = '';
+    this.Node_Type = 'ProgressBar';
+    this.mainclass = ko.observable('ProgressBar');
 
     /* Place Properties Here */
-    this.Node_Type = 'ProgressBar';
 
-    this.classMain = ko.pureComputed(function(){
-      this.disabled(); //what the heck ko??? what is the subscriber crap?
-      this.status();
-        return this.Node_Type + ' '
-        + (_disabled ? 'ProgressBar--disabled ' : '')
-        + (_status.length > 0 ? 'ProgressBar--'+_status : '');
-    },this);
+    /* important! this is what ties this viewmodel to the main class,
+     * whenever a new vm is made it calls its constructor which is the
+     * main class constructor */
+    this.methods = this.constructor();
 
-    this.disabled = ko.pureComputed({
-      read:function(){
-        return _disabled;
-      },
-      write:function(v){
-        _disabled = !!v;
-        this.disabled.notifySubscribers();
-      },
-      owner:this
-    });
-
-    this.status = ko.pureComputed({
-      read:function(){
-        return _status;
-      },
-      write:function(v){
-        _status = (typeof v === 'string' ? v : _status);
-        this.status.notifySubscribers();
-      },
-      owner:this
-    });
+    this.methods.call();
   }
 
   /* Place Prototypes here */

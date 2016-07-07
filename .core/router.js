@@ -24,13 +24,6 @@ define(['crossroads','hasher','./routes'],function(crossroads,hasher,routes){
     hasher.changed.add(hash => crossroads.parse(hash));
     hasher.init();
   }
-  ko.components.register('progressbar',{
-        viewModel:{
-          require: './../Components/ProgressBar/ProgressBar.vm.js'
-        },
-        template:{
-          require: 'text!./../Components/ProgressBar/ProgressBar.html'
-        }});
 
   // Create and export router instance
   return new Router(routes);

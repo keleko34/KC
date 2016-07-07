@@ -1,3 +1,5 @@
 define(['./router'],function(router){
-  ko.applyBindings({ route: router.currentRoute });
+  require(['Components/ProgressBar/ProgressBar'],function(ProgressBar){
+    ko.applyBindings({ route: router.currentRoute });
+  })
 });

@@ -11,6 +11,12 @@ Shows the progress of a given event
 ###### Properties
 Node_Type (*Type*)<br />
 **Description**
+
+mainclass (*Type*)<br />
+**Description**
+
+methods (*Type*)<br />
+**Description**
 <!-- endinject -->
 
 ###### Methods

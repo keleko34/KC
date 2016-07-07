@@ -4,7 +4,7 @@
  *  $Description
  ********************************/
 
-define(['text!./$Name.html','./$Name.vm','css!./$Name.css'],function(template,viewmodel){
+define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css'],function(blueprint, viewmodel, template){
 	function Create$Name(){
 
       /* BUILD SECTION */
@@ -12,43 +12,17 @@ define(['text!./$Name.html','./$Name.vm','css!./$Name.css'],function(template,vi
 
       /* Add Private _variables here */
 
-      function $Name(node){
-        if(node){
-          node = (typeof node === 'string' ? document.querySelector(node) : (typeof node === 'object' && node.parentElement !== undefined ? node : null));
-          if(!node)
-          {
-              console.error('you have passed an invalid node into Input: ',node);
-              console.error('stack: ',new Error().stack);
-              return;
-          }
-          var fragment = document.createDocumentFragment();
-          fragment.appendChild(document.createElement('$Name'));
-          node.appendChild(fragment);
-        }
+      function $Name(){
+        /* 'this' in the constructor refers to the viewmodel
+         * whenever you update something in code always call the constructor for updating the viewmodel */
 
         /* Update viewmodel properties here */
-
-        this.ko.applyBindings(viewmodel);
       }
 
       /* add methods for updating and type checking viewmodel properties */
 
-      if(!this.ko.components.isRegistered('$Name'))
-      {
-        this.ko.components.register('$Name',{viewModel:viewmodel,template:template});
-      }
-
       return $Name;
 	}
-
-    if (typeof define === "function" && define.amd)
-    {
-        define('Create$Name',['knockout'],function(ko){return Create$Name.bind({ko:ko});});
-        define(['knockout'],function(ko){return Create$Name.bind({ko:ko});})
-    }
-    else if (typeof module === "object" && module.exports)
-    {
-        module.exports = Create$Name;
-    }
+    blueprint.register_$Name(Create$Name,viewmodel,template);
 	return Create$Name;
 });

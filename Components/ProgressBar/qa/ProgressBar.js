@@ -1,28 +1,1 @@
-/********************************* *  ProgressBar *  Created by Keleko34 *  Shows the progress of a given event ********************************/var CreateProgressBar = (function(){	function CreateProgressBar(){      /* BUILD SECTION */
-            var template = "<!-- ProgressBar html -->";            var viewmodel = (function(){              function ProgressBar_vm(){                this.Node_Type = 'ProgressBar';                /* Place Properties Here */              }              /* Place Prototypes here */              if (typeof define === "function" && define.amd)              {                define('CreateProgressBar',ProgressBar_vm);              }              else if (typeof module === "object" && module.exports)              {                module.exports = ProgressBar_vm;              }              return ProgressBar_vm;            }());      /* END BUILD SECTION */
-      /* Add Private _variables here */
-      function ProgressBar(node){
-        if(node){
-          node = (typeof node === 'string' ? document.querySelector(node) : (typeof node === 'object' && node.parentElement !== undefined ? node : null));
-          if(!node)
-          {
-              console.error('you have passed an invalid node into Input: ',node);
-              console.error('stack: ',new Error().stack);
-              return;
-          }
-          var fragment = document.createDocumentFragment();
-          fragment.appendChild(document.createElement('ProgressBar'));
-          node.appendChild(fragment);
-        }
-        /* Update viewmodel properties here */
-        this.ko.applyBindings(viewmodel);
-      }
-      /* add methods for updating and type checking viewmodel properties */
-      if(!this.ko.components.isRegistered('ProgressBar'))
-      {
-        this.ko.components.register('ProgressBar',{viewModel:viewmodel,template:template});
-      }
-      return ProgressBar;
-	}    if (typeof define === "function" && define.amd)    {        define('CreateProgressBar',['knockout'],function(ko){return CreateProgressBar.bind({ko:ko});});
-        define(['knockout'],function(ko){return CreateProgressBar.bind({ko:ko});})
-    }    else if (typeof module === "object" && module.exports)    {        module.exports = CreateProgressBar;    }	return CreateProgressBar;}());
+/********************************* *  ProgressBar *  Created by Keleko34 *  Shows the progress of a given event ********************************/var CreateProgressBar = (function(){	function CreateProgressBar(){      /* BUILD SECTION */            var template = "<!-- ProgressBar html -->";            var viewmodel = (function(){              function ProgressBar_vm(){                this.Node_Type = 'ProgressBar';                this.mainclass = ko.observable('ProgressBar');                /* Place Properties Here */                /* important! this is what ties this viewmodel to the main class,                  * whenever a new vm is made it calls its constructor which is the                 * main class constructor */                this.methods = this.constructor();                this.methods.call();              }              /* Place Prototypes here */              return ProgressBar_vm;            }());            /* BluePrint Include */            var blueprint = {            register_ProgressBar:function register_ProgressBar(CreateProgressBar,viewModel,template){              if(typeof define === 'function' && define.amd){                define('CreateProgressBar',[],function(){return CreateProgressBar});                define([],function(){return CreateProgressBar;});              }              else if(typeof module === "object" && module.exports){                module.exports = CreateProgressBar;              }              viewmodel.prototype.constructor = CreateProgressBar;              if(ko && !ko.components.isRegistered('ProgressBar')){                ko.components.register('ProgressBar',{viewModel:viewmodel,template:template});              }            }            }            /* End Blueprint Include */      /* END BUILD SECTION */      /* Add Private _variables here */      function ProgressBar(){        /* 'this' in the constructor refers to the viewmodel         * whenever you update something in code always call the constructor for updating the viewmodel */        /* Update viewmodel properties here */      }      /* add methods for updating and type checking viewmodel properties */      return ProgressBar;	}    blueprint.register_ProgressBar(CreateProgressBar,viewmodel,template);	return CreateProgressBar;}());
