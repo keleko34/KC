@@ -10,7 +10,7 @@ define([],function(){
      * main class constructor */
     this.methods = this.constructor();
 
-    this.methods.call();
+    this.methods();
   }
 
   /* Place Prototypes here */

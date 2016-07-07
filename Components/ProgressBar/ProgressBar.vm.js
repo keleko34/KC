@@ -1,6 +1,8 @@
 define([],function(){
-  function ProgressBar_vm(){
+  function ProgressBar_vm(params,element){
     this.Node_Type = 'ProgressBar';
+    this.params = params;
+    this.Node = element;
     this.mainclass = ko.observable('ProgressBar');
 
     /* Place Properties Here */
@@ -10,7 +12,7 @@ define([],function(){
      * main class constructor */
     this.methods = this.constructor();
 
-    this.methods.call();
+    this.methods();
   }
 
   /* Place Prototypes here */
