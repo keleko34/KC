@@ -7,7 +7,7 @@ var config = global.gulp.config;
 
 module.exports = function(){
 
-  function Exists(res,key){
+  function Exists(key,res){
     if(res.Type !== undefined && key === 'Name'){
       try
       {
@@ -34,10 +34,23 @@ module.exports = function(){
 
       for(var x=0;x<resKeys.length;x++){
         var k = resKeys[x],
-            reg = new RegExp("(\\$" + k + ")",'g');
-
-        template = template.replace(reg,res[k]);
-        f = f.replace(reg,res[k]);
+            v = res[k];
+        if(typeof v === 'object'){
+          /* Regex master skills */
+          var repeatReplace = new RegExp("(\\$" + k + "\\[x\\]\\((.*?)\\))",'g'),
+              xreplace = new RegExp("\\$x",'g');
+          for(var i=0;i<v.length;i++){
+            /* Iterator replacement for arrays, YAY!!!! */
+            template = template.replace(repeatReplace,(new Array(v.length).join("$2"))).replace(xreplace,v[i]);
+            var reg = new RegExp("(\\$" + k + "\\[" + i + "\\])",'g');
+            template = template.replace(reg,res[k]);
+          }
+        }
+        else{
+          var reg = new RegExp("(\\$" + k + ")",'g');
+          template = template.replace(reg,res[k]);
+          f = f.replace(reg,res[k]);
+        }
       }
       file('./'+f,template,{src:true})
       .pipe(gulp.dest('./'+ config[res.Type].base + '/' + res.Name));

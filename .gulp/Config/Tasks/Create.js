@@ -1,3 +1,5 @@
+var fs = require('fs')
+
 module.exports = {
       commands:{
         Type:{
@@ -8,8 +10,39 @@ module.exports = {
           prompt:{
             type:'list',
             message:'What type of template would You like to create?',
-            choices:['Component','Section','Page']
+            choices:function(){
+              return fs.readdirSync('./.gulp/Tasks/Create/Templates');
+            }
+          },
+          action:function(v){
+            if(v === 'Section'){
+              return 'AddComponent';
+            }
+            return 'Name';
           }
+        },
+        Add:{
+          prompt:{
+            type:'confirm',
+            message:'Would You like to add a Component to this Section?'
+          },
+          action:function(v){
+            if(v){
+              return 'Components';
+            }
+            return 'Name';
+          }
+        },
+        Components:{
+          prompt:{
+            type:'list',
+            message:'Which Component would you like to add?',
+            choices:function(){
+              return fs.readdirSync('./Components');
+            }
+          },
+          action:'Add',
+          store:'array'
         },
         Name:{
           cmd:{
@@ -19,7 +52,8 @@ module.exports = {
           prompt:{
             type:'input',
             message:'What would You like to name this?'
-          }
+          },
+          action:'Description'
         },
         Description:{
           cmd:{
@@ -29,7 +63,8 @@ module.exports = {
           prompt:{
             type:'input',
             message:'Please write a brief description of this element'
-          }
+          },
+          action:'Author'
         },
         Author:{
           cmd:{
@@ -39,7 +74,8 @@ module.exports = {
           prompt:{
             type:'input',
             message:'Initial Author of this Element?'
-          }
+          },
+          action:'Run'
         }
       }
     }

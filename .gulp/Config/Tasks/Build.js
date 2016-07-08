@@ -1,3 +1,5 @@
+var fs = require('fs')
+
 module.exports = {
   commands:{
     Type:{
@@ -15,7 +17,9 @@ module.exports = {
       prompt:{
         type:'list',
         message:'Which element would you like to build?',
-        choices:[]
+        choices:function(){
+          return fs.readdirSync('./Components');
+        }
       }
     },
     Environment:{
