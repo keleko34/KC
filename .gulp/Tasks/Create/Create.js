@@ -38,10 +38,17 @@ module.exports = function(){
         if(typeof v === 'object'){
           /* Regex master skills */
           var repeatReplace = new RegExp("(\\$" + k + "\\[x\\]\\((.*?)\\))",'g'),
-              xreplace = new RegExp("\\$x",'g');
+              xreplace = new RegExp("(\\$x)",'g');
+
+          /* awesome iterator replacement */
+          template = template.replace(repeatReplace,function(a,b,c){
+            return v.map(function(k,i){
+                return c.replace(xreplace,k);
+            }).join();
+          });
+
+
           for(var i=0;i<v.length;i++){
-            /* Iterator replacement for arrays, YAY!!!! */
-            template = template.replace(repeatReplace,(new Array(v.length).join("$2"))).replace(xreplace,v[i]);
             var reg = new RegExp("(\\$" + k + "\\[" + i + "\\])",'g');
             template = template.replace(reg,res[k]);
           }
