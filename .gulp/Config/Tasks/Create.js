@@ -16,18 +16,6 @@ module.exports = {
           },
           action:function(v){
             if(v === 'Section'){
-              return 'Add';
-            }
-            return 'Name';
-          }
-        },
-        Add:{
-          prompt:{
-            type:'confirm',
-            message:'Would You like to add a Component to this Section?'
-          },
-          action:function(v){
-            if(v){
               return 'Components';
             }
             return 'Name';
@@ -40,14 +28,14 @@ module.exports = {
             choices:function(values){
               return fs.readdirSync('./Components').filter(function(k,i){
                 return (!values.Components ? true : values.Components.indexOf(k) < 0)
-              });
+              }).concat('none');
             }
           },
           action:function(v,values){
-            if(fs.readdirSync('./Components').filter(function(k,i){return (values.Components.indexOf(k) < 0)}).length === 0){
+            if(fs.readdirSync('./Components').filter(function(k,i){return (values.Components.indexOf(k) < 0)}).length === 0 || v === 'none'){
               return 'Name';
             }
-            return 'Add';
+            return 'Components';
           },
           store:'array'
         },

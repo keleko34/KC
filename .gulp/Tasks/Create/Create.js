@@ -36,6 +36,9 @@ module.exports = function(){
         var k = resKeys[x],
             v = res[k];
         if(typeof v === 'object'){
+          if(v.indexOf('none') > -1){
+            v.splice(v.indexOf('none'),1);
+          }
           /* Regex master skills */
 
           var repeatReplace = new RegExp("(\\$" + k + "\\[x\\])(\\(([^()]*|\\(([^()]*|\\([^()]*\\))*\\))*\\))",'g'),

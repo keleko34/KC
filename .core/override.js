@@ -3,6 +3,10 @@ define([],function(){
   /* This overrides the components loader so that an element is attached the viewmodel and the viewmodel is atached to the element */
   function loader(){
 
+    ko.bindingProvider.instance.preprocessNode = function(node) {
+      console.log(node);
+    }
+
     ko.components.loaders.unshift({
       loadViewModel: function (name, viewModelConfig, callback) {
         if (typeof viewModelConfig === "function") {

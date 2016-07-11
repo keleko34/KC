@@ -6,7 +6,7 @@
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./Upload.bp', './Upload.vm', 'text!./Upload.html', 'css!./Upload.css' , './../../Components/ProgressBar/ProgressBar'],function(blueprint, viewmodel, template){
+define(['./Upload.bp', './Upload.vm', 'text!./Upload.html', 'css!./Upload.css'],function(blueprint, viewmodel, template){
 
 	function CreateUpload(){
 

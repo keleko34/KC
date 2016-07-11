@@ -8,7 +8,8 @@ module.exports = {
       prompt: {
         type: "input",
         message: "Please enter a port for the server to use"
-      }
+      },
+      action:'Reload'
     },
     Reload: {
       cmd: {
@@ -18,7 +19,8 @@ module.exports = {
       prompt: {
         type: "confirm",
         message: "Would You like to turn on livereload?"
-      }
+      },
+      action:'Root'
     },
     Root: {
       cmd: {
@@ -28,7 +30,8 @@ module.exports = {
       prompt: {
         type: "input",
         message: "Please specify a root filepath"
-      }
+      },
+      action:'end'
     }
   }
 }
