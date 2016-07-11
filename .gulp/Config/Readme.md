@@ -58,6 +58,8 @@ When you add a command to the `commands` property it should be structured as:
  * Default 'string' *
  ** store tells how to store the values in the values object, either 'string' which then stores Key value pair eg. 'Name of command':value or 'array' which specifies and array of multiple values due to the command being run multiple times eg. 'Name of command':[value1,value2,etc...] **
  
+ - overwrite
+ ** allows for overwriting the value prior to being set with a function **
  
  ##### Mapping in Create task
  

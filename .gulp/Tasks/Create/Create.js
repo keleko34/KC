@@ -58,6 +58,9 @@ module.exports = function(){
           template = template.replace(reg,res[k]);
           f = f.replace(reg,res[k]);
         }
+        template = template.replace(/(\$(.*?)\[x\]\((.*?)\)/g,'');
+        template = template.replace(/(\$(.*?)\[(.*?)\]/g,'');
+        template = template.replace(/(\$(.*?)/g,'');
       }
       file('./'+f,template,{src:true})
       .pipe(gulp.dest('./'+ config[res.Type].base + '/' + res.Name));

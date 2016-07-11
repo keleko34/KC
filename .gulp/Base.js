@@ -101,12 +101,12 @@ module.exports = (function(){
       if(_values[commandName] === undefined){
         _values[commandName] = [];
       }
-      _values[commandName].push(res);
+      _values[commandName].push((typeof options.overwrite === 'function' ? options.overwrite(res) : res));
     }
 
     /* else we just set the value straight up */
     else{
-      _values[commandName] = res;
+      _values[commandName] = (typeof options.overwrite === 'function' ? options.overwrite(res) : res);
     }
 
     /* here we allow the task to filter the current values set and do something based on that */

@@ -42,7 +42,10 @@ module.exports = {
             }
           },
           action:'Add',
-          store:'array'
+          store:'array',
+          overwrite:function(k){
+            return ','+' ./Components/'+k+'/'+k;
+          }
         },
         Name:{
           cmd:{
