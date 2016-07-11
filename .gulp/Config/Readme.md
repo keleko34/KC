@@ -1,6 +1,6 @@
 # Task Configs
 
-##### Main config
+### Main config
 
  - Base<br />
  __This holds the base folder structure for templates and where to look for files for each__
@@ -8,13 +8,13 @@
  - Tasks<br />
  __This holds all the individual task configs__
  
-##### Task configs
+### Task configs
 
  - commands<br />
  __This holds all commands to be run when this task is ran__
  
  
-###### Command Structure
+### Command Structure
 
 When you add a command to the `commands` property it should be structured as:
 
@@ -37,7 +37,7 @@ When you add a command to the `commands` property it should be structured as:
  __This name is what will be used as a key when passed, as well as in create is used as the $(Name of command) for string replacement__
  
  - cmd<br />
- *Optional*
+ *Optional*<br />
  __cmd can only be used with store types of string atm, these commands get auto populated into the --options list when added__<br />
  *NOTE when something like a message is needed remember that mesages have spaces and must be wrapped in "Message" to escape spaces in the cli*
  
@@ -62,7 +62,7 @@ When you add a command to the `commands` property it should be structured as:
  - overwrite<br />
  __allows for overwriting the value prior to being set with a function__
  
- ##### Mapping in Create task
+ ### Mapping in Create task
  
  __String__
  
