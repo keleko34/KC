@@ -1,14 +1,14 @@
 {
   "Header":[
-    { "url": "", "params": { "page": "test"}},
-    { "url": "progressbar",    "params": { "page": "test" } }
+    { "url": "", "params": { "page": "upload"}},
+    { "url": "progressbar",    "params": { "page": "upload" } }
   ],
   "Content":[
-    { "url": "",    "params": { "page": "progressbar" } },
-    { "url": "progressbar",    "params": { "page": "progressbar" } }
+    { "url": "",    "params": { "page": "upload" } },
+    { "url": "progressbar",    "params": { "page": "upload" } }
   ],
   "Footer":[
-    { "url":"", "params": { "page": "progressbar"}},
-    { "url": "progressbar",    "params": { "page": "test" } }
+    { "url":"", "params": { "page": "upload"}},
+    { "url": "progressbar",    "params": { "page": "upload" } }
   ]
 }

@@ -1,6 +1,6 @@
 /*********************************
- *  Test
- *  Created by Me
+ *  Upload
+ *  Created by Keleko34
  *  This file is a blueprint that registers the
  *  component with requirejs, knockoutjs and commonjs
  ********************************/
@@ -10,28 +10,27 @@ if (typeof define === "function" && define.amd)
 {
   define([],function(){
     return {
-      register_Test:register_Test
+      register_Upload:register_Upload
     }
   });
 }
 else if (typeof module === "object" && module.exports)
 {
     module.exports = {
-      register_Test:register_Test
+      register_Upload:register_Upload
     }
 }
 
 /* This method is the method that will be put into the main file when it is compiled during dev build */
-function register_Test(CreateTest,viewmodel,template){
+function register_Upload(CreateUpload,viewmodel,template){
   if(typeof define === 'function' && define.amd){
-    define('CreateTest',[],function(){return CreateTest});
-    define([],function(){return CreateTest;});
+    define('CreateUpload',[],function(){return CreateUpload});
   }
   else if(typeof module === "object" && module.exports){
-    module.exports = CreateTest;
+    module.exports = CreateUpload;
   }
-  viewmodel.prototype.constructor = CreateTest;
-  if(ko && !ko.components.isRegistered(('Test').toLowerCase())){
-    ko.components.register(('Test').toLowerCase(),{viewModel:viewmodel,template:template});
+  viewmodel.prototype.constructor = CreateUpload;
+  if(ko && !ko.components.isRegistered(('Upload').toLowerCase())){
+    ko.components.register(('Upload').toLowerCase(),{viewModel:viewmodel,template:template});
   }
 }

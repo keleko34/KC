@@ -11,9 +11,9 @@ module.exports = function(){
     if(res.Type !== undefined && key === 'Name'){
       try
       {
-        var exists = fs.statSync('./' + config[res.Type].base + '/' + res.Name);
+        var exists = fs.statSync('./' + config.Base[res.Type] + '/' + res.Name);
         if(exists){
-          console.error('\033[31mThere is already something by the name: \033[37m',res.Name,' in ',config[res.Type].base);
+          console.error('\033[31mThere is already something by the name: \033[37m',res.Name,' in ',config.Base[res.Type]);
           process.exit(1);
         }
       }
@@ -37,16 +37,17 @@ module.exports = function(){
             v = res[k];
         if(typeof v === 'object'){
           /* Regex master skills */
-          var repeatReplace = new RegExp("(\\$" + k + "\\[x\\]\\((.*?)\\))",'g'),
+
+          var repeatReplace = new RegExp("(\\$" + k + "\\[x\\])(\\(([^()]*|\\(([^()]*|\\([^()]*\\))*\\))*\\))",'g'),
               xreplace = new RegExp("(\\$x)",'g');
 
           /* awesome iterator replacement */
           template = template.replace(repeatReplace,function(a,b,c){
+            c = c.substring(1,c.length-1);
             return v.map(function(k,i){
                 return c.replace(xreplace,k);
-            }).join();
+            }).join('');
           });
-
 
           for(var i=0;i<v.length;i++){
             var reg = new RegExp("(\\$" + k + "\\[" + i + "\\])",'g');
@@ -58,12 +59,12 @@ module.exports = function(){
           template = template.replace(reg,res[k]);
           f = f.replace(reg,res[k]);
         }
-        template = template.replace(/(\$(.*?)\[x\]\((.*?)\)/g,'');
-        template = template.replace(/(\$(.*?)\[(.*?)\]/g,'');
-        template = template.replace(/(\$(.*?)/g,'');
       }
+      template = template.replace(/(\$(.*?)\[x\]\((.*?)\))/g,'');
+      template = template.replace(/(\$(.*?)\[(.*?)\])/g,'');
+      template = template.replace(/(\$(.*?))/g,'');
       file('./'+f,template,{src:true})
-      .pipe(gulp.dest('./'+ config[res.Type].base + '/' + res.Name));
+      .pipe(gulp.dest('./'+ config.Base[res.Type] + '/' + res.Name));
     });
   };
 

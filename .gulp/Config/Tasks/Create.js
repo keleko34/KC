@@ -16,7 +16,7 @@ module.exports = {
           },
           action:function(v){
             if(v === 'Section'){
-              return 'AddComponent';
+              return 'Add';
             }
             return 'Name';
           }
@@ -37,15 +37,19 @@ module.exports = {
           prompt:{
             type:'list',
             message:'Which Component would you like to add?',
-            choices:function(){
-              return fs.readdirSync('./Components');
+            choices:function(values){
+              return fs.readdirSync('./Components').filter(function(k,i){
+                return (!values.Components ? true : values.Components.indexOf(k) < 0)
+              });
             }
           },
-          action:'Add',
-          store:'array',
-          overwrite:function(k){
-            return ','+' ./Components/'+k+'/'+k;
-          }
+          action:function(v,values){
+            if(fs.readdirSync('./Components').filter(function(k,i){return (values.Components.indexOf(k) < 0)}).length === 0){
+              return 'Name';
+            }
+            return 'Add';
+          },
+          store:'array'
         },
         Name:{
           cmd:{
@@ -78,7 +82,7 @@ module.exports = {
             type:'input',
             message:'Initial Author of this Element?'
           },
-          action:'Run'
+          action:'end'
         }
       }
     }

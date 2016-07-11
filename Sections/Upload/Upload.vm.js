@@ -1,8 +1,8 @@
 define([],function(){
-  function Test_vm(params,element){
-    this.Node_Type = 'Test';
+  function Upload_vm(params,element){
+    this.Node_Type = 'Upload';
     this.Node = element;
-    this.mainclass = ko.observable('Test');
+    this.mainclass = ko.observable('Upload');
 
     /* Place Properties Here */
 
@@ -16,5 +16,5 @@ define([],function(){
 
   /* Place Prototypes here */
 
-  return Test_vm;
+  return Upload_vm;
 })

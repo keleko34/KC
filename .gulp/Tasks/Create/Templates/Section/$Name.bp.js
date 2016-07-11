@@ -25,7 +25,6 @@ else if (typeof module === "object" && module.exports)
 function register_$Name(Create$Name,viewmodel,template){
   if(typeof define === 'function' && define.amd){
     define('Create$Name',[],function(){return Create$Name});
-    define([],function(){return Create$Name;});
   }
   else if(typeof module === "object" && module.exports){
     module.exports = Create$Name;

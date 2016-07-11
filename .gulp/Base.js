@@ -35,9 +35,6 @@ module.exports = (function(){
 
   /* runs the given command based on the name */
   function runCommand(commandName,options){
-    /* check if value hasnt already been set, or value type is an array */
-    if(_values[commandName] === undefined || _values[commandName].constructor.toString() === Array.toString()){
-
       /* set prompt options */
       _prompts[commandName] = {
         name:commandName,
@@ -47,31 +44,34 @@ module.exports = (function(){
 
       /* if type is list set choices option for prompt */
       if(options.prompt.type === 'list'){
-        _prompts[commandName].choices = (typeof options.prompt.choices === 'function' ? options.prompt.choices() : options.prompt.choices);
+        _prompts[commandName].choices = (typeof options.prompt.choices === 'function' ? options.prompt.choices(_values) : options.prompt.choices);
       }
 
       /* Run gulp prompt command */
       _gulp = _gulp.pipe(prompt.prompt(_prompts[commandName],method(commandName,options)));
-    }
   }
 
   /* This method acts as a filter for which command to run next based on the action property */
   function toCommand(commandName,action){
 
     /* exit process on command action of 'exit' */
-    if(action === 'exit'){
+    if(action.toLowerCase() === 'exit'){
       console.error('Exiting process due to command; ',commandName);
       process.exit(1);
     }
 
     /* go to final task command with values upon seeing an 'end' action */
-    else if(action === 'end'){
+    else if(action.toLowerCase() === 'end'){
       _command(_values);
     }
 
     /* go the the next command specified in 'action' */
     else{
       _currentTaskCommand = action;
+      if(_taskCommands[_currentTaskCommand] === undefined){
+        console.error('No command exists by the name of ',_currentTaskCommand);
+        process.exit(1);
+      }
       runCommand(_currentTaskCommand,_taskCommands[_currentTaskCommand]);
     }
   }
@@ -106,23 +106,24 @@ module.exports = (function(){
 
     /* else we just set the value straight up */
     else{
+
       _values[commandName] = (typeof options.overwrite === 'function' ? options.overwrite(res) : res);
     }
 
     /* here we allow the task to filter the current values set and do something based on that */
-    _filter(comandName,_values,function(action){
-      if(action === 'exit'){
+    _filter(commandName,_values,function(action){
+      if(action.toLowerCase() === 'exit'){
         toCommand(commandName,action);
       }
     });
 
-    toCommand(commandName,(typeof options.acton === 'function' ? options.action(res) : options.action));
+    toCommand(commandName,(typeof options.action === 'function' ? options.action(res,_values) : options.action));
   }
 
   function Base(){
 
     /* Grab all the commands from the config */
-    _taskCommands = config.Tasks[_task];
+    _taskCommands = config.Tasks[_task].commands;
 
     /* check if this task even exists in the config */
     if(_taskCommands === undefined){

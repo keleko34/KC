@@ -1,13 +1,14 @@
 /*********************************
- *  Test
- *  Created by Me
- *  To test routes
+ *  Upload
+ *  Created by Keleko34
+ *  This section is for uploading files
  ********************************/
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./Test.bp', './Test.vm', 'text!./Test.html', 'css!./Test.css'],function(blueprint, viewmodel, template){
-	function CreateTest(){
+define(['./Upload.bp', './Upload.vm', 'text!./Upload.html', 'css!./Upload.css' , './../../Components/ProgressBar/ProgressBar'],function(blueprint, viewmodel, template){
+
+	function CreateUpload(){
 
       /* Do not remove!!! */
       /* BUILD SECTION */
@@ -21,7 +22,7 @@ define(['./Test.bp', './Test.vm', 'text!./Test.html', 'css!./Test.css'],function
          *   var _example = '';
         */
 
-      function Test(){
+      function Upload(){
         /* 'vm' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
@@ -29,34 +30,34 @@ define(['./Test.bp', './Test.vm', 'text!./Test.html', 'css!./Test.css'],function
 
         /* ex: updates the class attr with a changed state
          *
-         *   vm.mainclass('Test' + (_example ? ' Test--'+_example : ''));
+         *   vm.mainclass('Upload' + (_example ? ' Upload--'+_example : ''));
         */
 
       }
 
-      Test.viewmodel = function(v){
+      Upload.viewmodel = function(v){
         if(v === undefined){
           return vm;
         }
         vm = (v instanceof viewmodel ? v : vm);
-        return Test;
+        return Upload;
       }
 
       /* add methods for updating and type checking viewmodel properties */
 
       /* ex: functional property, returns value if nothing, sets if value is string
          *
-         *   Test.example = function(v){
+         *   Upload.example = function(v){
          *     if(v === undefined){
          *        return _example;
          *     }
          *     _example = (typeof v === 'string' ? v : _example);
-         *     return Test;
+         *     return Upload;
          *   }
         */
 
-      return Test;
+      return Upload;
 	}
-    blueprint.register_Test(CreateTest,viewmodel,template);
-	return CreateTest;
+    blueprint.register_Upload(CreateUpload,viewmodel,template);
+	return CreateUpload;
 });
