@@ -18,20 +18,20 @@
 
 When you add a command to the `commands` property it should be structured as:
 
-`<Name of the command>:{`
-   `cmd:{ *optional`
-     `short:<short cli command like '-a'>, *optional`
-     `long:<long cli command like '--author'>,`
-     `help:<help message to show when --options is called> *optional`
-   `},`
-   `prompt:{`
-    `type:<('input'|'confirm'|'list')>,`
-    `message:<message to user>,`
-    `choices:<(array['option']|function(){returns array['option']})>`
-   `},`
-   `action:<string for next command or 'end' or 'exit' (string|function(){returns string})>,`
-   `store:<('string'|'array')> *optional`
- `}`
+`<Name of the command>:{`<br />
+   `cmd:{ *optional`<br />
+     `short:<short cli command like '-a'>, *optional`<br />
+     `long:<long cli command like '--author'>,`<br />
+     `help:<help message to show when --options is called> *optional`<br />
+   `},`<br />
+   `prompt:{`<br />
+    `type:<('input'|'confirm'|'list')>,`<br />
+    `message:<message to user>,`<br />
+    `choices:<(array['option']|function(){returns array['option']})>`<br />
+   `},`<br />
+   `action:<string for next command or 'end' or 'exit' (string|function(){returns string})>,`<br />
+   `store:<('string'|'array')> *optional`<br />
+ `}`<br />
  
  - Name of command<br />
  __This name is what will be used as a key when passed, as well as in create is used as the $(Name of command) for string replacement__
