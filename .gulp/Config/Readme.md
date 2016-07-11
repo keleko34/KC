@@ -38,11 +38,11 @@ When you add a command to the `commands` property it should be structured as:
  
  - cmd<br />
  *Optional*<br />
- __cmd can only be used with store types of string atm, these commands get auto populated into the --options list when added__<br />
+ __cmd can only be used with store types of string, these commands get auto populated into the --options list when added__<br />
  *NOTE when something like a message is needed remember that mesages have spaces and must be wrapped in "Message" to escape spaces in the cli*
  
  - prompt<br />
- __prompt is all te settings for the prompt that will be shown to the user if a cli is passed based on cmd then this will not be shown__
+ __prompt is all the settings for the prompt that will be shown to the user, if a cli command was given then this will not be shown__
  
    * type<br />
    *Default 'input'*<br />
@@ -57,7 +57,7 @@ When you add a command to the `commands` property it should be structured as:
  
  - store<br />
  *Default 'string'*<br />
- __store tells how to store the values in the values object, either 'string' which then stores Key value pair eg. 'Name of command':value or 'array' which specifies and array of multiple values due to the command being run multiple times eg. 'Name of command':[value1,value2,etc...]__
+ __store tells how to store the values in the values object, either 'string' which then stores Key value pair eg.('Name of command':value) or 'array' which specifies an array of multiple values due to the command being run multiple times eg. 'Name of command':[value1,value2,etc...]__
  
  - overwrite<br />
  __allows for overwriting the value prior to being set with a function__
@@ -66,9 +66,9 @@ When you add a command to the `commands` property it should be structured as:
  
  __String__
  
- Mapping in create task is relatively simple, every `$Name of command` will be replaced with whatever was entered by the user if the command had a store type of 'string' or default. File names may also have `$Name of command` in them as to have their names replaced when created.
+ Mapping in create task is relatively simple, every `$Name of command` will be replaced with whatever was entered by the user. File names may also have `$Name of command` in them as to have their names replaced when created.
  
  __Array__
  
- Mapping with arrays is slightly different and is only allowed in file content. You can either map individual values as `$Name of command[0]` or if You want a repeating effect You can specify: `$Name of command[x](string to replicate with $x as value)` this will take all the text within `()` and replicate it as many times as the length of the array and replace `$x` in the text with that array positions value.
+ Mapping with arrays is slightly different and is only allowed inside the file content. You can either map individual values as `$Name of command[0]` or if You want a repeating effect You can specify: `$Name of command[x](string to replicate with $x as value)` this will take all the text within `()` and replicate it as many times as the length of the array and replace `$x` in the text with that array positions value. This is very useful when needing to create lists based on a users input.
  
