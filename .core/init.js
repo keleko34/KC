@@ -26,6 +26,44 @@ require(['./.core/routes', 'crossroads', 'hasher'],function(routeConfig, crossro
       });
     }
 
+    /* future parser */
+    function parseComponents(template,callback){
+      var reg = /(<\/(.*?)>)/g,
+          matched = template.match(reg).map(function(k,i){
+            return k.substring(2,k.length-1);
+          }),
+          routes = [];
+
+      for(var x=0;x<matched.length;x++){
+        if(document.createElement(matched[x]) instanceof HTMLUnknownElement){
+          if(!ko.components.isRegistered(matched[x])){
+            routes.push('/require/'+matched[x]);
+          }
+        }
+      }
+      if(routes.length > 0){
+        loadComponent(routes,callback);
+      }
+      else{
+        callback();
+      }
+    }
+
+    /* future page getter */
+    function getPage(name,callback){
+      var routes = [];
+      if(!ko.components.isRegistered(name)){
+        routes.push('/require/'+name);
+      }
+
+      if(routes.length > 0){
+        loadComponent(routes,callback);
+      }
+      else{
+        callback();
+      }
+    }
+
     function searchComponents(check,callback){
       var elroutes = Object.keys(element_routes),
           routes = [];
