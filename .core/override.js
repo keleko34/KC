@@ -22,10 +22,15 @@ define([],function(){
           var found = [],
               cb = function(){
                 ko.components.defaultLoader.loadTemplate(name, templateConfig, callback);
-              }
+              },
+              query = parseQuery(location.search);
           Object.keys(element_routes).forEach(function(t,x){
             Object.keys(element_routes[t]).forEach(function(k,i){
               if(templateConfig.indexOf('</'+k+'>') > -1){
+
+                if(query.env !== undefined){
+                  element_routes[t][k] = element_routes[t][k]+(element_routes[t][k].indexOf('.js') > -1 ? '' : '.js')+'?env='+query.env;
+                }
                 if(!require.defined(element_routes[t][k])){
                     found.push(k);
                     require([element_routes[t][k]],function(vm){
