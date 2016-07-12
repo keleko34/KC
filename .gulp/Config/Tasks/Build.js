@@ -24,7 +24,17 @@ module.exports = {
           return fs.readdirSync('./Src/'+values.Type);
         }
       },
-      action:'Environments'
+      action:'SubTask'
+    },
+    SubTask:{
+      prompt:{
+        type:'list',
+        message:'Which sub task do you want to use?',
+        choices:function(values){
+          return Object.keys(global.gulp.config.Tasks.Build.subtasks);
+        }
+      },
+      action:'Environment'
     },
     Environment:{
       cmd:{
@@ -35,10 +45,13 @@ module.exports = {
         type:'list',
         message:'Which environment would You like to build for?',
         choices:function(values){
-          return fs.readdirSync('./.gulp/Tasks/Build/Subtasks');
+          return (global.gulp.config.Tasks.Build.subtasks[values.SubTask]);
         }
       },
       action:'end'
     }
+  },
+  subtasks:{
+    web_elements:['dev','qa','stage','prod']
   }
 }

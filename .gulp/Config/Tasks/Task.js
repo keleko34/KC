@@ -8,7 +8,8 @@ module.exports = {
       prompt:{
         type:'input',
         message:'What would You like to name this Gulp Task?'
-      }
+      },
+      action:'Description'
     },
     Description:{
       cmd:{
@@ -18,7 +19,8 @@ module.exports = {
       prompt:{
         type:'input',
         message:'Please write a brief description of what this task does'
-      }
+      },
+      action:'Author'
     },
     Author:{
       cmd:{
@@ -28,7 +30,8 @@ module.exports = {
       prompt:{
         type:'input',
         message:'Initial Author of this Task?'
-      }
+      },
+      action:'end'
     }
   }
 }

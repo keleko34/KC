@@ -1,13 +1,10 @@
 /* Gulp Modules */
 var gulp = require('gulp'),
-    env = [
-      {name:'dev',task:require('./Subtasks/Dev')},
-      {name:'qa',task:require('./Subtasks/Qa')},
-      {name:'stage',task:require('./Subtasks/Stage')},
-      {name:'prod',task:require('./Subtasks/Prod')},
-    ],
-    base = require('./../../Base'),
     fs = require('fs'),
+    env = fs.readdirSync('./Subtasks').map(function(k){
+      return {name:k.replace('.js',''),task:require('./Subtasks/'+k.replace('.js',''))}
+    }),
+    base = require('./../../Base'),
     currentEnv = 0;
 
 var config = global.gulp.config;

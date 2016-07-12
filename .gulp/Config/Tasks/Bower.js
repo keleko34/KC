@@ -8,7 +8,8 @@ module.exports = {
       prompt: {
         type: "input",
         message: "Please enter the library you would like to install"
-      }
+      },
+      action:'end'
     }
   }
 }
