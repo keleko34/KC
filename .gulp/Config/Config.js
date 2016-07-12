@@ -1,9 +1,4 @@
 module.exports = {
-  Base:{
-    Component:'Components',
-    Section: 'Sections',
-    Page: 'Pages'
-  },
   Tasks: {
     Server: require('./Tasks/Server'),
     Bower: require('./Tasks/Bower'),

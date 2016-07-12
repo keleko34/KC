@@ -14,15 +14,6 @@ var config = global.gulp.config;
 
 module.exports = function(){
 
-  function listComponents(res,key,prompts){
-    if(key === 'Type'){
-      prompts.Name.choices = fs.readdirSync('./' + config[res.Type].base)
-      .filter(function(k,i){
-        return k !== '.gitkeep';
-      });
-    }
-  }
-
   function finished(res){
     return function(){
       console.log('\033[36mFinished compiling \033[37m',res.Name,' \033[36mfor \033[37m',res.Environment);
@@ -51,7 +42,7 @@ module.exports = function(){
     if(res.Type !== undefined && key === 'Name'){
       try
       {
-        var exists = fs.statSync('./' + config[res.Type].base + '/' + res.Name + '/' + res.Name + '.js');
+        var exists = fs.statSync('./Src/' + res.Type + '/' + res.Name + '/' + res.Name + '.js');
         if(!exists || !exists.isFile()){
           console.error('\033[31mThere is no ' + res.Type + ' by the name:\033[37m ',res.Name);
           process.exit(1);
@@ -75,7 +66,6 @@ module.exports = function(){
 
 
   return base.task('Build')
-  .editPrompts(listComponents)
   .filter(Exists)
   .command(Command)
   .call();

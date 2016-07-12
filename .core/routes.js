@@ -18,10 +18,10 @@ define([],function(){
     /* Sails we will change this to backend routing */
     "element_routes":{
       "Components":{
-        "progressbar":"./Components/ProgressBar/ProgressBar"
+        "progressbar":"./Src/Components/ProgressBar/ProgressBar"
       },
       "Sections":{
-        "upload":"./Sections/Upload/Upload"
+        "upload":"./Src/Sections/Upload/Upload"
       },
       "Pages":{
 

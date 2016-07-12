@@ -10,17 +10,21 @@ module.exports = {
       prompt:{
         type:'list',
         message:'What type of template would You like to build?',
-        choices:['Component','Section','Page']
-      }
+        choices:function(){
+          return fs.readdirSync('./.gulp/Tasks/Create/Templates');
+        }
+      },
+      action:'Name'
     },
     Name:{
       prompt:{
         type:'list',
         message:'Which element would you like to build?',
-        choices:function(){
-          return fs.readdirSync('./Components');
+        choices:function(values){
+          return fs.readdirSync('./'+values.Type);
         }
-      }
+      },
+      action:'Environments'
     },
     Environment:{
       cmd:{
@@ -30,8 +34,11 @@ module.exports = {
       prompt:{
         type:'list',
         message:'Which environment would You like to build for?',
-        choices:['dev','qa','stage','prod']
-      }
+        choices:function(values){
+          return fs.readdirSync('./.gulp/Tasks/Build/Subtasks');
+        }
+      },
+      action:'end'
     }
   }
 }

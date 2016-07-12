@@ -9,15 +9,15 @@ var gulp = require('gulp'),
 module.exports = function(res,cb){
   console.log('\033[36mStarting Stage Build\033[37m');
 
-  var _file = './' + config[res.Type].base + '/'+res.Name+'/qa/'+res.Name+'.min.js',
-      _docsFile = './' + config[res.Type].base + '/'+res.Name+'/README.md',
-      _vmDocrFile = './' + config[res.Type].base + '/'+res.Name+'/'+res.Name+'.vm.js',
-      _docrFile = './' + config[res.Type].base + '/'+res.Name+'/qa/'+res.Name+'.js',
-      _cssFile = './' + config[res.Type].base + '/'+res.Name+'/' + res.Name + '.css'
+  var _file = './Src/' + res.Type + '/'+res.Name+'/qa/'+res.Name+'.min.js',
+      _docsFile = './Src/' + res.Type + '/'+res.Name+'/README.md',
+      _vmDocrFile = './Src/' + res.Type + '/'+res.Name+'/'+res.Name+'.vm.js',
+      _docrFile = './Src/' + res.Type + '/'+res.Name+'/qa/'+res.Name+'.js',
+      _cssFile = './Src/' + res.Type + '/'+res.Name+'/' + res.Name + '.css'
 
   var _g = gulp.src(_file)
   .pipe(replace(res.Name + '.css',res.Name + '.min.css'))
-  .pipe(gulp.dest('./' + config[res.Type].base + '/' + res.Name + '/'  + res.Environment));
+  .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name + '/'  + res.Environment));
 
   _g = gulp.src(_docsFile)
   .pipe(inject(gulp.src(_vmDocrFile),{
@@ -56,12 +56,12 @@ module.exports = function(res,cb){
         return '*No Methods*';
       }
   }))
-  .pipe(gulp.dest('./' + config[res.Type].base + '/' + res.Name));
+  .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name));
 
   _g = gulp.src(_cssFile)
   .pipe(cssmin())
   .pipe(rename({suffix: '.min'}))
-  .pipe(gulp.dest('./' + config[res.Type].base + '/' + res.Name));
+  .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name));
 
   _g.on('end',cb);
 
