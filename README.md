@@ -2,7 +2,7 @@
 
 ## Chainable Components
 
-D3, Require(AMD), and Common compatable
+Knockout, Requirejs(AMD), or Commonjs
 
 [Check Out The Demos](http://keleko34.github.io/KC/)
 
