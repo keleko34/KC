@@ -3,10 +3,6 @@ define([],function(){
   /* This overrides the components loader so that an element is attached the viewmodel and the viewmodel is atached to the element */
   function loader(){
 
-    ko.bindingProvider.instance.preprocessNode = function(node) {
-      console.log(node);
-    }
-
     ko.components.loaders.unshift({
       loadViewModel: function (name, viewModelConfig, callback) {
         if (typeof viewModelConfig === "function") {
@@ -17,6 +13,38 @@ define([],function(){
             }
           };
           ko.components.defaultLoader.loadViewModel(name, viewModelConstructor, callback);
+        } else {
+          callback(null);
+        }
+      },
+      loadTemplate: function (name, templateConfig, callback) {
+        if (typeof templateConfig === 'string'){
+          var found = [],
+              cb = function(){
+                ko.components.defaultLoader.loadTemplate(name, templateConfig, callback);
+              }
+          Object.keys(element_routes).forEach(function(t,x){
+            Object.keys(element_routes[t]).forEach(function(k,i){
+              if(templateConfig.indexOf('</'+k+'>') > -1){
+                found.push(k);
+                require([element_routes[t][k]],function(vm){
+                  found.splice(found.indexOf(k),1);
+                  if(found.length < 1){
+                    cb();
+                  }
+                },function(err){
+                  console.log(element_routes[t][k],' does not exist in ',t, ' but is refrenced in its routes');
+                })
+              }
+            });
+          });
+          if(found.length < 1){
+            ko.components.defaultLoader.loadTemplate(name, templateConfig, callback);
+          }
+        } else if (templateConfig.fromUrl) {
+          require(['text!'+templateConfig.fromUrl],function(cp){
+            ko.components.defaultLoader.loadTemplate(name, cp, callback);
+          });
         } else {
           callback(null);
         }
