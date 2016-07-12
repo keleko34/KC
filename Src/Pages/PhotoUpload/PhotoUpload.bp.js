@@ -1,6 +1,6 @@
 /*********************************
- *  $Name
- *  Created by $Author
+ *  PhotoUpload
+ *  Created by Keleko34
  *  This file is a blueprint that registers the
  *  component with requirejs, knockoutjs and commonjs
  ********************************/
@@ -10,27 +10,27 @@ if (typeof define === "function" && define.amd)
 {
   define([],function(){
     return {
-      register_$Name:register_$Name
+      register_PhotoUpload:register_PhotoUpload
     }
   });
 }
 else if (typeof module === "object" && module.exports)
 {
     module.exports = {
-      register_$Name:register_$Name
+      register_PhotoUpload:register_PhotoUpload
     }
 }
 
 /* This method is the method that will be put into the main file when it is compiled during dev build */
-function register_$Name(Create$Name,viewmodel,template){
+function register_PhotoUpload(CreatePhotoUpload,viewmodel,template){
   if(typeof define === 'function' && define.amd){
-    define('Create$Name',[],function(){return Create$Name});
+    define('CreatePhotoUpload',[],function(){return CreatePhotoUpload});
   }
   else if(typeof module === "object" && module.exports){
-    module.exports = Create$Name;
+    module.exports = CreatePhotoUpload;
   }
-  viewmodel.prototype.constructor = Create$Name;
-  if(ko && !ko.components.isRegistered(('$Name').toLowerCase())){
-    ko.components.register(('$Name').toLowerCase(),{viewModel:viewmodel,template:template});
+  viewmodel.prototype.constructor = CreatePhotoUpload;
+  if(ko && !ko.components.isRegistered(('PhotoUpload').toLowerCase())){
+    ko.components.register(('PhotoUpload').toLowerCase(),{viewModel:viewmodel,template:template});
   }
 }

@@ -1,14 +1,14 @@
 /*********************************
- *  $Name
- *  Created by $Author
- *  $Description
+ *  PhotoUpload
+ *  Created by Keleko34
+ *  Page for uploading photos
  ********************************/
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css' $Components[x](, './Components/$x/$x')],function(blueprint, viewmodel, template){
+define(['./PhotoUpload.bp', './PhotoUpload.vm', 'text!./PhotoUpload.html', 'css!./PhotoUpload.css' ],function(blueprint, viewmodel, template){
 
-	function Create$Name(){
+	function CreatePhotoUpload(){
 
       /* Do not remove!!! */
       /* BUILD SECTION */
@@ -22,7 +22,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css' $Comp
          *   var _example = '';
         */
 
-      function $Name(){
+      function PhotoUpload(){
         /* 'vm' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
@@ -30,34 +30,34 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css' $Comp
 
         /* ex: updates the class attr with a changed state
          *
-         *   vm.mainclass('$Name' + (_example ? ' $Name--'+_example : ''));
+         *   vm.mainclass('PhotoUpload' + (_example ? ' PhotoUpload--'+_example : ''));
         */
 
       }
 
-      $Name.viewmodel = function(v){
+      PhotoUpload.viewmodel = function(v){
         if(v === undefined){
           return vm;
         }
         vm = (v instanceof viewmodel ? v : vm);
-        return $Name;
+        return PhotoUpload;
       }
 
       /* add methods for updating and type checking viewmodel properties */
 
       /* ex: functional property, returns value if nothing, sets if value is string
          *
-         *   $Name.example = function(v){
+         *   PhotoUpload.example = function(v){
          *     if(v === undefined){
          *        return _example;
          *     }
          *     _example = (typeof v === 'string' ? v : _example);
-         *     return $Name;
+         *     return PhotoUpload;
          *   }
         */
 
-      return $Name;
+      return PhotoUpload;
 	}
-    blueprint.register_$Name(Create$Name,viewmodel,template);
-	return Create$Name;
+    blueprint.register_PhotoUpload(CreatePhotoUpload,viewmodel,template);
+	return CreatePhotoUpload;
 });

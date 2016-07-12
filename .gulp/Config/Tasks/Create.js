@@ -18,6 +18,9 @@ module.exports = {
             if(v === 'Section'){
               return 'Components';
             }
+            else if(v === 'Pages'){
+              return 'Sections';
+            }
             return 'Name';
           }
         },
@@ -26,16 +29,34 @@ module.exports = {
             type:'list',
             message:'Which Component would you like to add?',
             choices:function(values){
-              return fs.readdirSync('./Components').filter(function(k,i){
+              return fs.readdirSync('./Src/Components').filter(function(k,i){
                 return (!values.Components ? true : values.Components.indexOf(k) < 0)
               }).concat('none');
             }
           },
           action:function(v,values){
-            if(fs.readdirSync('./Components').filter(function(k,i){return (values.Components.indexOf(k) < 0)}).length === 0 || v === 'none'){
+            if(fs.readdirSync('./Src/Components').filter(function(k,i){return (values.Components.indexOf(k) < 0)}).length === 0 || v === 'none'){
               return 'Name';
             }
             return 'Components';
+          },
+          store:'array'
+        },
+        Sections:{
+          prompt:{
+            type:'list',
+            message:'Which Section would you like to add?',
+            choices:function(values){
+              return fs.readdirSync('./Src/Sections').filter(function(k,i){
+                return (!values.Sections ? true : values.Sections.indexOf(k) < 0)
+              }).concat('none');
+            }
+          },
+          action:function(v,values){
+            if(fs.readdirSync('./Src/Sections').filter(function(k,i){return (values.Sections.indexOf(k) < 0)}).length === 0 || v === 'none'){
+              return 'Name';
+            }
+            return 'Sections';
           },
           store:'array'
         },

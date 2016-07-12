@@ -2,16 +2,16 @@ define([],function(){
   return {
     "page_routes":{
       "Header":[
-        { "url": "", "params": { "page": "upload"}},
-        { "url": "progressbar",    "params": { "page": "upload" } }
+        { "url": "", "params": { "page": "photoupload"}},
+        { "url": "progressbar",    "params": { "page": "progressbar" } }
       ],
       "Content":[
-        { "url": "",    "params": { "page": "upload" } },
-        { "url": "progressbar",    "params": { "page": "upload" } }
+        { "url": "",    "params": { "page": "photoupload" } },
+        { "url": "progressbar",    "params": { "page": "progressbar" } }
       ],
       "Footer":[
-        { "url":"", "params": { "page": "upload"}},
-        { "url": "progressbar",    "params": { "page": "upload" } }
+        { "url":"", "params": { "page": "photoupload"}},
+        { "url": "progressbar",    "params": { "page": "progressbar" } }
       ]
     },
 
@@ -24,7 +24,7 @@ define([],function(){
         "upload":"./Src/Sections/Upload/Upload"
       },
       "Pages":{
-
+        "photoupload":"./Src/Pages/PhotoUpload/PhotoUpload"
       }
     },
     parseQuery:function(qstr){

@@ -21,7 +21,7 @@ module.exports = {
         type:'list',
         message:'Which element would you like to build?',
         choices:function(values){
-          return fs.readdirSync('./'+values.Type);
+          return fs.readdirSync('./Src/'+values.Type);
         }
       },
       action:'Environments'
