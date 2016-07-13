@@ -53,6 +53,10 @@ define(['./PhotoPost.bp', './PhotoPost.vm', 'text!./PhotoPost.html', 'css!./Phot
         return PhotoPost;
       }
 
+      PhotoPost.getImage(){
+
+      }
+
       /* add methods for updating and type checking viewmodel properties */
 
       /* ex: functional property, returns value if nothing, sets if value is string

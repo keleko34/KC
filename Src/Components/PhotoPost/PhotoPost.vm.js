@@ -4,6 +4,8 @@ define([],function(){
     this.Node = element;
     this.mainclass = ko.observable('PhotoPost');
 
+    this.name = ko.observable('');
+
     /* Place Properties Here */
 
     /* important! this is what ties this viewmodel to the main class,

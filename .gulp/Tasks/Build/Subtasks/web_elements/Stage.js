@@ -1,67 +1,24 @@
 var gulp = require('gulp'),
     replace = require('gulp-replace'),
-    inject = require('gulp-inject'),
     rename = require('gulp-rename'),
     cssmin = require('gulp-cssmin'),
-    fs = require('fs'),
     config = global.gulp.config;
 
 module.exports = function(res,cb){
   console.log('\033[36mStarting Stage Build\033[37m');
 
   var _file = './Src/' + res.Type + '/'+res.Name+'/qa/'+res.Name+'.min.js',
-      _docsFile = './Src/' + res.Type + '/'+res.Name+'/README.md',
-      _vmDocrFile = './Src/' + res.Type + '/'+res.Name+'/'+res.Name+'.vm.js',
-      _docrFile = './Src/' + res.Type + '/'+res.Name+'/qa/'+res.Name+'.js',
       _cssFile = './Src/' + res.Type + '/'+res.Name+'/' + res.Name + '.css',
       _env = config.Tasks.Build.subtasks[res.SubTask];
 
-  gulp.src(_docsFile)
-  .pipe(inject(gulp.src(_vmDocrFile),{
-      relative:true,
-      starttag: '###### Properties',
-      transform: function(filepath,file,i,len,target){
-        console.log('\033[36mCreating Property Docs:\033[37m');
-        var __contents = file.contents.toString('utf8'),
-            __targetContents = target.contents.toString('utf8'),
-            __rx = /this\.(.*?)\s=/gm,
-            __props = __contents.match(__rx);
-            if(__props){
-              __props = __props.map(function(k,i){
-                return k.replace(/this\./g,'').replace(/\s=/g,'')+' (*Type*)<br />\r\n**Description**'+( i !== (__props.length-1) ? '\r\n\r\n' : '');
-              })
-              return __props.join('');
-            }
-        return '*No Properties*';
-      }
-  }))
-  .pipe(inject(gulp.src(_vmDocrFile),{
-      relative:true,
-      starttag: '###### Methods',
-      transform: function(filepath,file,i,len, target){
-        console.log('\033[36mCreating Method Docs:\033[37m');
-        var __contents = file.contents.toString('utf8'),
-            __targetContents = target.contents.toString('utf8'),
-            __rx = /prototype\.(.*?)\s=/gm,
-            __props = __contents.match(__rx);
-            if(__props){
-              __props = __props.map(function(k,i){
-                return k.replace(/this\./g,'').replace(/\s=/g,'')+' (*Type \'Param\'*)<br />\r\n**Description**'+( i !== (__props.length-1) ? '\r\n\r\n' : '');
-              })
-              return __props.join('');
-            }
-        return '*No Methods*';
-      }
-  }))
-  .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name));
-
-  gulp.src(_cssFile)
+  return gulp.src(_cssFile)
   .pipe(cssmin())
   .pipe(rename({suffix: '.min'}))
-  .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name));
-
-  return gulp.src(_file)
-  .pipe(replace(res.Name + '.css',res.Name + '.min.css'))
-  .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name + '/'  + _env[res.currentrule]))
-  .on('finish',cb);
+  .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name))
+  .on('end',function(){
+    gulp.src(_file)
+    .pipe(replace(res.Name + '.css',res.Name + '.min.css'))
+    .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name + '/'  + _env[res.currentrule]))
+    .on('end',cb);
+  })
 }
