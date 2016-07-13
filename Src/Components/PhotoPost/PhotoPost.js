@@ -16,6 +16,7 @@ define(['./PhotoPost.bp', './PhotoPost.vm', 'text!./PhotoPost.html', 'css!./Phot
       var vm = {};
       /* Add Private _variables here */
 
+      var _liked = false;
       /* ex: private for functional property
          *
          *   var _example = '';
@@ -26,6 +27,8 @@ define(['./PhotoPost.bp', './PhotoPost.vm', 'text!./PhotoPost.html', 'css!./Phot
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
         /* Update viewmodel properties here */
+
+        vm.mainclass('PhotoPost' + (_liked ? ' PhotoPost--liked' : ''));
 
         /* ex: updates the class attr with a changed state
          *
@@ -39,6 +42,14 @@ define(['./PhotoPost.bp', './PhotoPost.vm', 'text!./PhotoPost.html', 'css!./Phot
           return vm;
         }
         vm = (v instanceof viewmodel ? v : vm);
+        return PhotoPost;
+      }
+
+      PhotoPost.liked = function(v){
+        if(v === undefined){
+          return _liked;
+        }
+        _liked = !!v;
         return PhotoPost;
       }
 
