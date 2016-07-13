@@ -43,7 +43,7 @@ module.exports = {
       },
       prompt:{
         type:'list',
-        message:'Which environment would You like to build for?',
+        message:'Which sub task rule would You like to build for?',
         choices:function(values){
           return (global.gulp.config.Tasks.Build.subtasks[values.SubTask]);
         }

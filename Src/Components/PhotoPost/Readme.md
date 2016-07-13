@@ -9,9 +9,21 @@ Shows a photo post and its needed info
 [PhotoPost Demo](http://keleko34.github.io/KC/)
 
 ###### Properties
+Node_Type (*Type*)<br />
+**Description**
+
+Node (*Type*)<br />
+**Description**
+
+mainclass (*Type*)<br />
+**Description**
+
+methods (*Type*)<br />
+**Description**
 <!-- endinject -->
 
 ###### Methods
+*No Methods*
 <!-- endinject -->
 
 

@@ -13,13 +13,10 @@ module.exports = function(res,cb){
       _docsFile = './Src/' + res.Type + '/'+res.Name+'/README.md',
       _vmDocrFile = './Src/' + res.Type + '/'+res.Name+'/'+res.Name+'.vm.js',
       _docrFile = './Src/' + res.Type + '/'+res.Name+'/qa/'+res.Name+'.js',
-      _cssFile = './Src/' + res.Type + '/'+res.Name+'/' + res.Name + '.css'
+      _cssFile = './Src/' + res.Type + '/'+res.Name+'/' + res.Name + '.css',
+      _env = config.Tasks.Build.subtasks[res.SubTask];
 
-  var _g = gulp.src(_file)
-  .pipe(replace(res.Name + '.css',res.Name + '.min.css'))
-  .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name + '/'  + res.Environment));
-
-  _g = gulp.src(_docsFile)
+  gulp.src(_docsFile)
   .pipe(inject(gulp.src(_vmDocrFile),{
       relative:true,
       starttag: '###### Properties',
@@ -58,12 +55,13 @@ module.exports = function(res,cb){
   }))
   .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name));
 
-  _g = gulp.src(_cssFile)
+  gulp.src(_cssFile)
   .pipe(cssmin())
   .pipe(rename({suffix: '.min'}))
   .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name));
 
-  _g.on('end',cb);
-
-  return _g;
+  return gulp.src(_file)
+  .pipe(replace(res.Name + '.css',res.Name + '.min.css'))
+  .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name + '/'  + _env[res.currentrule]))
+  .on('finish',cb);
 }

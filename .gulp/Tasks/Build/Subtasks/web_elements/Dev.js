@@ -12,9 +12,10 @@ module.exports = function(res,cb){
       _vmFile = _file.replace('.js','.vm.js'),
       _bpFile = _file.replace('.js','.bp.js'),
       _temFile = _file.replace('.js','.html'),
-      _cssHtml = './Templates/Styles.js';
+      _cssHtml = './Templates/Styles.js',
+      _env = config.Tasks.Build.subtasks[res.SubTask];
 
-  var _g = gulp.src(_file)
+  return gulp.src(_file)
     .pipe(inject(gulp.src(_vmFile),{
       relative:true,
       starttag: '/* BUILD SECTION */',
@@ -74,9 +75,6 @@ module.exports = function(res,cb){
     .pipe(replace('/* CSS Include */',''))
     .pipe(replace('/* End CSS Include */',''))
     .pipe(replace(/^\s*[\r\n]/gm,''))
-    .pipe(gulp.dest('./Src/' + res.Type + '/'+res.Name+'/' + res.Environment));
-
-    _g.on('end',cb);
-
-    return _g;
+    .pipe(gulp.dest('./Src/' + res.Type + '/'+res.Name+'/' + _env[res.currentrule]))
+    .on('end',cb);
 }
