@@ -9,7 +9,8 @@ module.exports = function(res,cb){
         _env = config.Tasks.Build.subtasks[res.SubTask];
 
     console.log('\033[36mStarting compiler for:\033[37m',res.Name);
-    var _g =  gulp.src(_file)
+
+    return  gulp.src(_file)
     .pipe(gulp.dest('./Src/' + res.Type + '/'+res.Name + '/' + _env[res.currentrule]))
     .pipe(closureCompiler({
       compilerPath:"./compiler.jar",

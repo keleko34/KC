@@ -18,7 +18,7 @@ module.exports = function(res,cb){
   .on('end',function(){
     gulp.src(_file)
     .pipe(replace(res.Name + '.css',res.Name + '.min.css'))
-    .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name + '/'  + _env[res.currentrule]))
+    .pipe(gulp.dest('./Src/' + res.Type + '/' + res.Name + '/'  + _env[res.currentrule-1]))
     .on('end',cb);
   })
 }

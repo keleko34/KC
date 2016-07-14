@@ -37,7 +37,9 @@ module.exports = function(){
   function commandCallback(res){
     var env = config.Tasks.Build.subtasks[res.SubTask];
     return function(){
+
       console.log((res.currentrule > 0 ? ('Finished task '+env[res.currentrule-1]) : ''));
+
       if(env[res.currentrule] === res.Environment){
         require('./Subtasks/'+res.SubTask+'/'+env[res.currentrule]).call({},res,finished(res));
       }

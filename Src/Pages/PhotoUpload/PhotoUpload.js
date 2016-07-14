@@ -8,11 +8,11 @@
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
 define(['./PhotoUpload.bp', './PhotoUpload.vm', 'text!./PhotoUpload.html', 'css!./PhotoUpload.css' ],function(blueprint, viewmodel, template){
 
-	function CreatePhotoUpload(){
+    /* Do not remove!!! */
+    /* BUILD SECTION */
+    /* END BUILD SECTION */
 
-      /* Do not remove!!! */
-      /* BUILD SECTION */
-      /* END BUILD SECTION */
+	function CreatePhotoUpload(){
 
       var vm = {};
       /* Add Private _variables here */

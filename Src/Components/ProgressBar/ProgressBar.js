@@ -5,10 +5,12 @@
  ********************************/
 
 define(['./ProgressBar.bp', './ProgressBar.vm', 'text!./ProgressBar.html', 'css!./ProgressBar.css'],function(blueprint, viewmodel, template){
-	function CreateProgressBar(){
 
-      /* BUILD SECTION */
-      /* END BUILD SECTION */
+    /* Do not remove!!! */
+    /* BUILD SECTION */
+    /* END BUILD SECTION */
+
+    function CreateProgressBar(){
 
       var vm = {};
       /* Add Private _variables here */

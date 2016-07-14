@@ -1,15 +1,17 @@
 var includeCSS = (function(){
-    var _styleTemplate = '<style id="$Type-Styles" media="screen" type="text/css"></style>',
-        _styleNode = document.getElementById('$Type-Styles');
+    var _styleNode = document.getElementById('$Type-Styles');
+
     if(!_styleNode){
-        var frag = document.createDocumentFragment();
-        frag.appendChild(_styleTemplate);
-        document.head.appendChild(frag);
+        _styleNode = document.createElement('style');
+        _styleNode.setAttribute('id','$Type-Styles');
+        _styleNode.setAttribute('media','screen');
+        _styleNode.setAttribute('type','text/css');
+        document.head.appendChild(_styleNode);
         _styleNode = document.getElementById('$Type-Styles');
     }
 
-    if(_styleNode.textContent.indexOf('$Component') < 0){
-        _styleNode.textContent += '\r\n@import "$Types/$Name/$Name.css";';
+    if(_styleNode.textContent.indexOf('$Name') < 0){
+        _styleNode.textContent += '\r\n@import "/Src/$Type/$Name/$Name.css";';
     }
     return _styleNode;
 }());

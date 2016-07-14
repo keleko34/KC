@@ -12,7 +12,7 @@ module.exports = function(res,cb){
       _vmFile = _file.replace('.js','.vm.js'),
       _bpFile = _file.replace('.js','.bp.js'),
       _temFile = _file.replace('.js','.html'),
-      _cssHtml = './Templates/Styles.js',
+      _cssHtml = './.gulp/Tasks/Build/Templates/Styles.js',
       _env = config.Tasks.Build.subtasks[res.SubTask];
 
   return gulp.src(_file)
@@ -63,7 +63,8 @@ module.exports = function(res,cb){
         console.log('\033[36mInjecting CSS include Code:\033[37m',filepath);
         var __contents = file.contents.toString('utf8');
         __contents = '\r\n' + __contents;
-        __contents = __contents.replace(/(\$Component)/g,res.Name);
+        __contents = __contents.replace(/(\$Type)/g,res.Type);
+        __contents = __contents.replace(/(\$Name)/g,res.Name);
         __contents = __contents.replace(/\r\n/g,'\r\n' + Array(13).join(' '));
         return __contents;
       }

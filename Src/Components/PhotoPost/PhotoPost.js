@@ -7,11 +7,12 @@
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
 define(['./PhotoPost.bp', './PhotoPost.vm', 'text!./PhotoPost.html', 'css!./PhotoPost.css'],function(blueprint, viewmodel, template){
-	function CreatePhotoPost(){
 
-      /* Do not remove!!! */
-      /* BUILD SECTION */
-      /* END BUILD SECTION */
+    /* Do not remove!!! */
+    /* BUILD SECTION */
+    /* END BUILD SECTION */
+
+	function CreatePhotoPost(){
 
       var vm = {};
       /* Add Private _variables here */
@@ -53,7 +54,7 @@ define(['./PhotoPost.bp', './PhotoPost.vm', 'text!./PhotoPost.html', 'css!./Phot
         return PhotoPost;
       }
 
-      PhotoPost.getImage(){
+      PhotoPost.getImage = function(){
 
       }
 
