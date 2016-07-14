@@ -11,7 +11,7 @@ module.exports = function(){
     if(res.Type !== undefined && key === 'Name'){
       try
       {
-        var exists = fs.statSync('./Src/' + res.Type + '/' + res.Name);
+        var exists = fs.statSync('./src/' + res.Type + '/' + res.Name);
         if(exists){
           console.error('\033[31mThere is already something by the name: \033[37m',res.Name,' in ',res.Type);
           process.exit(1);
@@ -67,7 +67,7 @@ module.exports = function(){
       template = template.replace(/(\$(.*?)\[(.*?)\])/g,'');
       template = template.replace(/(\$(.*?))/g,'');
       file('./'+f,template,{src:true})
-      .pipe(gulp.dest('./Src/'+ res.Type + '/' + res.Name));
+      .pipe(gulp.dest('./src/'+ res.Type + '/' + res.Name));
     });
   };
 

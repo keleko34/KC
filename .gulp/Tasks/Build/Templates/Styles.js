@@ -11,7 +11,7 @@ var includeCSS = (function(){
     }
 
     if(_styleNode.textContent.indexOf('$Name') < 0){
-        _styleNode.textContent += '\r\n@import "/Src/$Type/$Name/$Name.css";';
+        _styleNode.textContent += '\r\n@import "/src/$Type/$Name/$Name.css";';
     }
     return _styleNode;
 }());

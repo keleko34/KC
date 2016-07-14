@@ -18,14 +18,14 @@ define([],function(){
     /* Sails we will change this to backend routing */
     "element_routes":{
       "Components":{
-        "progressbar":"./Src/Components/ProgressBar/ProgressBar",
-        "photopost":"./Src/Components/PhotoPost/PhotoPost"
+        "progressbar":"./src/Components/ProgressBar/ProgressBar",
+        "photopost":"./src/Components/PhotoPost/PhotoPost"
       },
       "Sections":{
-        "upload":"./Src/Sections/Upload/Upload"
+        "upload":"./src/Sections/Upload/Upload"
       },
       "Pages":{
-        "photoupload":"./Src/Pages/PhotoUpload/PhotoUpload"
+        "photoupload":"./src/Pages/PhotoUpload/PhotoUpload"
       }
     },
     parseQuery:function(qstr){

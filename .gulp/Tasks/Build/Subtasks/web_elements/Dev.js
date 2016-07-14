@@ -8,7 +8,7 @@ module.exports = function(res,cb){
 
   var _regexDefine = /(define)(.*)(function\()(.*)(\))(.*)(?:{)/,
       _regexDefineEnd = /}\)(?![\s\S]*}\))/m,
-      _file = './Src/' + res.Type + '/'+res.Name+'/'+res.Name+'.js',
+      _file = './src/' + res.Type + '/'+res.Name+'/'+res.Name+'.js',
       _vmFile = _file.replace('.js','.vm.js'),
       _bpFile = _file.replace('.js','.bp.js'),
       _temFile = _file.replace('.js','.html'),
@@ -76,6 +76,6 @@ module.exports = function(res,cb){
     .pipe(replace('/* CSS Include */',''))
     .pipe(replace('/* End CSS Include */',''))
     .pipe(replace(/^\s*[\r\n]/gm,''))
-    .pipe(gulp.dest('./Src/' + res.Type + '/'+res.Name+'/' + _env[res.currentrule]))
+    .pipe(gulp.dest('./src/' + res.Type + '/'+res.Name+'/' + _env[res.currentrule]))
     .on('end',cb);
 }

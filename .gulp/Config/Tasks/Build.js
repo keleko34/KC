@@ -21,7 +21,7 @@ module.exports = {
         type:'list',
         message:'Which element would you like to build?',
         choices:function(values){
-          return fs.readdirSync('./Src/'+values.Type);
+          return fs.readdirSync('./src/'+values.Type);
         }
       },
       action:'SubTask'

@@ -11,7 +11,7 @@ module.exports = {
         type: "list",
         message: "What type of template would You like to document?",
         choices: function(){
-          return fs.readdirSync('./Src');
+          return fs.readdirSync('./src');
         }
       },
       action:'Element'
@@ -25,7 +25,7 @@ module.exports = {
         type: "list",
         message: "Which element would you like to document?",
         choices: function(values){
-          return fs.readdirSync('./Src/'+values.Type);
+          return fs.readdirSync('./src/'+values.Type);
         }
       },
       action:'Manual'
