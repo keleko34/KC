@@ -5,12 +5,9 @@
 ### Purpose
 Page for uploading photos
 
-###### Properties
-<!-- endinject -->
+<!-- Build Here -->
 
-###### Methods
-<!-- endinject -->
-
+<!-- END Build Here -->
 
 [npm-image]: https://img.shields.io/badge/NPM-0.0.1-green.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/KC

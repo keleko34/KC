@@ -20,7 +20,7 @@ module.exports = function(){
      all prompts are passed as res
   */
   function command(res){
-
+    console.log(res);
   }
 
   return base.task('Docr')
