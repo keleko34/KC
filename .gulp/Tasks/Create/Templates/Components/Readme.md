@@ -5,12 +5,8 @@
 ### Purpose
 $Description
 
-<!-- Build Here -->
-
-<!-- END Build Here -->
-
-### Examples
-[$Name Demo](http://keleko34.github.io/KC/)
+<!-- Build -->
+<!-- End Build -->
 
 [npm-image]: https://img.shields.io/badge/NPM-0.0.1-green.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/KC

@@ -60,7 +60,8 @@ module.exports = {
       action:function(v,values){
         var reg = v.split(': ')[1],
             type = (reg.substring(reg.length-1,reg.length) !== '/' ? reg.substring(reg.length-1,reg.length) : null);
-        values.Regex = new RegExp(reg.substring(1,(type ? reg.length-2 : reg.length-1)),(type ? type : ''));
+        values.Regex = v.split(': ')[0];
+        values.RegExp = new RegExp(reg.substring(1,(type ? reg.length-2 : reg.length-1)),(type ? type : ''));
         return 'Filtered';
       }
     },
@@ -69,8 +70,8 @@ module.exports = {
         type:'list',
         message:'Which would You like to document?',
         choices:function(values){
-          var choices = (fs.readFileSync('./src/'+values.Type+'/'+values.Element+'/'+values.File,'utf8')).match(values.Regex).map(function(k,i){
-              return k.replace(values.Regex,'$2');
+          var choices = (fs.readFileSync('./src/'+values.Type+'/'+values.Element+'/'+values.File,'utf8')).match(values.RegExp).map(function(k,i){
+              return k.replace(values.RegExp,'$2');
           }).filter(function(k,i){
             if(values.Filtered !== undefined){
               return (values.Filtered.indexOf(k) < 0);
@@ -81,8 +82,9 @@ module.exports = {
           return choices;
         }
       },
-      action:function(v){
+      action:function(v,values){
         if(v === 'none'){
+          values.Filtered.splice(values.Filtered.indexOf('end'),1);
           return 'end';
         }
         return 'Description';
@@ -93,6 +95,14 @@ module.exports = {
       prompt: {
         type:'input',
         message:'Please write a brief description'
+      },
+      action:'TypeCheck',
+      store:'array'
+    },
+    TypeCheck:{
+      prompt:{
+        type:'input',
+        message:'Please specify the type of this property eg `string` `int`, if method specify params'
       },
       action:'Filtered',
       store:'array'
