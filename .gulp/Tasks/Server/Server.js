@@ -38,7 +38,7 @@ module.exports = function(){
   }
 
   function environment(req){
-    if(req.query && req.query.env && ['dev','qa','stage'].indexOf(req.query.env) > -1){
+    if(req.query && req.query.env && ['local','dev','qa','stage'].indexOf(req.query.env) > -1){
       return req.query.env;
     }
     return 'prod';
@@ -70,6 +70,9 @@ module.exports = function(){
       if(!req.params){
         req.params = [];
         req.params[0] = req.url.replace('/require/','');
+        req.params[0] = req.params[0].substring(0,(req.params[0].indexOf('.') > -1 ? req.params[0].indexOf('.') : req.params[0].length));
+        req.ext = (req.url.indexOf('.') < 0 ? '.js' : req.url.substring(req.url.indexOf('.'),req.url.length));
+        console.log(req.params[0],req.ext);
       }
       if(!res.notFound){
         res.notFound = notFound.bind(res);
@@ -86,7 +89,7 @@ module.exports = function(){
             }
             if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
               _type = 'Components';
-              sendRequest(_type,dir[x],_env,_debug,res);
+              sendRequest(_type,dir[x],_env,_debug, req.ext,res);
             }
           }
           _finished[0] = true;
@@ -104,7 +107,7 @@ module.exports = function(){
             }
             if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
               _type = 'Sections';
-              sendRequest(_type,dir[x],_env,_debug,res);
+              sendRequest(_type,dir[x],_env,_debug, req.ext,res);
             }
           }
           _finished[1] = true;
@@ -122,7 +125,7 @@ module.exports = function(){
             }
             if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
               _type = 'Pages';
-              sendRequest(_type,dir[x],_env,_debug,res);
+              sendRequest(_type,dir[x],_env,_debug, req.ext,res);
             }
           }
           _finished[2] = true;
@@ -138,13 +141,17 @@ module.exports = function(){
 
   }
 
-  function sendRequest(type,el,env,debug,res){
+  function sendRequest(type, el, env, debug, ext, res){
+    console.log(type,el);
     var _path = (appPath+'/src/'
-    +type+'/'+el+'/'
-    +(env === undefined ? 'prod' : env)
+    +type+'/'+el
+    +(env === undefined ? '/prod' : (env === 'local' ? '' : '/'+env))
     +'/'+el
     +(((env === undefined || env === 'prod') || (env === 'qa' && !debug)) ? '.min' : '')
-    +'.js');
+    +ext);
+
+    console.log(env,(env === undefined ? '/prod' : (env === 'local' ? '' : '/'+env)),_path);
+
     fs.stat(_path,function(err,stat){
       if(!err && stat.isFile()){
          fs.createReadStream(_path).pipe(res);
