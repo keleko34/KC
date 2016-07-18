@@ -70,9 +70,18 @@ module.exports = function(){
       if(!req.params){
         req.params = [];
         req.params[0] = req.url.replace('/require/','');
-        req.params[0] = req.params[0].substring(0,(req.params[0].indexOf('.') > -1 ? req.params[0].indexOf('.') : req.params[0].length));
-        req.ext = (req.url.indexOf('.') < 0 ? '.js' : req.url.substring(req.url.indexOf('.'),req.url.length));
-        console.log(req.params[0],req.ext);
+        req.params[1] = '.js';
+
+        if(req.params[0].indexOf('.bp') > -1 || req.params[0].indexOf('.vm') > -1){
+          _env = 'local';
+          req.params[1] = req.params[0].substring(req.params[0].indexOf('.'),req.params[0].length)+'.js';
+          req.params[0] = req.params[0].substring(0,req.params[0].indexOf('.'));
+        }
+        else if(req.params[0].indexOf('.html') > -1 || req.params[0].indexOf('.css') > -1){
+          _env = 'local';
+          req.params[1] = req.params[0].substring(req.params[0].indexOf('.'),req.params[0].length);
+          req.params[0] = req.params[0].substring(0,req.params[0].indexOf('.'));
+        }
       }
       if(!res.notFound){
         res.notFound = notFound.bind(res);
@@ -89,7 +98,7 @@ module.exports = function(){
             }
             if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
               _type = 'Components';
-              sendRequest(_type,dir[x],_env,_debug, req.ext,res);
+              sendRequest(_type,req.params,_env,_debug,res);
             }
           }
           _finished[0] = true;
@@ -107,7 +116,7 @@ module.exports = function(){
             }
             if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
               _type = 'Sections';
-              sendRequest(_type,dir[x],_env,_debug, req.ext,res);
+              sendRequest(_type,req.params,_env,_debug,res);
             }
           }
           _finished[1] = true;
@@ -125,7 +134,7 @@ module.exports = function(){
             }
             if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
               _type = 'Pages';
-              sendRequest(_type,dir[x],_env,_debug, req.ext,res);
+              sendRequest(_type,req.params,_env,_debug,res);
             }
           }
           _finished[2] = true;
@@ -141,16 +150,14 @@ module.exports = function(){
 
   }
 
-  function sendRequest(type, el, env, debug, ext, res){
-    console.log(type,el);
+  function sendRequest(type, params, env, debug, res){
+    if(env)
     var _path = (appPath+'/src/'
-    +type+'/'+el
+    +type+'/'+params[0]
     +(env === undefined ? '/prod' : (env === 'local' ? '' : '/'+env))
-    +'/'+el
+    +'/'+params[0]
     +(((env === undefined || env === 'prod') || (env === 'qa' && !debug)) ? '.min' : '')
-    +ext);
-
-    console.log(env,(env === undefined ? '/prod' : (env === 'local' ? '' : '/'+env)),_path);
+    +params[1]);
 
     fs.stat(_path,function(err,stat){
       if(!err && stat.isFile()){
