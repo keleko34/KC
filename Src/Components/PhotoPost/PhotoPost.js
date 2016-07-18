@@ -35,7 +35,7 @@ define(['./PhotoPost.bp', './PhotoPost.vm', 'text!./PhotoPost.html', 'css!./Phot
          *
          *   vm.mainclass('PhotoPost' + (_example ? ' PhotoPost--'+_example : ''));
         */
-
+        return PhotoPost;
       }
 
       PhotoPost.viewmodel = function(v){

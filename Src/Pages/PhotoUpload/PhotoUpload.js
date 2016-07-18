@@ -32,7 +32,7 @@ define(['./PhotoUpload.bp', './PhotoUpload.vm', 'text!./PhotoUpload.html', 'css!
          *
          *   vm.mainclass('PhotoUpload' + (_example ? ' PhotoUpload--'+_example : ''));
         */
-
+        return PhotoUpload;
       }
 
       PhotoUpload.viewmodel = function(v){

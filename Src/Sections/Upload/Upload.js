@@ -32,7 +32,7 @@ define(['./Upload.bp', './Upload.vm', 'text!./Upload.html', 'css!./Upload.css'],
          *
          *   vm.mainclass('Upload' + (_example ? ' Upload--'+_example : ''));
         */
-
+        return Upload;
       }
 
       Upload.viewmodel = function(v){

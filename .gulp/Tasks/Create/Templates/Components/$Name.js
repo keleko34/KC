@@ -32,7 +32,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css'],func
          *
          *   vm.mainclass('$Name' + (_example ? ' $Name--'+_example : ''));
         */
-
+        return $Name;
       }
 
       $Name.viewmodel = function(v){
