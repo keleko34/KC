@@ -62,7 +62,6 @@ module.exports = function(){
         req.query = query.parse(req.url.substring((req.url.indexOf('?')+1),req.url.length));
         req.url = req.url.substring(0,req.url.indexOf('?'));
       }
-      console.log(req.query,req.url);
       var _type = '',
           _finished = [],
           _env = environment(req),
@@ -146,8 +145,6 @@ module.exports = function(){
     +'/'+el
     +(((env === undefined || env === 'prod') || (env === 'qa' && !debug)) ? '.min' : '')
     +'.js');
-
-    console.log(_path);
     fs.stat(_path,function(err,stat){
       if(!err && stat.isFile()){
          fs.createReadStream(_path).pipe(res);
