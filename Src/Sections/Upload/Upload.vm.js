@@ -12,8 +12,13 @@ define([],function(){
     this.methods = this.constructor()
     .viewmodel(this)
     .call();
+
+    Object.keys(this).forEach((function(k,i){
+      ko.attachProp(k,this);
+    }).bind(this));
   }
 
+  Upload_vm.prototype.attachProp = function(k,el){ko.attachProp(k,this,el);return this.methods;};
   /* Place Prototypes here */
 
   return Upload_vm;

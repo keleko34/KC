@@ -10,7 +10,8 @@
     "requirejs-text": "~2.0.10",
     "knockout": "~3.3.0-alpha",
     "knockout-projections": "~1.1.0",
-    "require-css": "^0.1.8"
+    "require-css": "^0.1.8",
+    "knockout.punches": "^0.5.1"
   },
   "resolutions": {
     "knockout": "~3.3.0-alpha"

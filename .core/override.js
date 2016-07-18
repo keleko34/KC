@@ -31,13 +31,12 @@ define([],function(){
                     callback();
                   }
                 }, function(err){
-                  console.log(k,' does not exist in but is refrenced in its routes');
+                  console.log(k,' does not exist');
                 })
             }
         });
       }
 
-      /* future parser */
       function parseComponents(template,callback){
         var reg = /(<\/(.*?)>)/g,
             matched = (template.match(reg) ? template.match(reg) : []).map(function(k,i){
@@ -60,7 +59,6 @@ define([],function(){
         }
       }
 
-      /* future page getter */
       function getPage(name,callback){
         var routes = [];
         if(!ko.components.isRegistered(name)){
@@ -76,10 +74,74 @@ define([],function(){
       }
 
       /* So we can keep the text content inside */
-      ko.bindingHandlers.component._init = ko.bindingHandlers.component.init;
-      ko.bindingHandlers.component.init = function(params){
-        params.bindingText = params.textContent;
-        return ko.bindingHandlers.component._init.apply(this,arguments);
+
+      function bindingtranslator(t,el){
+        if(t === 'component'){
+          //el.kobindings.attr = el.attributes;
+          if(el.textContent.length > 0){
+            el.kobindings.textbinding = el.textContent;
+          }
+        }
+        else{
+
+        }
+      }
+
+      Object.keys(ko.bindingHandlers).forEach(function(k,i){
+        ko.bindingHandlers[k]._preprocess = ko.bindingHandlers[k].preprocess;
+        ko.bindingHandlers[k].preprocess = function(val,name,km){
+          if(ko.bindingHandlers[k]._preprocess !== undefined){
+            return ko.bindingHandlers[k]._preprocess.apply(this,arguments);
+          }
+          else{
+            return val;
+          }
+        }
+
+        ko.bindingHandlers[k]._init = ko.bindingHandlers[k].init;
+        ko.bindingHandlers[k].init = function(el,valueAccessor,model,vm){
+
+          if(el.kobindings === undefined){
+            el.kobindings = {};
+            el.bindnames = [];
+          }
+          bindingtranslator(k,el);
+          if(ko.bindingHandlers[k]._init !== undefined){
+            ko.bindingHandlers[k]._init.apply(this,arguments);
+          }
+        }
+      });
+
+      /* used for attaching props dynamicly to viewmodels and components */
+      ko.attachProp = function(k,vm,el){
+        if(k !== 'methods' && k !== 'name'){
+          if(vm[k] === undefined){
+            vm[k] = ko.observable();
+            if(!el || (el && el.KViewModel !== undefined)){
+              (el ? el : document).querySelectorAll("[data-bind*='"+k+"']").forEach(function(n,i){
+                ko.cleanNode(n);
+                ko.applyBindings(vm,n);
+              });
+            }
+
+          }
+          if(vm.methods[k] === undefined && typeof vm[k] === 'function'){
+            var _private = vm[k]();
+            vm.methods[k] = function(v){
+              if(v === undefined){
+                return _private;
+              }
+              if(typeof v === typeof vm[k]() || vm[k]() === undefined){
+                _private = v;
+                vm[k](v);
+              }
+              return vm.methods;
+            }
+          }
+          else if(typeof vm[k] === 'function'){
+            vm.methods[k](vm[k]());
+          }
+        }
       }
 
       /* This overrides the components loader so that an element is attached the viewmodel and the viewmodel is atached to the element */
@@ -99,11 +161,12 @@ define([],function(){
             var viewModelConstructor = {
               createViewModel: function (params, componentInfo) {
                 componentInfo.element.KViewModel = new viewModelConfig(params, componentInfo.element);
-                if(componentInfo.element.KViewModel.methods.content !== undefined){
-                  if(componentInfo.element.bindingText.length > 0){
-                    componentInfo.element.KViewModel.methods.content(componentInfo.element.bindingText);
-                    componentInfo.element.KViewModel.methods();
-                  }
+                if(componentInfo.element.kobindings){
+                  Object.keys(componentInfo.element.kobindings).forEach(function(k,i){
+                    componentInfo.element.KViewModel[k] = ko.observable(componentInfo.element.kobindings[k]);
+                    ko.attachProp(k,componentInfo.element.KViewModel,componentInfo.element);
+                  });
+
                 }
                 return componentInfo.element.KViewModel;
               }

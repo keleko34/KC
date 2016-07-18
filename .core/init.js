@@ -61,7 +61,7 @@ require(['./.core/routes', './.core/override', 'crossroads', 'hasher'],function(
     // Create and export router instance
     return new Router(routes);
   }
-
   override();
+  ko.punches.enableAll();
   ko.applyBindings(router().bindings);
 });

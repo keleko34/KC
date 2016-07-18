@@ -29,7 +29,10 @@ define(['./PhotoPost.bp', './PhotoPost.vm', 'text!./PhotoPost.html', 'css!./Phot
 
         /* Update viewmodel properties here */
 
-        vm.mainclass('PhotoPost' + (_liked ? ' PhotoPost--liked' : ''));
+        var main_class = vm.mainclass();
+        main_class = main_class.replace(' PhotoPost--liked',(_liked ? ' PhotoPost--liked' : ''));
+
+        vm.mainclass(main_class);
 
         /* ex: updates the class attr with a changed state
          *

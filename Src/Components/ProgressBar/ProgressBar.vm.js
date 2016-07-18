@@ -1,4 +1,5 @@
 define([],function(){
+
   function ProgressBar_vm(params,element){
     this.Node_Type = 'ProgressBar';
     this.Node = element;
@@ -12,7 +13,13 @@ define([],function(){
     this.methods = this.constructor()
     .viewmodel(this)
     .call();
+
+    Object.keys(this).forEach((function(k,i){
+      ko.attachProp(k,this);
+    }).bind(this));
   }
+
+  ProgressBar_vm.prototype.attachProp = function(k,el){ko.attachProp(k,this,el);return this.methods;};
 
   /* Place Prototypes here */
 

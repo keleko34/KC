@@ -1,12 +1,12 @@
-<div data-bind="attr:{'class':mainclass}">
+<div data-bind="attr:{class:mainclass,title:cool}">
   <div class="PhotoPost__Image">
     <img class="PhotoPost__Image__Src" />
   </div>
   <div class="PhotoPost__Stats">
     <div class="PhotoPost__Stats__Like">
-      <div class="PhotoPost__Stats__Like__Icon"></div>
+      <div class="PhotoPost__Stats__Like__Icon" data-bind="text:some"></div>
     </div>
-    <div class="PhotoPost__Stats__Details">
+    <div class="PhotoPost__Stats__Details" data-bind="text:textbinding">
 
     </div>
   </div>
