@@ -99,8 +99,13 @@ define([],function(){
           if(el.getAttribute('src_hover')) el.kobindings.src_hoverbinding = el.getAttribute('src_hover');
           if(el.getAttribute('src_active')) el.kobindings.src_activebinding = el.getAttribute('src_active');
         }
-        else{
-
+        else if(t === 'attr'){
+          var attrs = valueAccessor();
+          Object.keys(attrs).forEach(function(k,i){
+            if(el.getAttribute(k)){
+              valueAccessor()[k].extend({attach:el.getAttribute(k)});
+            }
+          });
         }
       }
 
