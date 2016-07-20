@@ -5,13 +5,14 @@ var require = {
         "bootstrap":            "assets/bower_modules/components-bootstrap/js/bootstrap.min",
         "crossroads":           "assets/bower_modules/crossroads/dist/crossroads.min",
         "hasher":               "assets/bower_modules/hasher/dist/js/hasher.min",
-        "jquery":               "assets/bower_modules/jquery/dist/jquery",
+        "jquery":               "assets/bower_modules/jquery/dist/jquery.min",
         "knockout":             "assets/bower_modules/knockout/dist/knockout",
-        "knockout-projections": "assets/bower_modules/knockout-projections/dist/knockout-projections",
+        "knockout-projections": "assets/bower_modules/knockout-projections/dist/knockout-projections.min",
         "signals":              "assets/bower_modules/js-signals/dist/signals.min",
         "text":                 "assets/bower_modules/requirejs-text/text",
-        "css":                  "assets/bower_modules/require-css/css",
-        "knockout.punches":     "assets/bower_modules/knockout.punches/knockout.punches.min"
+        "css":                  "assets/bower_modules/require-css/css.min",
+        "knockout.punches":     "assets/bower_modules/knockout.punches/knockout.punches.min",
+        "kb":                   "assets/bower_modules/kb/KB/Min/KB.min"
     },
     shim: {
         "bootstrap": { deps: ["jquery"] }

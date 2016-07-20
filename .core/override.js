@@ -77,10 +77,27 @@ define([],function(){
 
       function bindingtranslator(t,el){
         if(t === 'component'){
-          //el.kobindings.attr = el.attributes;
-          if(el.textContent.length > 0){
-            el.kobindings.textbinding = el.textContent;
-          }
+          /* Text Bindings */
+          if(el.textContent.length > 0) el.kobindings.textbinding = el.textContent;
+          if(el.innerHTML.length > 0) el.kobindings.htmlbinding = el.innerHTML;
+
+          /* Event Bindings */
+          if(el.onclick || el.getAttribute('onclick')) el.kobindings.onclickbinding = (el.onclick || eval('(function(e){'+el.getAttribute('onclick')+'})'));
+          if(el.onmouseover  || el.getAttribute('onmouseover')) el.kobindings.onmouseoverbinding = (el.onmouseover || eval('(function(e){'+el.getAttribute('onmouseover')+'})'));
+          if(el.onmouseout  || el.getAttribute('onmouseout')) el.kobindings.onmouseoutbinding = (el.onmouseout  || eval('(function(e){'+el.getAttribute('onmouseout')+'})'));
+          if(el.onmousedown  || el.getAttribute('onmousedown')) el.kobindings.onmousedownbinding = (el.onmousedown  || eval('(function(e){'+el.getAttribute('onmousedown')+'})'));
+          if(el.onmouseup  || el.getAttribute('onmouseup')) el.kobindings.onmouseupbinding = (el.onmouseup || eval('(function(e){'+el.getAttribute('onmouseup')+'})'));
+          if(el.oninput  || el.getAttribute('oninput')) el.kobindings.oninputbinding = (el.oninput || eval('(function(e){'+el.getAttribute('oninput')+'})'));
+          if(el.onchange  || el.getAttribute('onchange')) el.kobindings.onchangebinding = (el.onchange || eval('(function(e){'+el.getAttribute('onchange')+'})'));
+          if(el.onkeydown  || el.getAttribute('onkeydown')) el.kobindings.onkeydownbinding = (el.onkeydown  || eval('(function(e){'+el.getAttribute('onkeydown')+'})'));
+          if(el.onkeyup  || el.getAttribute('onkeyup')) el.kobindings.onkeyupbinding = (el.onkeyup || eval('(function(e){'+el.getAttribute('onkeyup')+'})'));
+          if(el.onfocus  || el.getAttribute('onfocus')) el.kobindings.onfocusbinding = (el.onfocus || eval('(function(e){'+el.getAttribute('onfocus')+'})'));
+          if(el.onblur  || el.getAttribute('onblur')) el.kobindings.onblurbinding = (el.onblur || eval('(function(e){'+el.getAttribute('onblur')+'})'));
+
+          /* Src Bindings */
+          if(el.getAttribute('src')) el.kobindings.srcbinding = el.getAttribute('src');
+          if(el.getAttribute('src_hover')) el.kobindings.src_hoverbinding = el.getAttribute('src_hover');
+          if(el.getAttribute('src_active')) el.kobindings.src_activebinding = el.getAttribute('src_active');
         }
         else{
 

@@ -11,7 +11,8 @@
     "knockout": "~3.3.0-alpha",
     "knockout-projections": "~1.1.0",
     "require-css": "^0.1.8",
-    "knockout.punches": "^0.5.1"
+    "knockout.punches": "^0.5.1",
+    "kb": "^0.2.4"
   },
   "resolutions": {
     "knockout": "~3.3.0-alpha"
