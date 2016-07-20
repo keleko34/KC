@@ -14,10 +14,12 @@ define(['./_test.bp', './_test.vm', 'text!./_test.html', 'css!./_test.css' ],fun
 
 	function Create_test(){
 
-      var vm = {};
+      var vm = {},
+          modularizer = CreateModularizer();
       /* Add Private _variables here */
 
       function _test(){
+        modularizer(_test);
 
         /* Update viewmodel properties here */
         vm.Node.querySelector('._test__btnfirst').onclick = function(e){
