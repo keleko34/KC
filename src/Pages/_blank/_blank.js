@@ -1,18 +1,18 @@
 /*********************************
- *  $Name
- *  Created by $Author
- *  $Description
+ *  _blank
+ *  Created by Keleko34
+ *  blank templated page
  ********************************/
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css'],function(blueprint, viewmodel, template){
+define(['./_blank.bp', './_blank.vm', 'text!./_blank.html', 'css!./_blank.css' ],function(blueprint, viewmodel, template){
 
     /* Do not remove!!! */
     /* BUILD SECTION */
     /* END BUILD SECTION */
 
-    function Create$Name(){
+	function Create_blank(){
 
       var vm = {};
       /* Add Private _variables here */
@@ -22,42 +22,42 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css'],func
          *   var _example = '';
         */
 
-      function $Name(){
+      function _blank(){
         /* 'vm' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
-        /* Update viewmodel and node properties here */
+        /* Update viewmodel properties here */
 
         /* ex: updates the class attr with a changed state
          *
-         *   vm.mainclass('$Name' + (_example ? ' $Name--'+_example : ''));
+         *   vm.mainclass('_blank' + (_example ? ' _blank--'+_example : ''));
         */
-        return $Name;
+        return _blank;
       }
 
-      $Name.viewmodel = function(v){
+      _blank.viewmodel = function(v){
         if(v === undefined){
           return vm;
         }
         vm = (v instanceof viewmodel ? v : vm);
-        return $Name;
+        return _blank;
       }
 
       /* add methods for updating and type checking viewmodel properties */
 
       /* ex: functional property, returns value if nothing, sets if value is string
          *
-         *   $Name.example = function(v){
+         *   _blank.example = function(v){
          *     if(v === undefined){
          *        return _example;
          *     }
          *     _example = (typeof v === 'string' ? v : _example);
-         *     return $Name;
+         *     return _blank;
          *   }
         */
 
-      return $Name;
+      return _blank;
 	}
-    blueprint.register_$Name(Create$Name,viewmodel,template);
-	return Create$Name;
+    blueprint.register__blank(Create_blank,viewmodel,template);
+	return Create_blank;
 });

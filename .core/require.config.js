@@ -12,7 +12,7 @@ var require = {
         "text":                 "assets/bower_modules/requirejs-text/text",
         "css":                  "assets/bower_modules/require-css/css.min",
         "knockout.punches":     "assets/bower_modules/knockout.punches/knockout.punches.min",
-        "kb":                   "assets/bower_modules/kb/KB/Min/KB.min"
+        "kb":                   "assets/bower_modules/kb/KB/Build/KB"
     },
     shim: {
         "bootstrap": { deps: ["jquery"] }

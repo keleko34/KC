@@ -1,4 +1,8 @@
-define([],function(){
+define(['kb'],function(CreateKB){
+    /* Initilize KB */
+    var kb = CreateKB();
+    kb.call();
+
     return function(){
       function parseQuery(qstr){
         var query = {},
@@ -73,31 +77,87 @@ define([],function(){
         }
       }
 
+      function attachbinding(type,el,attr,vm){
+        switch(type){
+          case 'text':
+            if(el[attr].length > 0){
+              el.kobindings[attr.toLowerCase()+"binding"] = el[attr];
+            }
+            /*
+            el.addAttrListener(attr,function(e){
+              if(el.KViewModel && !el.KViewModel[attr.toLowerCase()+"binding"]){
+                el.KViewModel[attr.toLowerCase()+"binding"] = ko.observable(e.value);
+                ko.attachProp(attr.toLowerCase()+"binding",el.KViewModel,el);
+                e.preventDefault();
+              }
+            })*/
+          break;
+          case 'event':
+            if(el[attr] || el.getAttribute(attr)){
+              el.kobindings[attr.toLowerCase()+"binding"] = (el[attr] || eval('(function(e){'+el.getAttribute(attr)+'})'));
+              el[attr] = undefined;
+              el.removeAttribute(attr);
+            }
+            el.addAttrListener(attr,function(e){
+              if(el.KViewModel && !el.KViewModel[attr.toLowerCase()+"binding"]){
+                el.KViewModel[attr.toLowerCase()+"binding"] = e.value;
+                ko.attachProp(attr.toLowerCase()+"binding",el.KViewModel,el,true);
+                el.KViewModel.methods();
+                e.preventDefault();
+              }
+            })
+          break;
+          case 'attr':
+            if(el.getAttribute(attr)){
+              el.kobindings[attr.toLowerCase()+"binding"] = el.getAttribute(attr);
+            }
+          break;
+        }
+      }
+
       /* So we can keep the text content inside */
 
-      function bindingtranslator(t,el){
+      function bindingtranslator(t,el,valueAccessor,vm){
         if(t === 'component'){
           /* Text Bindings */
-          if(el.textContent.length > 0) el.kobindings.textbinding = el.textContent;
-          if(el.innerHTML.length > 0) el.kobindings.htmlbinding = el.innerHTML;
+          attachbinding('text',el,'textContent',vm);
+          attachbinding('text',el,'innerHTML',vm);
 
           /* Event Bindings */
-          if(el.onclick || el.getAttribute('onclick')) el.kobindings.onclickbinding = (el.onclick || eval('(function(e){'+el.getAttribute('onclick')+'})'));
-          if(el.onmouseover  || el.getAttribute('onmouseover')) el.kobindings.onmouseoverbinding = (el.onmouseover || eval('(function(e){'+el.getAttribute('onmouseover')+'})'));
-          if(el.onmouseout  || el.getAttribute('onmouseout')) el.kobindings.onmouseoutbinding = (el.onmouseout  || eval('(function(e){'+el.getAttribute('onmouseout')+'})'));
-          if(el.onmousedown  || el.getAttribute('onmousedown')) el.kobindings.onmousedownbinding = (el.onmousedown  || eval('(function(e){'+el.getAttribute('onmousedown')+'})'));
-          if(el.onmouseup  || el.getAttribute('onmouseup')) el.kobindings.onmouseupbinding = (el.onmouseup || eval('(function(e){'+el.getAttribute('onmouseup')+'})'));
-          if(el.oninput  || el.getAttribute('oninput')) el.kobindings.oninputbinding = (el.oninput || eval('(function(e){'+el.getAttribute('oninput')+'})'));
-          if(el.onchange  || el.getAttribute('onchange')) el.kobindings.onchangebinding = (el.onchange || eval('(function(e){'+el.getAttribute('onchange')+'})'));
-          if(el.onkeydown  || el.getAttribute('onkeydown')) el.kobindings.onkeydownbinding = (el.onkeydown  || eval('(function(e){'+el.getAttribute('onkeydown')+'})'));
-          if(el.onkeyup  || el.getAttribute('onkeyup')) el.kobindings.onkeyupbinding = (el.onkeyup || eval('(function(e){'+el.getAttribute('onkeyup')+'})'));
-          if(el.onfocus  || el.getAttribute('onfocus')) el.kobindings.onfocusbinding = (el.onfocus || eval('(function(e){'+el.getAttribute('onfocus')+'})'));
-          if(el.onblur  || el.getAttribute('onblur')) el.kobindings.onblurbinding = (el.onblur || eval('(function(e){'+el.getAttribute('onblur')+'})'));
+          var events = ['onclick','onmouseover','onmouseout','onmousedown','onmouseup','oninput','onchange','onkeydown','onkeyup','onfocus','onblur'];
+          events.forEach(function(e,i){
+            attachbinding('event',el,e,vm);
+          });
+
+          el.addAttrListener('setAttribute',function(e){
+              if(events.indexOf(e.arguments[0]) > -1){
+                if(el.KViewModel && !el.KViewModel[e.arguments[0]+"binding"]){
+                  el.KViewModel[e.arguments[0].toLowerCase()+"binding"] = eval('(function(e){'+e.arguments[1]+'})');
+                  ko.attachProp(e.arguments[0].toLowerCase()+"binding",el.KViewModel,el,true);
+                  el.KViewModel.methods();
+                  e.preventDefault();
+                }
+              }
+            })
 
           /* Src Bindings */
-          if(el.getAttribute('src')) el.kobindings.srcbinding = el.getAttribute('src');
-          if(el.getAttribute('src_hover')) el.kobindings.src_hoverbinding = el.getAttribute('src_hover');
-          if(el.getAttribute('src_active')) el.kobindings.src_activebinding = el.getAttribute('src_active');
+          var attributes = ['src','src_hover','src_active','src_toggled','type','toggled','link','disabled'];
+          attributes.forEach(function(a,i){
+            attachbinding('attr',el,a,vm);
+          });
+
+          el.addAttrListener('setAttribute',function(e){
+            if(attributes.indexOf(e.arguments[0]) > -1){
+              if(el.KViewModel && !el.KViewModel[e.arguments[0]+"binding"]){
+                el.KViewModel[e.arguments[0].toLowerCase()+"binding"] = ko.observable(e.arguments[1]);
+                ko.attachProp(e.arguments[0].toLowerCase()+"binding",el.KViewModel,el);
+                el.KViewModel.methods();
+                e.preventDefault();
+              }
+            }
+          })
+
+
         }
         else if(t === 'attr'){
           var attrs = valueAccessor();
@@ -127,7 +187,7 @@ define([],function(){
             el.kobindings = {};
             el.bindnames = [];
           }
-          bindingtranslator(k,el);
+          bindingtranslator(k,el,valueAccessor,vm);
           if(ko.bindingHandlers[k]._init !== undefined){
             ko.bindingHandlers[k]._init.apply(this,arguments);
           }
@@ -135,10 +195,10 @@ define([],function(){
       });
 
       /* used for attaching props dynamicly to viewmodels and components */
-      ko.attachProp = function(k,vm,el){
+      ko.attachProp = function(k,vm,el,isEvent){
         if(k !== 'methods' && k !== 'name'){
           if(vm[k] === undefined){
-            vm[k] = ko.observable();
+            vm[k] = (!isEvent ? ko.observable() : function(){});
             if(!el || (el && el.KViewModel !== undefined)){
               (el ? el : document).querySelectorAll("[data-bind*='"+k+"']").forEach(function(n,i){
                 ko.cleanNode(n);
@@ -148,22 +208,33 @@ define([],function(){
 
           }
           if(vm.methods[k] === undefined && typeof vm[k] === 'function'){
-            var _private = vm[k]();
+            var _private = (!isEvent ? vm[k]() : vm[k]);
             vm.methods[k] = function(v){
               if(v === undefined){
                 return _private;
               }
-              if(typeof v === typeof vm[k]() || vm[k]() === undefined){
+              if(typeof v === typeof (!isEvent ? vm[k]() : vm[k]) || (!isEvent ? vm[k]() : vm[k]) === undefined){
                 _private = v;
-                vm[k](v);
+                if(!isEvent){
+                  vm[k](v);
+                }
+                else{
+                  vm[k] = v;
+                }
               }
               return vm.methods;
             }
           }
           else if(typeof vm[k] === 'function'){
-            vm.methods[k](vm[k]());
+            vm.methods[k]((!isEvent ? vm[k]() : vm[k]));
           }
         }
+      }
+
+      /* add attachment extender */
+      ko.extenders.attach = function(target,attachment){
+        target(attachment+" "+target());
+        return target;
       }
 
       /* This overrides the components loader so that an element is attached the viewmodel and the viewmodel is atached to the element */
@@ -185,10 +256,22 @@ define([],function(){
                 componentInfo.element.KViewModel = new viewModelConfig(params, componentInfo.element);
                 if(componentInfo.element.kobindings){
                   Object.keys(componentInfo.element.kobindings).forEach(function(k,i){
-                    componentInfo.element.KViewModel[k] = ko.observable(componentInfo.element.kobindings[k]);
-                    ko.attachProp(k,componentInfo.element.KViewModel,componentInfo.element);
-                  });
+                    if(!componentInfo.element.KViewModel[k]){
+                      componentInfo.element.KViewModel[k] = (typeof componentInfo.element.kobindings[k] === 'function' ? componentInfo.element.kobindings[k] : ko.observable(componentInfo.element.kobindings[k]));
+                      ko.attachProp(k,componentInfo.element.KViewModel,componentInfo.element);
+                    }
+                    else{
+                      if(typeof componentInfo.element.kobindings[k] === 'function'){
+                        componentInfo.element.KViewModel[k] = componentInfo.element.kobindings[k];
+                      }
+                      else{
+                        componentInfo.element.KViewModel[k](componentInfo.element.kobindings[k]);
+                      }
 
+                      componentInfo.element.KViewModel.methods();
+                    }
+
+                  });
                 }
                 return componentInfo.element.KViewModel;
               }
@@ -212,5 +295,6 @@ define([],function(){
           }
         }
       });
+
     }
 })

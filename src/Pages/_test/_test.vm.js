@@ -1,9 +1,9 @@
 define([],function(){
 
-  function $Name_vm(params,element){
-    this.Node_Type = '$Name';
+  function _test_vm(params,element){
+    this.Node_Type = '_test';
     this.Node = element;
-    this.mainclass = ko.observable('$Name').extend({attach:element.getAttribute('class')});
+    this.mainclass = ko.observable('_test').extend({attach:element.getAttribute('class')});
 
     /* Place Properties Here */
 
@@ -19,9 +19,9 @@ define([],function(){
     }).bind(this));
   }
 
-  $Name_vm.prototype.attachProp = function(k,el){ko.attachProp(k,this,el);return this.methods;};
+  _test_vm.prototype.attachProp = function(k,el){ko.attachProp(k,this,el);return this.methods;};
 
   /* Place Prototypes here */
 
-  return $Name_vm;
+  return _test_vm;
 })

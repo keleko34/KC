@@ -26,7 +26,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css' $Comp
         /* 'vm' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
-        /* Update viewmodel properties here */
+        /* Update viewmodel and node properties here */
 
         /* ex: updates the class attr with a changed state
          *
