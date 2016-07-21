@@ -1,2 +1,107 @@
-/********************************* *  test_button *  Created by Keleko34 *  allows user interaction through a click ********************************//* This is Your class file, it controls the states as well as the fetching of data etc. */var Createtest_button = (function(){    /* Do not remove!!! */    /* BUILD SECTION */            var includeCSS = (function(){                var _styleNode = document.getElementById('Components-Styles');                if(!_styleNode){                    _styleNode = document.createElement('style');                    _styleNode.setAttribute('id','Components-Styles');                    _styleNode.setAttribute('media','screen');                    _styleNode.setAttribute('type','text/css');                    document.head.appendChild(_styleNode);                    _styleNode = document.getElementById('Components-Styles');                }                if(_styleNode.textContent.indexOf('test_button') < 0){                    _styleNode.textContent += '\r\n@import "/src/Components/test_button/test_button.css";';
-    }                return _styleNode;            }());            var template = "<div class=\"test_button\" data-bind=\"attr:{class:mainclass}\"> <!-- main button container -->  <div class=\"test_button__listener\" data-bind=\"event:{click:onclickbinding}\"> <!-- event listener -->    <div class=\"test_button__listener__content\">{{{innerhtmlbinding}}}</div> <!-- content -->  </div></div>";            var viewmodel = (function(){              function test_button_vm(params,element){                this.Node_Type = 'test_button';                this.Node = element;                this.mainclass = ko.observable('test_button').extend({attach:element.getAttribute('class')});                this.innerhtmlbinding = ko.observable('');                this.onclickbinding = ko.observable(function(){});                /* Place Properties Here */                /* important! this is what ties this viewmodel to the main class,                 * whenever a new vm is made it calls its constructor which is the                 * main class constructor */                this.methods = this.constructor()                .viewmodel(this)                .call();                Object.keys(this).forEach((function(k,i){                  ko.attachProp(k,this);                }).bind(this));              }              test_button_vm.prototype.attachProp = function(k,el){ko.attachProp(k,this,el);return this.methods;};              /* Place Prototypes here */              return test_button_vm;            }());            /* BluePrint Include */            var blueprint = {            register_test_button:function register_test_button(Createtest_button,viewmodel,template){              if(typeof define === 'function' && define.amd){                define('Createtest_button',[],function(){return Createtest_button});              }              else if(typeof module === "object" && module.exports){                module.exports = Createtest_button;              }              viewmodel.prototype.constructor = Createtest_button;              if(ko && !ko.components.isRegistered(('test_button').toLowerCase())){                ko.components.register(('test_button').toLowerCase(),{viewModel:viewmodel,template:template});              }            }            }            /* End Blueprint Include */    /* END BUILD SECTION */    function Createtest_button(){      var vm = {};      /* Add Private _variables here */      var _onClick = function(){},          _disabled = false,          _type = 'click',          _typeEnum = ['click','toggle','text'],          _toggled = false,          _link = '',          _content = '';      function test_button(){        /* Update viewmodel properties here */        test_button.link((vm.linkbinding ? vm.linkbinding() : _link))        .type((vm.typebinding ? vm.typebinding() : _type))        .disabled((vm.disabledbinding ? vm.disabledbinding() : _disabled))        .toggled((vm.toggledbinding ? vm.toggledbinding() : _toggled))        .htmlcontent((vm.innerhtmlbinding ? vm.innerhtmlbinding() : _content));        vm.mainclass((_disabled ? ' test_button--disabled' : '')        + (' test_button--'+(_type))        + (_type === 'toggle' ? (_toggled ? ' test_button--toggled' : '') : ''));        return test_button;      }      test_button.viewmodel = function(v){        if(v === undefined){          return vm;        }        vm = (v instanceof viewmodel ? v : vm);        return test_button;      }      test_button.onClick = function(v){        if(v === undefined){          return _onClick;        }        _onClick = (typeof v === 'function' ? function(e){          if(!_disabled){            v.call(this,e)          }          if(_link.length > 0){            location.href = '#'+_link;          }        } : _onClick);        if(vm.onclickbinding){          vm.onclickbinding(_onClick);        }        return test_button;      }      test_button.disabled = function(v){        if(v === undefined){          return _disabled;        }        _disabled = !!v;        if(vm.disabledbinding){          vm.disabledbinding((_disabled ? 'true' : null));        }        return test_button;      }      test_button.toggled = function(v){        if(v === undefined){          return _toggled;        }        _toggled = !!v;        if(vm.toggledbinding){          vm.toggledbinding((_toggled ? 'true' : null));        }        return test_button;      }      test_button.link = function(v){        if(v === undefined){          return _link;        }        _link = (typeof v === 'string' ? v.replace(/(#)/g,'') : _link);        if(vm.linkbinding){          vm.linkbinding(_link);        }        return test_button;      }      test_button.htmlcontent = function(v){        if(v === undefined){          return _content;        }        _content = (typeof v === 'string' ? v : _content);        if(vm.innerhtmlbinding){          vm.innerhtmlbinding(_content);        }        return test_button;      }      test_button.type = function(v){        if(v === undefined){          return _type;        }        _type = (_typeEnum.indexOf(v) > -1 ? v : _type);        if(vm.typebinding){          vm.typebinding(_type);        }        return test_button;      }      test_button.addType = function(v){        if(typeof v === 'string'){          _typeEnum.push(v);        }        return test_button;      }      /* add methods for updating and type checking viewmodel properties */      return test_button;	}    blueprint.register_test_button(Createtest_button,viewmodel,template);	return Createtest_button;}());
+/*********************************
+ *  test_button
+ *  Created by Keleko34
+ *  allows user interaction through a click
+ ********************************/
+/* This is Your class file, it controls the states as well as the fetching of data etc. */
+var Createtest_button = (function(){
+    /* Do not remove!!! */
+    /* BUILD SECTION */
+            var includeCSS = (function(){                var _styleNode = document.getElementById('Components-Styles');                if(!_styleNode){                    _styleNode = document.createElement('style');                    _styleNode.setAttribute('id','Components-Styles');                    _styleNode.setAttribute('media','screen');                    _styleNode.setAttribute('type','text/css');                    document.head.appendChild(_styleNode);                    _styleNode = document.getElementById('Components-Styles');                }                if(_styleNode.textContent.indexOf('test_button') < 0){                    _styleNode.textContent += '\r\n@import "/src/Components/test_button/test_button.css";';
+    }                return _styleNode;            }());            var template = "<div class=\"test_button\" data-bind=\"attr:{class:mainclass}\"> <!-- main button container -->  <div class=\"test_button__listener\" data-bind=\"event:{click:onclickbinding}\"> <!-- event listener -->    <div class=\"test_button__listener__content\">{{{innerhtmlbinding}}}</div> <!-- content -->  </div></div>";            var viewmodel = (function(){              function test_button_vm(params,element){
+                this.Node_Type = 'test_button';
+                this.Node = element;
+                this.mainclass = ko.observable('test_button').extend({attach:element.getAttribute('class')});
+                this.innerhtmlbinding = ko.observable('');
+                this.onclickbinding = function(){};
+                /* Place Properties Here */
+                /* important! this is what ties this viewmodel to the main class,
+                 * whenever a new vm is made it calls its constructor which is the
+                 * main class constructor */
+                this.methods = this.constructor()
+                .viewmodel(this)
+                .call();
+                Object.keys(this).forEach((function(k,i){
+                  ko.attachProp(k,this);
+                }).bind(this));
+              }
+              test_button_vm.prototype.attachProp = function(k,el){ko.attachProp(k,this,el);return this.methods;};
+              /* Place Prototypes here */
+              return test_button_vm;
+            }());            /* BluePrint Include */            var blueprint = {            register_test_button:function register_test_button(Createtest_button,viewmodel,template){
+              if(typeof define === 'function' && define.amd){
+                define('Createtest_button',[],function(){return Createtest_button});
+              }
+              else if(typeof module === "object" && module.exports){
+                module.exports = Createtest_button;
+              }
+              viewmodel.prototype.constructor = Createtest_button;
+              if(ko && !ko.components.isRegistered(('test_button').toLowerCase())){
+                ko.components.register(('test_button').toLowerCase(),{viewModel:viewmodel,template:template});
+              }
+            }
+            }            /* End Blueprint Include */    /* END BUILD SECTION */
+    function Createtest_button(){
+      var vm = {},
+          modularizer = CreateModularizer();
+      /* Add Private _variables here */
+      var _typeEnum = ['click','toggle','text'];
+      function test_button(){
+        modularizer(test_button);
+        vm.mainclass((test_button.disabled() ? ' test_button--disabled' : '')
+        + (' test_button--'+(test_button.type()))
+        + (test_button.type() === 'toggle' ? (test_button.toggled() ? ' test_button--toggled' : '') : ''));
+        return test_button;
+      }
+      test_button.viewmodel = function(v){
+        if(v === undefined){
+          return vm;
+        }
+        vm = (v instanceof viewmodel ? v : vm);
+        return test_button;
+      }
+      modularizer.add({
+        type:'function',
+        name:'onclick',
+        value:function(){},
+        preprocess:function(v){
+          return function(e){
+            if(!test_button.disabled()){
+              v.call(this,e);
+            }
+            if(test_button.link().length > 0){
+              location.href = '#'+test_button.link();
+            }
+          }
+        }
+      })
+      .add({
+        type:'boolean',
+        name:'disabled',
+        value:false
+      })
+      .add({
+        type:'boolean',
+        name:'toggled',
+        value:false
+      })
+      .add({
+        name:'link',
+        preprocess:function(v){
+          return v.replace(/(#)/g,'');
+        }
+      })
+      .add({
+        name:'innerhtml'
+      })
+      .add({
+        type:'enum',
+        name:'type',
+        checkAgainst:_typeEnum
+      })
+      /* add methods for updating and type checking viewmodel properties */
+      return test_button;
+	}
+    blueprint.register_test_button(Createtest_button,viewmodel,template);
+	return Createtest_button;
+}());
