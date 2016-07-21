@@ -99,8 +99,14 @@ define(['kb'],function(CreateKB){
               el.removeAttribute(attr);
             }
             el.addAttrListener(attr,function(e){
-              if(el.KViewModel && !el.KViewModel[attr.toLowerCase()+"binding"]){
-                el.KViewModel[attr.toLowerCase()+"binding"] = e.value;
+              if(el.KViewModel && el.KViewModel.methods && el.KViewModel.methods[attr.toLowerCase()]){
+                el.KViewModel.methods[attr.toLowerCase()](e.value);
+                el.KViewModel[attr.toLowerCase()+"binding"] = el.KViewModel.methods[attr.toLowerCase()]();
+                el.KViewModel.methods();
+                e.preventDefault();
+              }
+              else if(el.KViewModel && !el.KViewModel[attr.toLowerCase()+"binding"]){
+                el.KViewModel[attr.toLowerCase()+"binding"] = (el.KViewModel.methods[attr.toLowerCase()] ? el.KViewModel.methods[attr.toLowerCase()]() : e.value);
                 ko.attachProp(attr.toLowerCase()+"binding",el.KViewModel,el,true);
                 el.KViewModel.methods();
                 e.preventDefault();
@@ -233,8 +239,15 @@ define(['kb'],function(CreateKB){
 
       /* add attachment extender */
       ko.extenders.attach = function(target,attachment){
-        target(attachment+" "+target());
-        return target;
+        var result = ko.pureComputed({
+                      read: target,
+                      write: function(newValue) {
+                          target((attachment && newValue.indexOf(attachment+" ") < 0 ? attachment + " " + newValue : newValue));
+                      }
+                  });
+
+        result(target());
+        return result;
       }
 
       /* This overrides the components loader so that an element is attached the viewmodel and the viewmodel is atached to the element */
@@ -254,21 +267,40 @@ define(['kb'],function(CreateKB){
             var viewModelConstructor = {
               createViewModel: function (params, componentInfo) {
                 componentInfo.element.KViewModel = new viewModelConfig(params, componentInfo.element);
-                if(componentInfo.element.kobindings){
-                  Object.keys(componentInfo.element.kobindings).forEach(function(k,i){
-                    if(!componentInfo.element.KViewModel[k]){
-                      componentInfo.element.KViewModel[k] = (typeof componentInfo.element.kobindings[k] === 'function' ? componentInfo.element.kobindings[k] : ko.observable(componentInfo.element.kobindings[k]));
-                      ko.attachProp(k,componentInfo.element.KViewModel,componentInfo.element);
-                    }
-                    else{
-                      if(typeof componentInfo.element.kobindings[k] === 'function'){
-                        componentInfo.element.KViewModel[k] = componentInfo.element.kobindings[k];
+                var vm = componentInfo.element.KViewModel,
+                    kob = componentInfo.element.kobindings;
+                if(kob){
+                  Object.keys(kob).forEach(function(k,i){
+                    if(!vm[k]){
+                      if(vm.methods && typeof vm.methods[k.replace('binding','')] === 'function'){
+                        vm.methods[k.replace('binding','')](componentInfo.element.kobindings[k]);
+                        vm[k] = (typeof kob[k] === 'function' ? vm.methods[k.replace('binding','')]() : ko.observable(vm.methods[k.replace('binding','')]()));
                       }
                       else{
-                        componentInfo.element.KViewModel[k](componentInfo.element.kobindings[k]);
+                        vm[k] = (typeof kob[k] === 'function' ? kob[k] : ko.observable(kob[k]));
                       }
-
-                      componentInfo.element.KViewModel.methods();
+                      ko.attachProp(k,vm,componentInfo.element);
+                    }
+                    else{
+                      if(typeof kob[k] === 'function'){
+                        if(vm.methods && typeof vm.methods[k.replace('binding','')] === 'function'){
+                          vm.methods[k.replace('binding','')](componentInfo.element.kobindings[k]);
+                          vm[k] = vm.methods[k.replace('binding','')]();
+                        }
+                        else{
+                          vm[k] = kob[k];
+                        }
+                      }
+                      else{
+                        if(vm.methods && typeof vm.methods[k.replace('binding','')] === 'function'){
+                          vm.methods[k.replace('binding','')](componentInfo.element.kobindings[k]);
+                          vm[k](vm.methods[k.replace('binding','')]());
+                        }
+                        else{
+                          vm[k](kob[k]);
+                        }
+                      }
+                      vm.methods();
                     }
 
                   });

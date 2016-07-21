@@ -39,17 +39,25 @@ function CreateModularizer(){
             if(module.vm[k+"binding"].toString() === ko.observable.toString()){
               if(module[k].type() !== 'array' && module[k].type() !== 'object' && module.vm[k+"binding"]().toString() !== module[k]().toString()){
                 module[k](module.vm[k+"binding"]());
+                /* in case of a preprocess */
+                module.vm[k+"binding"](module[k]());
               }
               else if(module[k].type() === 'array' && module[k].type() === 'object'){
                 module[k](module.vm[k+"binding"]());
+                /* in case of a preprocess */
+                module.vm[k+"binding"](module[k]());
               }
             }
             else{
               if(module[k].type() !== 'array' && module[k].type() !== 'object' && module.vm[k+"binding"].toString() !== module[k]().toString()){
                 module[k](module.vm[k+"binding"]);
+                /* in case of a preprocess */
+                module.vm[k+"binding"] = module[k]();
               }
               else if(module[k].type() === 'array' && module[k].type() === 'object'){
                 module[k](module.vm[k+"binding"]);
+                /* in case of a preprocess */
+                module.vm[k+"binding"] = module[k]();
               }
             }
           }
@@ -58,8 +66,12 @@ function CreateModularizer(){
     }
 
     Modularizer.add = function(options){
-      props[(options.name ? options.name : 'default')] = CreateProperty().type((options.type ? options.type : 'string')).propName((options.name ? options.name : 'default')).preprocess((options.preprocess ? options.preprocess : function(v){return v;})).checkAgainst((options.checkAgainst ? options.checkAgainst : (options.type === 'enum' ? [] : (options.type === 'instance' ? this : ''))));
-      props[(options.name ? options.name : 'default')]((options.value ? options.value : ''));
+      props[(options.name !== undefined ? options.name : 'default')] = CreateProperty()
+      .type((options.type !== undefined ? options.type : 'string'))
+      .propName((options.name !== undefined ? options.name : 'default'))
+      .preprocess((options.preprocess !== undefined ? options.preprocess : function(v){return v;}))
+      .checkAgainst((options.checkAgainst !== undefined ? options.checkAgainst : (options.type === 'enum' ? [] : (options.type === 'instance' ? this : ''))));
+      props[(options.name !== undefined ? options.name : 'default')]((options.value !== undefined ? options.value : ''));
       return Modularizer;
     }
 

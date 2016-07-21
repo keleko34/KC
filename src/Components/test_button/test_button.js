@@ -74,6 +74,7 @@ define(['./test_button.bp', './test_button.vm', 'text!./test_button.html', 'css!
       .add({
         type:'enum',
         name:'type',
+        value:'click',
         checkAgainst:_typeEnum
       })
 

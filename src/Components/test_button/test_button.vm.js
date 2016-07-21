@@ -3,7 +3,7 @@ define([],function(){
   function test_button_vm(params,element){
     this.Node_Type = 'test_button';
     this.Node = element;
-    this.mainclass = ko.observable('test_button').extend({attach:element.getAttribute('class')});
+    this.mainclass = ko.observable('test_button').extend({attach:element.localName});
     this.innerhtmlbinding = ko.observable('');
     this.onclickbinding = function(){};
 
