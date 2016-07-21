@@ -1,9 +1,13 @@
+/* This File is in charge of KO integration, overrides and feature adding */
+
 define(['kb'],function(CreateKB){
     /* Initilize KB */
     var kb = CreateKB();
     kb.call();
 
     return function(){
+
+      /* parser for parsing location ?querydata */
       function parseQuery(qstr){
         var query = {},
             a = qstr.substr(1).split('&');
@@ -15,6 +19,7 @@ define(['kb'],function(CreateKB){
         return query;
       }
 
+      /* This method takes a series of routes and attempts to require them in, when finished it calls callback */
       function loadComponent(routes, callback){
         var query = parseQuery(location.search);
 
@@ -41,13 +46,13 @@ define(['kb'],function(CreateKB){
         });
       }
 
+      /* This will take a string template and parse it for new components and then attempt to load them */
       function parseComponents(template,callback){
         var reg = /(<\/(.*?)>)/g,
             matched = (template.match(reg) ? template.match(reg) : []).map(function(k,i){
               return k.substring(2,k.length-1);
             }),
             routes = [];
-
         for(var x=0;x<matched.length;x++){
           if(document.createElement(matched[x]) instanceof HTMLUnknownElement){
             if(!ko.components.isRegistered(matched[x])){
@@ -63,6 +68,7 @@ define(['kb'],function(CreateKB){
         }
       }
 
+      /* This simply fetches a page if it doesnt already exists */
       function getPage(name,callback){
         var routes = [];
         if(!ko.components.isRegistered(name)){
@@ -77,6 +83,7 @@ define(['kb'],function(CreateKB){
         }
       }
 
+      /* This automates the creation of bindings for items on the component node */
       function attachbinding(type,el,attr,vm){
         switch(type){
           case 'text':
@@ -120,8 +127,6 @@ define(['kb'],function(CreateKB){
           break;
         }
       }
-
-      /* So we can keep the text content inside */
 
       function bindingtranslator(t,el,valueAccessor,vm){
         if(t === 'component'){
