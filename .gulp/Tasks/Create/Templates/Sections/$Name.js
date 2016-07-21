@@ -12,9 +12,10 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css' $Comp
     /* BUILD SECTION */
     /* END BUILD SECTION */
 
-	function Create$Name(){=
+	function Create$Name(){
 
-      var vm = {};
+      var vm = {},
+          modularizer = CreateModularizer();
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -23,6 +24,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css' $Comp
         */
 
       function $Name(){
+        modularizer($Name);
         /* 'vm' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
