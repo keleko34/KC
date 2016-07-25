@@ -4,8 +4,8 @@ define([],function(){
     this.Node_Type = 'test_button';
     this.Node = element;
     this.mainclass = ko.observable('test_button').extend({attach:element.localName});
-    this.innerhtmlbinding = ko.observable('');
-    this.onclickbinding = function(){};
+    this.innerhtml_binding = ko.observable('');
+    this.onclick_binding = function(){};
 
     /* Place Properties Here */
 
@@ -16,12 +16,13 @@ define([],function(){
     .viewmodel(this)
     .call();
 
+    this.Node.KViewModel = this;
     Object.keys(this).forEach((function(k,i){
-      ko.attachProp(k,this);
+      ko.attachProp(k,(ko.isObservable(this[k]) ? this[k]() : this[k]),this.Node,(!ko.isObservable(this[k])));
     }).bind(this));
   }
 
-  test_button_vm.prototype.attachProp = function(k,el){ko.attachProp(k,this,el);return this.methods;};
+  test_button_vm.prototype.attachProp = function(k, val, el, isObservable){ko.attachProp(k,val,el,!isObservable);return this.methods;};
 
   /* Place Prototypes here */
 

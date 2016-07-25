@@ -1,10 +1,6 @@
 /* This File is in charge of KO integration, overrides and feature adding */
 
-define(['kb'],function(CreateKB){
-    /* Initilize KB */
-    var kb = CreateKB();
-    kb.call();
-
+define(['./autobindings'],function(CreateAutoBinds){
     return function(){
 
       /* parser for parsing location ?querydata */
@@ -83,92 +79,10 @@ define(['kb'],function(CreateKB){
         }
       }
 
-      /* This automates the creation of bindings for items on the component node */
-      function attachbinding(type,el,attr,vm){
-        switch(type){
-          case 'text':
-            if(el[attr].length > 0){
-              el.kobindings[attr.toLowerCase()+"binding"] = el[attr];
-            }
-            /*
-            el.addAttrListener(attr,function(e){
-              if(el.KViewModel && !el.KViewModel[attr.toLowerCase()+"binding"]){
-                el.KViewModel[attr.toLowerCase()+"binding"] = ko.observable(e.value);
-                ko.attachProp(attr.toLowerCase()+"binding",el.KViewModel,el);
-                e.preventDefault();
-              }
-            })*/
-          break;
-          case 'event':
-            if(el[attr] || el.getAttribute(attr)){
-              el.kobindings[attr.toLowerCase()+"binding"] = (el[attr] || eval('(function(e){'+el.getAttribute(attr)+'})'));
-              el[attr] = undefined;
-              el.removeAttribute(attr);
-            }
-            el.addAttrListener(attr,function(e){
-              if(el.KViewModel && el.KViewModel.methods && el.KViewModel.methods[attr.toLowerCase()]){
-                el.KViewModel.methods[attr.toLowerCase()](e.value);
-                el.KViewModel[attr.toLowerCase()+"binding"] = el.KViewModel.methods[attr.toLowerCase()]();
-                el.KViewModel.methods();
-                e.preventDefault();
-              }
-              else if(el.KViewModel && !el.KViewModel[attr.toLowerCase()+"binding"]){
-                el.KViewModel[attr.toLowerCase()+"binding"] = (el.KViewModel.methods[attr.toLowerCase()] ? el.KViewModel.methods[attr.toLowerCase()]() : e.value);
-                ko.attachProp(attr.toLowerCase()+"binding",el.KViewModel,el,true);
-                el.KViewModel.methods();
-                e.preventDefault();
-              }
-            })
-          break;
-          case 'attr':
-            if(el.getAttribute(attr)){
-              el.kobindings[attr.toLowerCase()+"binding"] = el.getAttribute(attr);
-            }
-          break;
-        }
-      }
-
       function bindingtranslator(t,el,valueAccessor,vm){
         if(t === 'component'){
-          /* Text Bindings */
-          attachbinding('text',el,'textContent',vm);
-          attachbinding('text',el,'innerHTML',vm);
-
-          /* Event Bindings */
-          var events = ['onclick','onmouseover','onmouseout','onmousedown','onmouseup','oninput','onchange','onkeydown','onkeyup','onfocus','onblur'];
-          events.forEach(function(e,i){
-            attachbinding('event',el,e,vm);
-          });
-
-          el.addAttrListener('setAttribute',function(e){
-              if(events.indexOf(e.arguments[0]) > -1){
-                if(el.KViewModel && !el.KViewModel[e.arguments[0]+"binding"]){
-                  el.KViewModel[e.arguments[0].toLowerCase()+"binding"] = eval('(function(e){'+e.arguments[1]+'})');
-                  ko.attachProp(e.arguments[0].toLowerCase()+"binding",el.KViewModel,el,true);
-                  el.KViewModel.methods();
-                  e.preventDefault();
-                }
-              }
-            })
-
-          /* Src Bindings */
-          var attributes = ['src','src_hover','src_active','src_toggled','type','toggled','link','disabled'];
-          attributes.forEach(function(a,i){
-            attachbinding('attr',el,a,vm);
-          });
-
-          el.addAttrListener('setAttribute',function(e){
-            if(attributes.indexOf(e.arguments[0]) > -1){
-              if(el.KViewModel && !el.KViewModel[e.arguments[0]+"binding"]){
-                el.KViewModel[e.arguments[0].toLowerCase()+"binding"] = ko.observable(e.arguments[1]);
-                ko.attachProp(e.arguments[0].toLowerCase()+"binding",el.KViewModel,el);
-                el.KViewModel.methods();
-                e.preventDefault();
-              }
-            }
-          })
-
-
+          el.AutoBinder = CreateAutoBinds();
+          el.AutoBinder.attachBinds(el);
         }
         else if(t === 'attr'){
           var attrs = valueAccessor();
@@ -206,25 +120,26 @@ define(['kb'],function(CreateKB){
       });
 
       /* used for attaching props dynamicly to viewmodels and components */
-      ko.attachProp = function(k,vm,el,isEvent){
+      ko.attachProp = function(k,value,el,isEvent){
+        k = k.toLowerCase();
         if(k !== 'methods' && k !== 'name'){
+          var vm = el.KViewModel;
           if(vm[k] === undefined){
-            vm[k] = (!isEvent ? ko.observable() : function(){});
-            if(!el || (el && el.KViewModel !== undefined)){
-              (el ? el : document).querySelectorAll("[data-bind*='"+k+"']").forEach(function(n,i){
-                ko.cleanNode(n);
-                ko.applyBindings(vm,n);
-              });
-            }
-
+            vm[k] = (!isEvent ? ko.observable(value) : (typeof value === 'function' ? value : function(){}));
+            (el ? el : document).querySelectorAll("[data-bind*='"+k+"']").forEach(function(n,i){
+              ko.cleanNode(n);
+              ko.applyBindings(vm,n);
+            });
           }
-          if(vm.methods[k] === undefined && typeof vm[k] === 'function'){
+
+          if(vm.methods && vm.methods[(k.replace('_binding',''))] === undefined){
             var _private = (!isEvent ? vm[k]() : vm[k]);
-            vm.methods[k] = function(v){
+            vm.methods[(k.replace('_binding',''))] = function(v){
               if(v === undefined){
                 return _private;
               }
-              if(typeof v === typeof (!isEvent ? vm[k]() : vm[k]) || (!isEvent ? vm[k]() : vm[k]) === undefined){
+              var vmVal = (!isEvent ? vm[k]() : vm[k]);
+              if(typeof v === typeof vmVal || vmVal === undefined){
                 _private = v;
                 if(!isEvent){
                   vm[k](v);
@@ -235,9 +150,18 @@ define(['kb'],function(CreateKB){
               }
               return vm.methods;
             }
+
+
+
           }
-          else if(typeof vm[k] === 'function'){
-            vm.methods[k]((!isEvent ? vm[k]() : vm[k]));
+          else if(vm.methods && vm.methods[(k.replace('_binding',''))] !== undefined){
+            vm.methods[(k.replace('_binding',''))]((!isEvent ? vm[k]() : vm[k]));
+            if(isEvent){
+              vm[k] = vm.methods[(k.replace('_binding',''))]();
+            }
+            else{
+              vm[k](vm.methods[(k.replace('_binding',''))]());
+            }
           }
         }
       }
@@ -245,11 +169,11 @@ define(['kb'],function(CreateKB){
       /* add attachment extender */
       ko.extenders.attach = function(target,attachment){
         var result = ko.pureComputed({
-                      read: target,
-                      write: function(newValue) {
-                          target((attachment && newValue.indexOf(attachment+" ") < 0 ? attachment + " " + newValue : newValue));
-                      }
-                  });
+            read: target,
+            write: function(newValue) {
+                target((attachment && newValue.indexOf(attachment+" ") < 0 ? attachment + " " + newValue : newValue));
+            }
+        });
 
         result(target());
         return result;
@@ -272,44 +196,7 @@ define(['kb'],function(CreateKB){
             var viewModelConstructor = {
               createViewModel: function (params, componentInfo) {
                 componentInfo.element.KViewModel = new viewModelConfig(params, componentInfo.element);
-                var vm = componentInfo.element.KViewModel,
-                    kob = componentInfo.element.kobindings;
-                if(kob){
-                  Object.keys(kob).forEach(function(k,i){
-                    if(!vm[k]){
-                      if(vm.methods && typeof vm.methods[k.replace('binding','')] === 'function'){
-                        vm.methods[k.replace('binding','')](componentInfo.element.kobindings[k]);
-                        vm[k] = (typeof kob[k] === 'function' ? vm.methods[k.replace('binding','')]() : ko.observable(vm.methods[k.replace('binding','')]()));
-                      }
-                      else{
-                        vm[k] = (typeof kob[k] === 'function' ? kob[k] : ko.observable(kob[k]));
-                      }
-                      ko.attachProp(k,vm,componentInfo.element);
-                    }
-                    else{
-                      if(typeof kob[k] === 'function'){
-                        if(vm.methods && typeof vm.methods[k.replace('binding','')] === 'function'){
-                          vm.methods[k.replace('binding','')](componentInfo.element.kobindings[k]);
-                          vm[k] = vm.methods[k.replace('binding','')]();
-                        }
-                        else{
-                          vm[k] = kob[k];
-                        }
-                      }
-                      else{
-                        if(vm.methods && typeof vm.methods[k.replace('binding','')] === 'function'){
-                          vm.methods[k.replace('binding','')](componentInfo.element.kobindings[k]);
-                          vm[k](vm.methods[k.replace('binding','')]());
-                        }
-                        else{
-                          vm[k](kob[k]);
-                        }
-                      }
-                      vm.methods();
-                    }
-
-                  });
-                }
+                componentInfo.element.AutoBinder(componentInfo.element);
                 return componentInfo.element.KViewModel;
               }
             };

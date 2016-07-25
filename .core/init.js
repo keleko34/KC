@@ -35,29 +35,29 @@ function CreateModularizer(){
           module[k] = props[k];
         }
         if(module.vm){
-          if(module.vm[k+"binding"]){
-            if(module.vm[k+"binding"].toString() === ko.observable.toString()){
-              if(module[k].type() !== 'array' && module[k].type() !== 'object' && module.vm[k+"binding"]().toString() !== module[k]().toString()){
-                module[k](module.vm[k+"binding"]());
+          if(module.vm[k+"_binding"]){
+            if(ko.isObservable(module.vm[k+"_binding"])){
+              if(module[k].type() !== 'array' && module[k].type() !== 'object' && module.vm[k+"_binding"]().toString() !== module[k]().toString()){
+                module[k](module.vm[k+"_binding"]());
                 /* in case of a preprocess */
-                module.vm[k+"binding"](module[k]());
+                module.vm[k+"_binding"](module[k]());
               }
               else if(module[k].type() === 'array' && module[k].type() === 'object'){
-                module[k](module.vm[k+"binding"]());
+                module[k](module.vm[k+"_binding"]());
                 /* in case of a preprocess */
-                module.vm[k+"binding"](module[k]());
+                module.vm[k+"_binding"](module[k]());
               }
             }
             else{
-              if(module[k].type() !== 'array' && module[k].type() !== 'object' && module.vm[k+"binding"].toString() !== module[k]().toString()){
-                module[k](module.vm[k+"binding"]);
+              if(module[k].type() !== 'array' && module[k].type() !== 'object' && module.vm[k+"_binding"].toString() !== module[k]().toString()){
+                module[k](module.vm[k+"_binding"]);
                 /* in case of a preprocess */
-                module.vm[k+"binding"] = module[k]();
+                module.vm[k+"_binding"] = module[k]();
               }
               else if(module[k].type() === 'array' && module[k].type() === 'object'){
-                module[k](module.vm[k+"binding"]);
+                module[k](module.vm[k+"_binding"]);
                 /* in case of a preprocess */
-                module.vm[k+"binding"] = module[k]();
+                module.vm[k+"_binding"] = module[k]();
               }
             }
           }
@@ -92,26 +92,26 @@ function CreateModularizer(){
         if(types[_type](value,_checkAgainst))
         {
           _value = _preprocess(value);
-          if(module.vm && module.vm[_name+"binding"]){
-            if(module.vm[_name+"binding"].toString() === ko.observable.toString()){
-              if(_type !== 'array' && _type !== 'object' && module.vm[_name+"binding"]().toString() !== _value.toString()){
-                module.vm[_name+"binding"](_value);
+          if(typeof this.viewmodel === 'function' && this.viewmodel()[_name+"_binding"]){
+            if(ko.isObservable(this.viewmodel()[_name+"_binding"])){
+              if(_type !== 'array' && _type !== 'object' && this.viewmodel()[_name+"_binding"]().toString() !== _value.toString()){
+                this.viewmodel()[_name+"_binding"](_value);
               }
               else if(_type === 'array' && _type === 'object'){
-                module.vm[_name+"binding"](_value);
+                this.viewmodel()[_name+"_binding"](_value);
               }
             }
             else{
-              if(_type !== 'array' && _type !== 'object' && module.vm[_name+"binding"].toString() !== _value.toString()){
-                module.vm[_name+"binding"] = _value;
+              if(_type !== 'array' && _type !== 'object' && this.viewmodel()[_name+"_binding"].toString() !== _value.toString()){
+                this.viewmodel()[_name+"_binding"] = _value;
               }
               else if(_type === 'array' && _type === 'object'){
-                module.vm[_name+"binding"] = _value;
+                this.viewmodel()[_name+"_binding"] = _value;
               }
             }
           }
         }
-        return module;
+        return this;
       }
 
       Property.type = function(v){
