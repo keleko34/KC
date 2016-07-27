@@ -144,6 +144,83 @@ module.exports = function(){
         }
       });
     }
+    else if(req.url.indexOf('/require_css') === 0){
+      if(!req.query && req.url.indexOf('?') > -1){
+        req.query = query.parse(req.url.substring((req.url.indexOf('?')+1),req.url.length));
+        req.url = req.url.substring(0,req.url.indexOf('?'));
+      }
+      var _type = '',
+          _finished = [],
+          _env = environment(req),
+          _debug = (req.query ? req.query.debug : false);
+
+      if(!req.params){
+        req.params = [];
+        req.params[0] = req.url.replace('/require_css/','');
+        req.params[1] = (((_env === 'qa' || _env === 'prod') && !_debug) ? '.min.css' : '.css');
+      }
+      if(!res.notFound){
+        res.notFound = notFound.bind(res);
+      }
+      if(!res.serverError){
+        res.serverError = serverError.bind(res);
+      }
+
+      fs.readdir(appPath+'/src/Components',function(err,dir){
+        if(!err){
+          loop:for(var x=0;x<dir.length;x++){
+            if(_type.length > 0){
+              break loop;
+            }
+            if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
+              _type = 'Components';
+              sendRequest(_type,req.params,'local',_debug,res);
+            }
+          }
+          _finished[0] = true;
+          if(_finished[0] && _finished[1] && _finished[2] && _type.length === 0){
+            res.notFound();
+          }
+        }
+      });
+
+      fs.readdir(appPath+'/src/Sections',function(err,dir){
+        if(!err){
+          loop:for(var x=0;x<dir.length;x++){
+            if(_type.length > 0){
+              break loop;
+            }
+            if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
+              _type = 'Sections';
+              sendRequest(_type,req.params,'local',_debug,res);
+            }
+          }
+          _finished[1] = true;
+          if(_finished[0] && _finished[1] && _finished[2] && _type.length === 0){
+            res.notFound();
+          }
+        }
+      });
+
+      fs.readdir(appPath+'/src/Pages',function(err,dir){
+        if(!err){
+          loop:for(var x=0;x<dir.length;x++){
+            if(_type.length > 0){
+              break loop;
+            }
+            if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
+              _type = 'Pages';
+              sendRequest(_type,req.params,'local',_debug,res);
+            }
+          }
+          _finished[2] = true;
+          if(_finished[0] && _finished[1] && _finished[2] && _type.length === 0){
+            res.notFound();
+          }
+        }
+      });
+
+    }
     else{
       next();
     }

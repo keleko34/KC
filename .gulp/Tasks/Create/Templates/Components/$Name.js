@@ -16,6 +16,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css'],func
 
       var vm = {},
           modularizer = CreateModularizer();
+
       /* Add Private _variables here */
 
       /* ex: private for functional property

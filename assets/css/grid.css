@@ -1,0 +1,30 @@
+.row {
+  clear:both;
+}
+
+.column {
+  display: table;
+  float: left;
+  position: relative;
+  min-width:300px;
+}
+
+.col-1 {
+  width:100%;
+}
+
+.col-2 {
+  width:50%;
+}
+
+.col-3 {
+  width:33.3%;
+}
+
+.col-4 {
+  width:25%;
+}
+
+.col-flex {
+
+}

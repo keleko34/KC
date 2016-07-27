@@ -1,3 +1,21 @@
 ._test {
 
 }
+
+._test__col1 {
+  background: aliceblue;
+}
+
+._test__col2 {
+  background: antiquewhite;
+}
+
+._test__btnfirst {
+  position: absolute;
+  right: 10px;
+}
+
+._test__btnsecond {
+  position: absolute;
+  left: 10px;
+}

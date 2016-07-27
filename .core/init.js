@@ -155,7 +155,7 @@ function CreateModularizer(){
 
 
 
-require(['./.core/routes', './.core/override', 'crossroads', 'hasher'],function(routeConfig, override, crossroads, hasher){
+require(['./.core/routes', './.core/ko/init', 'crossroads', 'hasher'],function(routeConfig, override, crossroads, hasher){
 
   function router(){
     var routes = routeConfig.page_routes;
@@ -218,7 +218,6 @@ require(['./.core/routes', './.core/override', 'crossroads', 'hasher'],function(
     // Create and export router instance
     return new Router(routes);
   }
-  override();
   ko.punches.enableAll();
   ko.applyBindings(router().bindings);
 });

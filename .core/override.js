@@ -79,6 +79,17 @@ define(['./autobindings'],function(CreateAutoBinds){
         }
       }
 
+
+
+
+
+
+
+
+
+
+
+
       function bindingtranslator(t,el,valueAccessor,vm){
         if(t === 'component'){
           el.AutoBinder = CreateAutoBinds();

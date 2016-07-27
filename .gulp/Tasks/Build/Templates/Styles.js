@@ -10,7 +10,7 @@ var includeCSS = (function(){
         _styleNode = document.getElementById('$Type-Styles');
     }
 
-    if(_styleNode.textContent.indexOf('$Name') < 0){
+    if(_styleNode.textContent.indexOf('/src/$Type/$Name/$Name') < 0){
         _styleNode.textContent += '\r\n@import "/src/$Type/$Name/$Name.css";';
     }
     return _styleNode;
