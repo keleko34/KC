@@ -1,7 +1,12 @@
 function koComponent(){
 
-  var _eventEnum = ['init','config','viewmodel','template','css'],
-      _events = {};
+  var _events = {
+        init:[],
+        css:[],
+        config:[],
+        viewmodel:[],
+        template:[]
+      };
 
   ko.override = {};
 
@@ -11,8 +16,8 @@ function koComponent(){
       url = '/require/'+name;
       url = (query.env !== undefined ? url+'?env='+query.env : url);
       url = (query.debug !== undefined ? url+((query.env !== undefined ? '&' : '?')+'debug='+query.debug) : url);
-      if(!require.defined(k)){
-         require([k],function(){
+      if(!require.defined(url)){
+         require([url],function(){
            ko.override.css(name);
            cb();
          },function(err){console.error(name,' does not exist');});
@@ -44,8 +49,8 @@ function koComponent(){
 
   ko.override.css = function(name){
     var _styleNode = document.getElementById('src_styles'),
-        _query = parse_query(location.search),
-        _url = '/require_css/'+name;
+        query = parse_query(location.search),
+        url = '/require_css/'+name;
         url = (query.env !== undefined ? url+'?env='+query.env : url);
         url = (query.debug !== undefined ? url+((query.env !== undefined ? '&' : '?')+'debug='+query.debug) : url);
 
@@ -60,7 +65,7 @@ function koComponent(){
               .replace(/\s/g,'')
               .split('/')[2];
               console.log(name);
-              ko.override.events.css(name);
+              ko.override.events.oncss(name);
          });
       document.head.appendChild(_styleNode);
     }
@@ -148,7 +153,7 @@ function koComponent(){
   }
 
   Component.addListener = function(ev,func){
-    if(typeof ev === 'string' && _eventEnum.indexOf(ev) > -1){
+    if(typeof ev === 'string' && Object.keys(_events).indexOf(ev) > -1){
       if(_events[ev] === undefined){
         _events[ev] = [];
       }

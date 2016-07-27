@@ -3,7 +3,7 @@ define(['./component','./binding','./extenders'],function(CreateComponentOverrid
       BindingOverride = CreateBindingOverride(),
       ExtenderOverride = CreateExtendersOverride();
 
-  kc.addListener('viewmodel',BindingOverride.inject).call();
+  ComponentOverride.addListener('viewmodel',BindingOverride.inject).call();
   return {
     ComponentOverride : ComponentOverride,
     BindingOverride : BindingOverride,

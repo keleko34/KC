@@ -152,10 +152,13 @@ function CreateModularizer(){
     return Modularizer;
 }
 
+var kb;
 
 
+require(['./.core/routes', './.core/ko/init', 'crossroads', 'hasher','kb'],function(routeConfig, override, crossroads, hasher, CreateKB){
 
-require(['./.core/routes', './.core/ko/init', 'crossroads', 'hasher'],function(routeConfig, override, crossroads, hasher){
+  kb = CreateKB();
+  kb.call();
 
   function router(){
     var routes = routeConfig.page_routes;
@@ -214,10 +217,10 @@ require(['./.core/routes', './.core/ko/init', 'crossroads', 'hasher'],function(r
       })
     }
 
-
     // Create and export router instance
     return new Router(routes);
   }
   ko.punches.enableAll();
   ko.applyBindings(router().bindings);
+
 });
