@@ -33,7 +33,7 @@ function koComponent(){
       return k.substring(2,k.length-1);
     })
     .filter(function(k){
-      return (document.createElement(matches[x]) instanceof HTMLUnknownElement);
+      return (document.createElement(k) instanceof HTMLUnknownElement);
     }),
     count = 0;
 
@@ -47,6 +47,7 @@ function koComponent(){
     }
   }
 
+  /*
   ko.override.css = function(name){
     var _styleNode = document.getElementById('src_styles'),
         query = parse_query(location.search),
@@ -61,11 +62,10 @@ function koComponent(){
         _styleNode.setAttribute('type','text/css');
         _styleNode.addAttrListener('textContent',function(e){
               var name = e.value.replace(new RegExp("("+e.oldvalue+")"),'')
-              .replace('@import','')
+              .replace(/(@import)/g,'')
               .replace(/\s/g,'')
               .split('/')[2];
-              console.log(name);
-              ko.override.events.oncss(name);
+              ko.override.events.oncss({component:name});
          });
       document.head.appendChild(_styleNode);
     }
@@ -73,16 +73,40 @@ function koComponent(){
         _styleNode.textContent += '\r\n@import "'+url+'";';
     }
   }
+  */
+
+
+  ko.override.css = function(name){
+    var query = parse_query(location.search),
+        url = '/require_css/'+name;
+        url = (query.env !== undefined ? url+'?env='+query.env : url);
+        url = (query.debug !== undefined ? url+((query.env !== undefined ? '&' : '?')+'debug='+query.debug) : url),
+        _styleNode = document.querySelector('style[src="'+url+'"]');
+
+    if(!_styleNode){
+        _styleNode = document.createElement('link');
+        _styleNode.setAttribute('rel','stylesheet')
+        _styleNode.onload = function(e){
+          ko.override.events.oncss({component:name});
+        }
+        _styleNode.setAttribute('href',url);
+      document.head.appendChild(_styleNode);
+    }
+  }
+
 
   ko.override.events = {};
-  ko.override.events.oncss = function(name){run_event('css',name);}
-  ko.override.events.ontemplate = function(name){run_event('template',name);}
-  ko.override.events.onviewmodel = function(name,vm){run_event('viewmodel',name,vm);}
-  ko.override.events.onconfig = function(name){run_event('config',name);}
-  ko.override.events.oninit = function(name){run_event('init',name);}
+  ko.override.events.oncss = function(options){run_event('css',options);}
+  ko.override.events.ontemplate = function(options){run_event('template',options);}
+  ko.override.events.onviewmodel = function(options){run_event('viewmodel',options);}
+  ko.override.events.onconfig = function(options){run_event('config',options);}
+  ko.override.events.oninit = function(options){run_event('init',options);}
 
   function event_object(options){
-    this.component = options.name;
+    this.component = options.component;
+    this.valueAccessor = options.valueAccessor;
+    this.target = options.target;
+    this.template = options.template
     this.event = options.event;
     this.view_model = options.view_model;
     this.stopPropogation = function(){
@@ -90,8 +114,9 @@ function koComponent(){
     }
   }
 
-  function run_event(type,name,vm){
-    var e = new event_object({event:type,name:name,view_model:vm});
+  function run_event(type,options){
+    options.event = type;
+    var e = new event_object(options);
     loop:for(var x=0;x<_events[type].length;x++){
       _events[type][x](e);
       if(e._stopPropogation){
@@ -117,7 +142,7 @@ function koComponent(){
         kc = ko.components;
     bh.component._init = (bh.component._init === undefined ? bh.component.init : bh.component._init);
     bh.component.init = function(el,valueAccessor,model,vm){
-      ko.override.events.oninit(el.nodeName.toLowerCase());
+      ko.override.events.oninit({component:el.nodeName.toLowerCase(),target:el,view_model:vm,valueAcessor:valueAccessor});
       if(bh.component._init !== undefined){
         bh.component._init.apply(this,arguments);
       }
@@ -127,7 +152,7 @@ function koComponent(){
       getConfig:function(name, callback){
         ko.override.load(name,function(){
           kc.defaultLoader.getConfig(name, callback);
-          ko.override.events.onconfig(name);
+          ko.override.events.onconfig({component:name});
         });
       },
       loadViewModel:function(name, viewModelConfig, callback){
@@ -136,7 +161,7 @@ function koComponent(){
           createViewModel: function(params, componentInfo){
             var el = componentInfo.element;
                 el.KViewModel = new viewModelConfig(params, componentInfo.element);
-                ko.override.events.onviewmodel(name);
+                ko.override.events.onviewmodel({component:name,view_model:el.KViewModel,target:el});
                 return el.KViewModel;
           }
         }, callback);
@@ -145,7 +170,7 @@ function koComponent(){
         if(typeof templateConfig !== 'string') callback(null);
         ko.override.parsetemplate(templateConfig,function(){
           kc.defaultLoader.loadTemplate(name, templateConfig, callback);
-          ko.override.events.ontemplate(name);
+          ko.override.events.ontemplate({component:name,template:templateConfig});
         });
       }
     });
@@ -153,22 +178,37 @@ function koComponent(){
   }
 
   Component.addListener = function(ev,func){
-    if(typeof ev === 'string' && Object.keys(_events).indexOf(ev) > -1){
-      if(_events[ev] === undefined){
-        _events[ev] = [];
+    if(typeof ev === 'string' && (Object.keys(_events).indexOf(ev) > -1 || ev === '*')){
+      if(ev === '*'){
+        Object.keys(_events).forEach(function(k){
+          _events[k].push(func);
+        });
       }
-      _events[ev].push(func);
+      else{
+        _events[ev].push(func);
+      }
     }
     return Component;
   }
 
   Component.removeListener = function(ev,func){
-    if(typeof ev === 'string' && _eventEnum.indexOf(ev) > -1){
-      loop:for(var x=0;x<_events[ev];x++){
-        if(_events[ev][x].toString() === func.toString()){
-          _events[ev].splice(x,1);
-          break loop;
+    if(typeof ev === 'string' && (_eventEnum.indexOf(ev) > -1 || ev === '*')){
+
+      function event_looper(e){
+        loop:for(var x=0;x<_events[e];x++){
+          if(_events[e][x].toString() === func.toString()){
+            _events[e].splice(x,1);
+            break loop;
+          }
         }
+      }
+      if(ev === '*'){
+        Object.keys(_events).forEach(function(k){
+          event_looper(k);
+        });
+      }
+      else{
+        event_looper(ev);
       }
     }
     return Component;

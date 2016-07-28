@@ -30,6 +30,8 @@ function Grid(){
     traverseToClosestSizedElement : traverseToClosestSizedElement,
     adjustColumnsHeight : adjustColumnsHeight
   }
-
-
 };
+
+
+define([],function(){return Grid();});
+define(['Grid'],function(){return Grid();});

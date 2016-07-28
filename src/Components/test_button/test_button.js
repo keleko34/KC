@@ -6,7 +6,7 @@
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./test_button.bp', './test_button.vm', 'text!./test_button.html', 'css!./test_button.css'],function(blueprint, viewmodel, template){
+define(['./test_button.bp', './test_button.vm', 'text!./test_button.html'],function(blueprint, viewmodel, template){
 
     /* Do not remove!!! */
     /* BUILD SECTION */

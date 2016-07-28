@@ -57,7 +57,7 @@ module.exports = function(){
   }
 
   function Route(req,res,next){
-    if(req.url.indexOf('/require') === 0){
+    if(req.url.indexOf('/require') === 0 && req.url.indexOf('/require_css') !== 0){
       if(!req.query && req.url.indexOf('?') > -1){
         req.query = query.parse(req.url.substring((req.url.indexOf('?')+1),req.url.length));
         req.url = req.url.substring(0,req.url.indexOf('?'));
@@ -165,6 +165,8 @@ module.exports = function(){
       if(!res.serverError){
         res.serverError = serverError.bind(res);
       }
+
+      res.setHeader('content-type','text/css');
 
       fs.readdir(appPath+'/src/Components',function(err,dir){
         if(!err){

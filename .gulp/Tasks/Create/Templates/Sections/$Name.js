@@ -6,7 +6,7 @@
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'css!./$Name.css' $Components[x](, './Components/$x/$x')],function(blueprint, viewmodel, template){
+define(['./$Name.bp', './$Name.vm', 'text!./$Name.html'],function(blueprint, viewmodel, template){
 
     /* Do not remove!!! */
     /* BUILD SECTION */
