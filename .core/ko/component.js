@@ -166,6 +166,34 @@ function koComponent(){
     return Component;
   }
 
+  Component.parseCss = function(cssString,itarator){
+    return cssString.split(/(.*?{.*?})/g)
+    .filter(function(r){
+      return (r.length > 0 && (r !== '\r\n' && r !== '\n'));
+    })
+    .map(function(r){
+      return r.split(/(.*?)({)(.*?)(})/)
+      .filter(function(k){
+        return (k.length > 0 && (k !== '\r\n' && k !== '\n'));
+      })
+    })
+    .reduce(function(o,r){
+      o[r[0].replace(/\s/g,'')] = (r.length < 4 ? "" : r[2].split(/(.*?:.*?;)/)
+      .filter(function(k){
+        return (k.length > 0 && (k !== '\r\n' && k !== '\n'));
+      })
+      .reduce(function(ro,k){
+        k = k.substring(2,k.length)
+        ro[k.substring(0,k.indexOf(':')).replace(/\s/g,'')] = k.substring((k.indexOf(':')+1),k.indexOf(';'));
+        if(typeof itarator === 'function'){
+          itarator({selector:r[0].replace(/\s/g,''),rule:k.substring(0,k.indexOf(':')).replace(/\s/g,''),value:k.substring((k.indexOf(':')+1),k.indexOf(';'))});
+        }
+        return ro;
+      },{}));
+      return o;
+    },{})
+  }
+
   return Component;
 }
 

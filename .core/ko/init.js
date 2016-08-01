@@ -22,31 +22,9 @@ define(['./component','./extenders', './binding', 'kb'],function(CreateComponent
 
     /* Here we can control style reading for methods etc. */
 
-    var rules = e.template.substring((e.template.indexOf('<style>')+"<style>".length),(e.template.indexOf('</style>')))
-    .split(/(.*?{.*?})/g)
-    .filter(function(r){
-      return (r.length > 0 && (r !== '\r\n' && r !== '\n'));
-    })
-    .map(function(r){
-      return r.split(/(.*?)({)(.*?)(})/)
-      .filter(function(k){
-        return (k.length > 0 && (k !== '\r\n' && k !== '\n'));
-      })
-    })
-    .reduce(function(o,r){
-      o[r[0].replace(/\s/g,'')] = (r.length < 4 ? "" : r[2].split(/(.*?:.*?;)/)
-      .filter(function(k){
-        return (k.length > 0 && (k !== '\r\n' && k !== '\n'));
-      })
-      .reduce(function(ro,k){
-        k = k.substring(2,k.length)
-        ro[k.substring(0,k.indexOf(':')).replace(/\s/g,'')] = k.substring((k.indexOf(':')+1),k.indexOf(';'));
-        return ro;
-      },{}));
-      return o;
-    },{})
-
-
+    var rules = ComponentOverride.parseCss(e.template.substring((e.template.indexOf('<style>')+"<style>".length),(e.template.indexOf('</style>'))),function(e){
+      /* iterator for each rule */
+    });
 
 
 
