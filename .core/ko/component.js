@@ -47,55 +47,6 @@ function koComponent(){
     }
   }
 
-  /*
-  ko.override.css = function(name){
-    var _styleNode = document.getElementById('src_styles'),
-        query = parse_query(location.search),
-        url = '/require_css/'+name;
-        url = (query.env !== undefined ? url+'?env='+query.env : url);
-        url = (query.debug !== undefined ? url+((query.env !== undefined ? '&' : '?')+'debug='+query.debug) : url);
-
-    if(!_styleNode){
-        _styleNode = document.createElement('style');
-        _styleNode.setAttribute('id','src_styles');
-        _styleNode.setAttribute('media','screen');
-        _styleNode.setAttribute('type','text/css');
-        _styleNode.addAttrListener('textContent',function(e){
-              var name = e.value.replace(new RegExp("("+e.oldvalue+")"),'')
-              .replace(/(@import)/g,'')
-              .replace(/\s/g,'')
-              .split('/')[2];
-              ko.override.events.oncss({component:name});
-         });
-      document.head.appendChild(_styleNode);
-    }
-    if(_styleNode.textContent.indexOf('"'+url+'"') < 0){
-        _styleNode.textContent += '\r\n@import "'+url+'";';
-    }
-  }
-  */
-
-  /*
-  ko.override.css = function(name){
-    var query = parse_query(location.search),
-        url = '/require_css/'+name;
-        url = (query.env !== undefined ? url+'?env='+query.env : url);
-        url = (query.debug !== undefined ? url+((query.env !== undefined ? '&' : '?')+'debug='+query.debug) : url),
-        _styleNode = document.querySelector('style[src="'+url+'"]');
-
-    if(!_styleNode){
-        _styleNode = document.createElement('link');
-        _styleNode.setAttribute('rel','stylesheet')
-        _styleNode.onload = function(e){
-          ko.override.events.oncss({component:name});
-        }
-        _styleNode.setAttribute('href',url);
-      document.head.appendChild(_styleNode);
-    }
-  }
-  */
-
-
   ko.override.events = {};
   ko.override.events.oncss = function(options){run_event('css',options);}
   ko.override.events.ontemplate = function(options){run_event('template',options);}
