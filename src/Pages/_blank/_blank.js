@@ -6,7 +6,7 @@
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./_blank.bp', './_blank.vm', 'text!./_blank.html'],function(blueprint, viewmodel, template){
+define(['./_blank.bp', './_blank.vm', 'text!./_blank.html', 'text!./_blank.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
     /* BUILD SECTION */
@@ -58,6 +58,6 @@ define(['./_blank.bp', './_blank.vm', 'text!./_blank.html'],function(blueprint, 
 
       return _blank;
 	}
-    blueprint.register__blank(Create_blank,viewmodel,template);
+    blueprint.register__blank(Create_blank,viewmodel,template,css);
 	return Create_blank;
 });

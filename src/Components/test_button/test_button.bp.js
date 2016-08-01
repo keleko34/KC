@@ -22,7 +22,7 @@ else if (typeof module === "object" && module.exports)
 }
 
 /* This method is the method that will be put into the main file when it is compiled during dev build */
-function register_test_button(Createtest_button,viewmodel,template){
+function register_test_button(Createtest_button,viewmodel,template,css){
   if(typeof define === 'function' && define.amd){
     define('Createtest_button',[],function(){return Createtest_button});
   }
@@ -31,6 +31,7 @@ function register_test_button(Createtest_button,viewmodel,template){
   }
   viewmodel.prototype.constructor = Createtest_button;
   if(ko && !ko.components.isRegistered(('test_button').toLowerCase())){
+    template = "<style>\r\n"+css+"\r\n</style>"+template;
     ko.components.register(('test_button').toLowerCase(),{viewModel:viewmodel,template:template});
   }
 }

@@ -22,7 +22,7 @@ else if (typeof module === "object" && module.exports)
 }
 
 /* This method is the method that will be put into the main file when it is compiled during dev build */
-function register__blank(Create_blank,viewmodel,template){
+function register__blank(Create_blank,viewmodel,template,css){
   if(typeof define === 'function' && define.amd){
     define('Create_blank',[],function(){return Create_blank});
   }
@@ -31,6 +31,7 @@ function register__blank(Create_blank,viewmodel,template){
   }
   viewmodel.prototype.constructor = Create_blank;
   if(ko && !ko.components.isRegistered(('_blank').toLowerCase())){
+    template = "<style>\r\n"+css+"\r\n</style>"+template;
     ko.components.register(('_blank').toLowerCase(),{viewModel:viewmodel,template:template});
   }
 }

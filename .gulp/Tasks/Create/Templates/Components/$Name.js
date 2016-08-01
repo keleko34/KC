@@ -6,7 +6,7 @@
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./$Name.bp', './$Name.vm', 'text!./$Name.html'],function(blueprint, viewmodel, template){
+define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
     /* BUILD SECTION */
@@ -16,7 +16,6 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html'],function(blueprint, vie
 
       var vm = {},
           modularizer = CreateModularizer();
-
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -61,6 +60,6 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html'],function(blueprint, vie
 
       return $Name;
 	}
-    blueprint.register_$Name(Create$Name,viewmodel,template);
+    blueprint.register_$Name(Create$Name,viewmodel,template,css);
 	return Create$Name;
 });

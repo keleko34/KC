@@ -18,7 +18,7 @@ function koComponent(){
       url = (query.debug !== undefined ? url+((query.env !== undefined ? '&' : '?')+'debug='+query.debug) : url);
       if(!require.defined(url)){
          require([url],function(){
-           ko.override.css(name);
+           //ko.override.css(name);
            cb();
          },function(err){console.error(name,' does not exist');});
       }
@@ -75,7 +75,7 @@ function koComponent(){
   }
   */
 
-
+  /*
   ko.override.css = function(name){
     var query = parse_query(location.search),
         url = '/require_css/'+name;
@@ -93,6 +93,7 @@ function koComponent(){
       document.head.appendChild(_styleNode);
     }
   }
+  */
 
 
   ko.override.events = {};

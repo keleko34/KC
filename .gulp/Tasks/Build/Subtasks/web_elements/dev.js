@@ -13,7 +13,7 @@ module.exports = function(res,cb){
       _vmFile = _file.replace('.js','.vm.js'),
       _bpFile = _file.replace('.js','.bp.js'),
       _temFile = _file.replace('.js','.html'),
-      _cssHtml = './.gulp/Tasks/Build/Templates/Styles.js',
+      _cssHtml = _file.replace('.js','.css'),
       _env = config.Tasks.Build.subtasks[res.SubTask];
 
   return gulp.src(_file)
@@ -24,8 +24,8 @@ module.exports = function(res,cb){
       transform: function(filepath,file,i,len){
         console.log('\033[36mInjecting ViewModel:\033[37m',filepath);
         var __contents = file.contents.toString('utf8');
-        __contents = __contents.replace(_regexDefineEnd,"}());\r\n/* BluePrint Include */\r\n/* End Blueprint Include */\r\n");
-        __contents = __contents.replace(_regexDefine,"\r\n/* HTML Include */\r\n/* End HTML Include */\r\nvar viewmodel = (function(){\r\n");
+        __contents = __contents.replace(_regexDefineEnd,"}());\r\n/* End Viewmodel include */\r\n/* BluePrint Include */\r\n/* End Blueprint Include */\r\n");
+        __contents = __contents.replace(_regexDefine,"\r\n/* HTML Include */\r\n/* End HTML Include */\r\n/* Viewmodel Included */\r\nvar viewmodel = (function(){\r\n");
         __contents = __contents.replace(/\n/g,'\n'+Array(13).join(' '));
         return __contents;
       }
@@ -44,6 +44,7 @@ module.exports = function(res,cb){
     }))
     .pipe(inject(gulp.src(_temFile),{
       relative:true,
+      removeTags:true,
       starttag: '/* HTML Include */',
       endtag: '/* End HTML Include */',
       transform: function(filepath,file,i,len){
@@ -52,7 +53,7 @@ module.exports = function(res,cb){
         __contents = __contents.replace(/\r\n/g,'');
         __contents = __contents.replace(/\n/g,'');
         __contents = __contents.replace(/(")/g,'\\"')
-        __contents = '/* CSS Include */\r\n/* End CSS Include */\r\n' + Array(13).join(' ') + 'var template = "' + __contents + '";';
+        __contents = '/* CSS Include */\r\n/* End CSS Include */\r\n\r\n'+ Array(13).join(' ') +'/* HTML Include */\r\n' + Array(13).join(' ') + 'var template = "' + __contents + '";\r\n'+Array(13).join(' ')+'/* End HTML Include */\r\n';
         return __contents;
       }
     }))
@@ -60,22 +61,20 @@ module.exports = function(res,cb){
       relative:true,
       starttag: '/* CSS Include */',
       endtag: '/* End CSS Include */',
+      removeTags:true,
       transform: function(filepath,file,i,len){
         console.log('\033[36mInjecting CSS include Code:\033[37m',filepath);
         var __contents = file.contents.toString('utf8');
-        __contents = '\r\n' + __contents;
-        __contents = __contents.replace(/(\$Type)/g,res.Type);
-        __contents = __contents.replace(/(\$Name)/g,res.Name);
-        __contents = __contents.replace(/\r\n/g,'\r\n' + Array(13).join(' '));
+        __contents = __contents.replace(/\r\n/g,'');
+        __contents = __contents.replace(/\n/g,'');
+        __contents = __contents.replace(/(")/g,'\\"');
+        __contents = __contents.replace(/(')/g,"\\'");
+        __contents = '\r\n'+Array(13).join(' ')+'/* CSS Include */\r\n' + Array(13).join(' ') + 'var css = "' + __contents + '";\r\n'+Array(13).join(' ')+'/* End CSS Include */\r\n';
         return __contents;
       }
     }))
     .pipe(replace(_regexDefineEnd,"}())"))
-    .pipe(replace(_regexDefine,("var Create"+res.Name+" = (function(){")))
-    .pipe(replace('/* HTML Include */',''))
-    .pipe(replace('/* End HTML Include */',''))
-    .pipe(replace('/* CSS Include */',''))
-    .pipe(replace('/* End CSS Include */',''))
+    .pipe(replace(_regexDefine,("\r\nvar Create"+res.Name+" = (function(){")))
     .pipe(replace(/^\s*[\r\n]/gm,''))
     .pipe(gulp.dest('./src/' + res.Type + '/'+res.Name+'/' + _env[res.currentrule]))
     .on('end',cb);

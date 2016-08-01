@@ -6,7 +6,7 @@
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./test_button.bp', './test_button.vm', 'text!./test_button.html'],function(blueprint, viewmodel, template){
+define(['./test_button.bp', './test_button.vm', 'text!./test_button.html', 'text!./test_button.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
     /* BUILD SECTION */
@@ -82,6 +82,6 @@ define(['./test_button.bp', './test_button.vm', 'text!./test_button.html'],funct
 
       return test_button;
 	}
-    blueprint.register_test_button(Createtest_button,viewmodel,template);
+    blueprint.register_test_button(Createtest_button,viewmodel,template,css);
 	return Createtest_button;
 });

@@ -22,7 +22,7 @@ else if (typeof module === "object" && module.exports)
 }
 
 /* This method is the method that will be put into the main file when it is compiled during dev build */
-function register_$Name(Create$Name,viewmodel,template){
+function register_$Name(Create$Name,viewmodel,template,css){
   if(typeof define === 'function' && define.amd){
     define('Create$Name',[],function(){return Create$Name});
   }
@@ -31,6 +31,7 @@ function register_$Name(Create$Name,viewmodel,template){
   }
   viewmodel.prototype.constructor = Create$Name;
   if(ko && !ko.components.isRegistered(('$Name').toLowerCase())){
+    template = "<style>\r\n"+css+"\r\n</style>"+template;
     ko.components.register(('$Name').toLowerCase(),{viewModel:viewmodel,template:template});
   }
 }
