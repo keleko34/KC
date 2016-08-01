@@ -14,19 +14,19 @@ define(['./component','./extenders', './binding', 'kb'],function(CreateComponent
     .getDefaults(e.target);
   })
   .addListener('viewmodel',function(e){
-    e.target.ko_binder.call(null,e.view_model,e.target);
-
-    ExtenderOverride.addListener('update',e.target.ko_binder.update);
-  })
-  .addListener('template',function(e){
-
+    var css = e.view_model.Node.querySelector('style').textContent;
     /* Here we can control style reading for methods etc. */
 
-    var rules = ComponentOverride.parseCss(e.template.substring((e.template.indexOf('<style>')+"<style>".length),(e.template.indexOf('</style>'))),function(e){
+    var rules = ComponentOverride.parseCss(css,function(e){
       /* iterator for each rule */
     });
 
 
+    e.target.ko_binder.call(null,e.view_model,e.target);
+
+    ExtenderOverride.addListener('update',e.target.ko_binder.update);
+
+    console.log(rules);
 
   })
   .call();

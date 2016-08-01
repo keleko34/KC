@@ -124,6 +124,9 @@ function koComponent(){
           kc.defaultLoader.loadTemplate(name, templateConfig, callback);
           ko.override.events.ontemplate({component:name,template:templateConfig});
         });
+      },
+      loadComponent:function(name, componentConfig, callback){
+        kc.defaultLoader.loadComponent(name, componentConfig, callback);
       }
     });
 

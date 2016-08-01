@@ -155,20 +155,14 @@ function CreateModularizer(){
 var kb;
 
 
-require(['./.core/routes', './.core/ko/init', './.core/grid/grid', 'crossroads', 'hasher'],function(routeConfig, override, grid, crossroads, hasher){
+require(['./.core/ko/init', './.core/grid/grid', 'crossroads', 'hasher'],function(override, grid, crossroads, hasher){
 
-  kb.addAttrListener('clientHeight',function(){
-    console.log('clientHeight');
-    grid.adjustColumnsHeight();
-  })
-
-  override.ComponentOverride.addListener('css',function(){
-    console.log(document.styleSheets);
+  override.ComponentOverride.addListener('viewmodel',function(){
     grid.adjustColumnsHeight();
   });
 
   function router(){
-    var routes = routeConfig.page_routes;
+    var routes = page_routes;
     function Router(config){
       var self = this,
           keys = Object.keys(config);
