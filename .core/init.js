@@ -1,28 +1,28 @@
 function CreateModularizer(){
     var types = {
       string: function(v){
-        return (typeof v === 'string');
+        return (typeof v === 'string' ? v : undefined);
       },
       number: function(v){
-        return (typeof v === 'number');
+        return (typeof v === 'number' || !isNaN(parseInt(v,10)) ? parseInt(v,10) : undefined);
       },
       boolean: function(v){
-        return (typeof v === 'boolean');
+        return (typeof v === 'boolean' ? !!v : undefined);
       },
       function: function(v){
-        return (typeof v === 'function');
+        return (typeof v === 'function' ? v : undefined);
       },
       object: function(v){
-        return (v.constructor.toString() === Object.toString());
+        return (v.constructor.toString() === Object.toString() ? v : undefined);
       },
       array: function(v){
-        return (v.constructor.toString() === Array.toString());
+        return (v.constructor.toString() === Array.toString() ? v : undefined);
       },
       instance: function(v,i){
-        return (v instanceof i);
+        return (v instanceof i ? v : undefined);
       },
       enum: function(v,e){
-        return (e.indexOf(v) > -1);
+        return (e.indexOf(v) > -1 ? v : undefined);
       }
     },
         module = function(){},
@@ -82,6 +82,7 @@ function CreateModularizer(){
           _name = '',
           _value = '',
           _preprocess = function(v){return v;},
+          _isMethod = false,
           _checkAgainst = '';
 
 
@@ -89,7 +90,8 @@ function CreateModularizer(){
         if(value === undefined){
           return _value;
         }
-        if(types[_type](value,_checkAgainst))
+        value = (types[_type](value,_checkAgainst) || false);
+        if(value)
         {
           _value = _preprocess(value);
           if(typeof this.viewmodel === 'function' && this.viewmodel()[_name+"_binding"]){
@@ -143,6 +145,14 @@ function CreateModularizer(){
           return _checkAgainst;
         }
         _checkAgainst = v;
+        return Property;
+      }
+
+      Property.isMethod = function(){
+        if(v === undefined){
+          return _isMethod;
+        }
+        _isMethod = !!v;
         return Property;
       }
 

@@ -12,10 +12,15 @@ function koExtend(){
       run_event('attach',(attach && v.indexOf(attach+" ") < 0 ? attach + " " + v : v),target())
     });
   },
+  ko.override.extenders.px = function(target, isPX){
+    return compute(target,function(v){
+      target((parseInt(v,10)+(isPX ? 'px' : '')));
+    });
+  },
   ko.override.extenders.update = function(target, options){
     return compute(target,function(v){
-      target(v);
-      run_event('update',v,target(),options.name,options.key,options.viewmodel);
+        target(v);
+        run_event('update',v,target(),options.name,options.key,options.viewmodel);
     });
   }
 
@@ -96,7 +101,11 @@ function koExtend(){
   }
 
   Extend.extendUpdate = function(obs,name,oKey,viewmodel){
-    return obs.extend({update:{name:name,key:oKey,viewmodel:viewmodel}});
+
+    obs.subscribe(function(value) {
+      run_event('update',v,target(),options.name,options.key,options.viewmodel);
+    });
+    return obs;
   }
 
   return Extend;

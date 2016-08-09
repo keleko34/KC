@@ -5,6 +5,10 @@ define([],function(){
     this.Node = element;
     this.mainclass = ko.observable('CMS_Grid').extend({attach:element.getAttribute('class')});
 
+    this.width_binding = ko.observable('').extend({px:true});
+    this.height_binding = ko.observable('').extend({px:true});
+    this.minHeight_binding = ko.observable('').extend({px:true});
+    this.minWidth_binding = ko.observable('').extend({px:true});
     /* Place Properties Here */
 
     /* important! this is what ties this viewmodel to the main class,

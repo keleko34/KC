@@ -18,20 +18,23 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
           modularizer = CreateModularizer();
       /* Add Private _variables here */
 
-      var _winSizeX = window.clientWidth,
-          _winSizeY = window.clientHeight;
+      var _winSizeX = 0,
+          _winSizeY = window.innerHeight,
+          _initial = false,
+          _remove = function(){
+            vm.Node.parentElement.removeChild(vm.Node);
+            window.removeEventListener('resize',resize);
+          }
 
       function CMS_Grid(){
         modularizer(CMS_Grid);
+        if(!_initial){
+          _initial = true;
+          resize();
+        }
         /* 'vm' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
-        /* Update viewmodel and node properties here */
-
-        /* ex: updates the class attr with a changed state
-         *
-         *   vm.mainclass('CMS_Grid' + (_example ? ' CMS_Grid--'+_example : ''));
-        */
         return CMS_Grid;
       }
 
@@ -53,6 +56,31 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
         name:'row',
         value:0
       })
+      .add({
+        type:'number',
+        name:'height',
+        value:200
+      })
+      .add({
+        type:'number',
+        name:'width',
+        value:_winSizeX
+      })
+      .add({
+        type:'number',
+        name:'minWidth',
+        value:300
+      })
+      .add({
+        type:'number',
+        name:'minHeight',
+        value:200
+      })
+      .add({
+        type:'function',
+        name:'remove',
+        value:_remove
+      })
 
       /* add methods for updating and type checking viewmodel properties */
 
@@ -69,31 +97,48 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
 
       function getIndex(node){
         var i = 0;
-        while((node = node.previousSibling) != null){
-          i++;
+        while(node !== null){
+          node = node.previousSibling;
+          if(node !== null && node.nodeName.toLowerCase() == 'cms_grid'){
+            i++
+          }
         }
         return i;
       }
 
-      Grid.resize = function(e){
-        var parent = vm.Node.parentElement,
-            index = getIndex(vm.Node),
-            siblings = Array.prototype.slice(parent.children).filter(function(k){
-              return (k.K_ViewModel && k.K_ViewModel.methods.col && k.K_ViewModel.methods.col() === Grid.col());
-            });
-
-        console.log(siblings);
-
-
-
+      function resize(e){
+        if(_winSizeX === window.innerWidth) return;
+        /* if width is same need to check columns */
+        if(CMS_Grid.width() === window.innerWidth){
+          var parent = vm.Node.parentElement,
+              index = getIndex(vm.Node),
+              siblings = Array.prototype.slice.call(parent.children).filter(function(k){
+                return (k.KViewModel && k.KViewModel.methods.col && k.KViewModel.methods.col() === CMS_Grid.col());
+              });
+          if(siblings.length > 0){
+            _winSizeX = window.innerWidth;
+            CMS_Grid.width(window.innerWidth/(siblings.length+1)).call();
+          }
+          else{
+            var w = CMS_Grid.width(),
+              dif = (_winSizeX - window.innerWidth);
+              _winSizeX = window.innerWidth;
+              CMS_Grid.width((w-dif)).call();
+          }
+        }
+        else{
+          var w = CMS_Grid.width(),
+              dif = (_winSizeX - window.innerWidth),
+              newW = (w-dif);
+          if(newW <= CMS_Grid.minWidth()){
+            newW = CMS_Grid.minWidth();
+          }
+          _winSizeX = window.innerWidth;
+          CMS_Grid.width(newW).call();
+        }
       }
 
-      Grid.remove = function(){
-        vm.Node.parentElement.removeChild(vm.Node);
-        window.removeEventListener('resize',Grid.resize);
-      }
-
-      window.addEventListener('resize',Grid.resize);
+      window.addEventListener('resize',resize);
 
       return CMS_Grid;
 	}

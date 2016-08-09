@@ -55,7 +55,7 @@ function koBinding(){
   }
 
   function checkClass(viewmodel,key,value){
-    if(typeof viewmodel.methods[key] === 'function'){
+    if(typeof viewmodel.methods[key] === 'function' && !viewmodel.methods[key].ignore){
 
       if(ko.isObservable(viewmodel[key+"_binding"])){
         if(viewmodel.methods[key]() !== value){
