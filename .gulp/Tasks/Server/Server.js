@@ -14,8 +14,7 @@ var base = require('./../../Base'),
 module.exports = function(){
 
   var paths = {
-    "/require":[appPath+'/src/Components',appPath+'/src/Sections',appPath+'/src/Pages'],
-    "/cms":[appPath+'/src/CMS_Components',appPath+'/src/CMS_Sections']
+    "/require":[appPath+'/src/Components',appPath+'/src/Sections',appPath+'/src/Pages',appPath+'/src/CMS_Components',appPath+'/src/CMS_Sections']
   }
 
   /* Filter helps to filter prompt inputs after they have been entered,

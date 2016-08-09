@@ -154,12 +154,9 @@ function CreateModularizer(){
 
 var kb;
 
-
 require(['./.core/ko/init', './.core/grid/grid', 'crossroads', 'hasher'],function(override, grid, crossroads, hasher){
 
-  override.ComponentOverride.addListener('viewmodel',function(){
-    grid.adjustColumnsHeight();
-  });
+
 
   function router(){
     var routes = page_routes;

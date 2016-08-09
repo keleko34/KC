@@ -5,7 +5,8 @@ function koComponent(){
         css:[],
         config:[],
         viewmodel:[],
-        template:[]
+        template:[],
+        build:[]
       },
       _kb_textevents = ['innerHTML','outerHTML','textContent','innerText','outerText'];
 
@@ -29,40 +30,95 @@ function koComponent(){
     }
   }
 
-  ko.override.parsetemplate = function(template,cb){
-    var matches = (template.match(/(<\/(.*?)>)/g) ? template.match(/(<\/(.*?)>)/g) : []).map(function(k,i){
+  ko.override.getUnkownElements = function(htmlString){
+    var match =  (htmlString.match(/(<\/(.*?)>)/g) ? htmlString.match(/(<\/(.*?)>)/g) : []).map(function(k,i){
       return k.substring(2,k.length-1);
     })
     .filter(function(k){
       return (document.createElement(k) instanceof HTMLUnknownElement);
-    }),
-    count = 0;
+    });
 
-    if(matches.length < 1) return cb();
+    return match.filter(function(k,i){
+      return (match.indexOf(k,(i+1)) < 0);
+    });
+  }
 
-    for(var x=0;x<matches.length;x++){
-      ko.override.load(matches[x],function(){
+  ko.override.parsetemplate = function(template,cb){
+    var matched = ko.override.getUnkownElements(template),
+        count = 0;
+
+    matched.forEach(function(tag){
+      if(!ko.components.isRegistered(tag)){
+        ko.override.load(tag,function(){
+          count += 1;
+          if(count === matched.length){
+            cb();
+          }
+        });
+      }
+      else{
         count += 1;
-        if(count === matches.length) cb();
+        if(count === matched.length){
+          cb();
+        }
+      }
+    });
+
+    if(matched.length < 1){
+      cb();
+    }
+  }
+
+  ko.override.parseNodeChildren = function(node){
+    var matched = ko.override.getUnkownElements((typeof node === 'string' ? node : node.innerHTML));
+      matched.forEach(function(tag){
+        if(!ko.components.isRegistered(tag)){
+          ko.override.load(tag,function(){
+            ko.override.setElementsBindings(node.getElementsByTagName(tag));
+          })
+        }
+        else{
+          ko.override.setElementsBindings(node.getElementsByTagName(tag));
+        }
       });
+  }
+
+  ko.override.setElementsBindings = function(elements){
+    for(var x=0;x<elements.length;x++){
+      if(!elements[x].KViewModel && !elements[x].ko_binds){
+        ko.applyBindings({},elements[x]);
+      }
     }
   }
 
   ko.override.events = {};
+  ko.override.events.onbuild = function(options){run_event('build',options);}
   ko.override.events.oncss = function(options){run_event('css',options);}
   ko.override.events.ontemplate = function(options){run_event('template',options);}
   ko.override.events.onviewmodel = function(options){run_event('viewmodel',options);}
   ko.override.events.onconfig = function(options){run_event('config',options);}
   ko.override.events.oninit = function(options){run_event('init',options);}
 
+  Object.keys(ko.bindingHandlers).forEach(function(k){
+    if(k.indexOf('html') > -1 && !ko.bindingHandlers[k]._update){
+      ko.bindingHandlers[k]._update = ko.bindingHandlers[k].update;
+      ko.bindingHandlers[k].update = function(element, valueAccessor, allBindings, viewModel, bindingContext){
+        if(ko.bindingHandlers[k]._update){
+          ko.bindingHandlers[k]._update.apply(this,arguments);
+        }
+        while(!(element instanceof HTMLUnknownElement) && element !== null){
+          element = element.parentElement;
+        }
+        if(element && element.ko_postcheck){
+          ko.override.parseNodeChildren(element);
+        }
+      }
+    }
+  });
+
   function textEvent(e){
     if(e.value.indexOf('ignore') < 0){
-      ko.override.parsetemplate(e.value,function(){
-        for(var x=0;x<e.target.children.length;x++){
-          var child = e.target.children[x];
-          ko.applyBindings({},child);
-        }
-      });
+      ko.override.parseNodeChildren(e.target);
     }
   }
 
@@ -73,8 +129,18 @@ function koComponent(){
   kb.addAttrUpdateListener('appendChild',function(e){
     if(e.arguments[0] instanceof HTMLUnknownElement){
       ko.override.load(e.arguments[0].tagName,function(){
-        ko.applyBindings({},e.arguments[0]);
+        if(!e.arguments[0].KViewModel && !e.arguments[0].ko_binds){
+          ko.applyBindings({},e.arguments[0]);
+        }
       });
+    }
+    else if(e.arguments[0].innerHTML && e.arguments[0].innerHTML.length > 0){
+      ko.override.parseNodeChildren(e.arguments[0]);
+    }
+    if(e.arguments[0] instanceof HTMLUnknownElement && e.arguments[0].innerHTML && e.arguments[0].innerHTML.length > 0){
+      if(!e.arguments[0].KViewModel && !e.arguments[0].ko_binds){
+        e.arguments[0].ko_postcheck = true;
+      }
     }
   });
 
@@ -117,7 +183,8 @@ function koComponent(){
   function Component(){
 
     var bh = ko.bindingHandlers,
-        kc = ko.components;
+        kc = ko.components,
+        ev;
     bh.component._init = (bh.component._init === undefined ? bh.component.init : bh.component._init);
     bh.component.init = function(el,valueAccessor,model,vm){
       ko.override.events.oninit({component:el.nodeName.toLowerCase(),target:el,view_model:vm,valueAcessor:valueAccessor});
@@ -135,11 +202,13 @@ function koComponent(){
       },
       loadViewModel:function(name, viewModelConfig, callback){
         if(typeof viewModelConfig !== 'function') return callback(null);
+
         kc.defaultLoader.loadViewModel(name,{
           createViewModel: function(params, componentInfo){
             var el = componentInfo.element;
                 el.KViewModel = new viewModelConfig(params, componentInfo.element);
-                ko.override.events.onviewmodel({component:name,view_model:el.KViewModel,target:el});
+                ev = {component:name,view_model:el.KViewModel,target:el};
+                ko.override.events.onviewmodel(ev);
                 return el.KViewModel;
           }
         }, callback);

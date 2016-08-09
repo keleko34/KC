@@ -25,9 +25,8 @@ define(['./component','./extenders', './binding', 'kb'],function(CreateComponent
     e.target.ko_binder.call(null,e.view_model,e.target);
 
     ExtenderOverride.addListener('update',e.target.ko_binder.update);
-
-    console.log(rules);
-
+    //console.log(e.target,e.target.children);
+    //ko.override.parseNodeChildren(e.target);
   })
   .call();
 

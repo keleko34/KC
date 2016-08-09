@@ -18,10 +18,8 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
           modularizer = CreateModularizer();
       /* Add Private _variables here */
 
-      /* ex: private for functional property
-         *
-         *   var _example = '';
-        */
+      var _winSizeX = window.clientWidth,
+          _winSizeY = window.clientHeight;
 
       function CMS_Grid(){
         modularizer(CMS_Grid);
@@ -45,6 +43,17 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
         return CMS_Grid;
       }
 
+      modularizer.add({
+        type:'number',
+        name:'col',
+        value:0
+      })
+      .add({
+        type:'number',
+        name:'row',
+        value:0
+      })
+
       /* add methods for updating and type checking viewmodel properties */
 
       /* ex: functional property, returns value if nothing, sets if value is string
@@ -57,6 +66,34 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
          *     return CMS_Grid;
          *   }
         */
+
+      function getIndex(node){
+        var i = 0;
+        while((node = node.previousSibling) != null){
+          i++;
+        }
+        return i;
+      }
+
+      Grid.resize = function(e){
+        var parent = vm.Node.parentElement,
+            index = getIndex(vm.Node),
+            siblings = Array.prototype.slice(parent.children).filter(function(k){
+              return (k.K_ViewModel && k.K_ViewModel.methods.col && k.K_ViewModel.methods.col() === Grid.col());
+            });
+
+        console.log(siblings);
+
+
+
+      }
+
+      Grid.remove = function(){
+        vm.Node.parentElement.removeChild(vm.Node);
+        window.removeEventListener('resize',Grid.resize);
+      }
+
+      window.addEventListener('resize',Grid.resize);
 
       return CMS_Grid;
 	}

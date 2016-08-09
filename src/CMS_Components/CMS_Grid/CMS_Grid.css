@@ -1,3 +1,11 @@
+CMS_Grid:nth-child(odd) {
+  background: #729bc4;
+}
+
+CMS_Grid:nth-child(even) {
+  background: #67a350;
+}
+
 .CMS_Grid {
 
 }

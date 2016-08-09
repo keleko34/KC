@@ -22,13 +22,12 @@ var require = {
 
 var page_routes = {
     "Header":[
-      { "url": "", "params": { "page": "_blank"}}
+      { "url": "", "params": { "page": "test_header"}}
     ],
     "Content":[
-      { "url": "",    "params": { "page": "_test" } },
-      { "url": "homepage", "params": { "page": "_blank"}}
+      { "url": "",    "params": { "page": "test_content" } }
     ],
     "Footer":[
-      { "url":"", "params": { "page": "_blank"}}
+      { "url":"", "params": { "page": "test_footer"}}
     ]
   }
