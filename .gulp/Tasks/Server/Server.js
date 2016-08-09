@@ -13,6 +13,11 @@ var base = require('./../../Base'),
 
 module.exports = function(){
 
+  var paths = {
+    "/require":[appPath+'/src/Components',appPath+'/src/Sections',appPath+'/src/Pages'],
+    "/cms":[appPath+'/src/CMS_Components',appPath+'/src/CMS_Sections']
+  }
+
   /* Filter helps to filter prompt inputs after they have been entered,
      such an example of seeing if a file they entered exists etc.
   */
@@ -56,15 +61,70 @@ module.exports = function(){
     fs.createReadStream(appPath+'/404.html').pipe(this);
   }
 
+  /* Default authorizer, normally ran through login system with permissions */
+  var isAuthorized = true;
+
   function Route(req,res,next){
-    if(req.url.indexOf('/require') === 0 && req.url.indexOf('/require_css') !== 0){
-      if(!req.query && req.url.indexOf('?') > -1){
+
+    var path_routes = Object.keys(paths);
+
+    path_loop:for(var p=0;p<path_routes.length;p++){
+      if(req.url.indexOf(path_routes[p]) === 0){
+        var _type = '',
+            _finished = [],
+            _isCMS = (req.url.indexOf('CMS') > -1),
+            _routes = paths[path_routes[p]];
+
+        sortQuery(req,res);
+
+        if(_isCMS){
+          if(!isAuthorized){
+            res.serverError();
+            return;
+          }
+        }
+
+        comp_loop:for(var c=0;c<_routes.length;c++){
+          (function(){
+            var r = _routes[c];
+            fs.readdir(_routes[c],function(err,dir){
+              if(!err){
+                loop:for(var x=0;x<dir.length;x++){
+                  if(_type.length > 0){
+                    break loop;
+                  }
+                  if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
+                    _type = r.replace(appPath+'/src/','');
+                    sendRequest(_type,req.params,req.query.env,req.query.debug,res);
+                    break loop;
+                  }
+                }
+                if(_type.length < 1){
+                  _finished.push(true);
+                }
+              }
+              else{
+                console.error(err,_routes[c]);
+                _finished.push(true);
+              }
+              if(_finished.length >= _routes.length){
+                res.notFound();
+              }
+            });
+          }());
+        }
+        return;
+      }
+    }
+    next();
+  }
+
+  function sortQuery(req,res){
+    if(!req.query && req.url.indexOf('?') > -1){
         req.query = query.parse(req.url.substring((req.url.indexOf('?')+1),req.url.length));
         req.url = req.url.substring(0,req.url.indexOf('?'));
       }
-      var _type = '',
-          _finished = [],
-          _env = environment(req),
+      var _env = environment(req),
           _debug = (req.query ? req.query.debug : false);
 
       if(!req.params){
@@ -90,64 +150,11 @@ module.exports = function(){
         res.serverError = serverError.bind(res);
       }
 
-      fs.readdir(appPath+'/src/Components',function(err,dir){
-        if(!err){
-          loop:for(var x=0;x<dir.length;x++){
-            if(_type.length > 0){
-              break loop;
-            }
-            if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
-              _type = 'Components';
-              sendRequest(_type,req.params,_env,_debug,res);
-            }
-          }
-          _finished[0] = true;
-          if(_finished[0] && _finished[1] && _finished[2] && _type.length === 0){
-            res.notFound();
-          }
-        }
-      });
-
-      fs.readdir(appPath+'/src/Sections',function(err,dir){
-        if(!err){
-          loop:for(var x=0;x<dir.length;x++){
-            if(_type.length > 0){
-              break loop;
-            }
-            if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
-              _type = 'Sections';
-              sendRequest(_type,req.params,_env,_debug,res);
-            }
-          }
-          _finished[1] = true;
-          if(_finished[0] && _finished[1] && _finished[2] && _type.length === 0){
-            res.notFound();
-          }
-        }
-      });
-
-      fs.readdir(appPath+'/src/Pages',function(err,dir){
-        if(!err){
-          loop:for(var x=0;x<dir.length;x++){
-            if(_type.length > 0){
-              break loop;
-            }
-            if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
-              _type = 'Pages';
-              sendRequest(_type,req.params,_env,_debug,res);
-            }
-          }
-          _finished[2] = true;
-          if(_finished[0] && _finished[1] && _finished[2] && _type.length === 0){
-            res.notFound();
-          }
-        }
-      });
+    if(!req.query){
+      req.query = {};
     }
-    else{
-      next();
-    }
-
+    req.query.env = _env;
+    req.query.debug = _debug;
   }
 
   function sendRequest(type, params, env, debug, res){

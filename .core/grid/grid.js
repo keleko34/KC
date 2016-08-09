@@ -1,5 +1,11 @@
 function Grid(){
 
+  window.onresize = function(e){
+    console.log('resize');
+  }
+
+
+
   function traverseToClosestSizedElement(el){
     for(var x=0;x<el.children.length;x++){
       if(el.children[x].clientHeight > 0 && el.children[x].clientWidth > 0){

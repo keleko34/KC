@@ -6,7 +6,8 @@ function koComponent(){
         config:[],
         viewmodel:[],
         template:[]
-      };
+      },
+      _kb_textevents = ['innerHTML','outerHTML','textContent','innerText','outerText'];
 
   ko.override = {};
 
@@ -53,6 +54,31 @@ function koComponent(){
   ko.override.events.onviewmodel = function(options){run_event('viewmodel',options);}
   ko.override.events.onconfig = function(options){run_event('config',options);}
   ko.override.events.oninit = function(options){run_event('init',options);}
+
+  function textEvent(e){
+    if(e.value.indexOf('ignore') < 0){
+      ko.override.parsetemplate(e.value,function(){
+        for(var x=0;x<e.target.children.length;x++){
+          var child = e.target.children[x];
+          ko.applyBindings({},child);
+        }
+      });
+    }
+  }
+
+  _kb_textevents.forEach(function(k){
+    kb.addAttrUpdateListener(k,textEvent);
+  });
+
+  kb.addAttrUpdateListener('appendChild',function(e){
+    if(e.arguments[0] instanceof HTMLUnknownElement){
+      ko.override.load(e.arguments[0].tagName,function(){
+        ko.applyBindings({},e.arguments[0]);
+      });
+    }
+  });
+
+
 
   function event_object(options){
     this.component = options.component;
