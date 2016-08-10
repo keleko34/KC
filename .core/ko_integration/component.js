@@ -1,3 +1,9 @@
+/* This file controls all auto-loading functionality of components
+ * as well as the loading process and automated html decoding sub component loader.
+ *
+ * Created By Keleko34
+ */
+
 /* important component attachments:
 
    #element.ko_overrides
@@ -20,6 +26,7 @@ var _textEvents = ['innerHTML','outerHTML','textContent','innerText','outerText'
       loadViewModel:ko.components.defaultLoader.loadViewModel
     }
 
+/* Constructor that ties KB to component loader and initiates the custom loader */
 function integrateComponents(){
 
   /* attach binding changes */
@@ -44,7 +51,7 @@ function integrateComponents(){
   ko.component.loaders.unshift(_loadOrder);
 }
 
-/* Methods for interacting with KO Overrides */
+/******* KO OVERRIDES ********/
 
 /* overwrites existing binding handler */
 integrateComponents.overwriteBindHandler = function(name,type,func){
@@ -63,9 +70,13 @@ integrateComponents.overwriteBindHandler = function(name,type,func){
 
 /* This method is run prior to any component action at all, only a name of the compoennt is provided */
 integrateComponents.overwriteGetConfig = function(func){
-  _loadOrder.getConfig = function(){
-    func.apply(this,arguments);
-    ko.components.defaultLoader.getConfig.apply(this,arguments);
+  var self = this,
+      args = arguments;
+
+  _loadOrder.getConfig = function(name,callback){
+    func(name,function(){
+      ko.components.defaultLoader.getConfig.apply(self,args);
+    });
   }
   return integrateComponents;
 }
@@ -81,9 +92,14 @@ integrateComponents.overwriteLoadComponent = function(func){
 
 /* This method runs prior to insert of the template */
 integrateComponents.overwriteLoadTemplate = function(func){
-  _loadOrder.loadTemplate = function(){
-    func.apply(this,arguments);
-    ko.components.defaultLoader.loadTemplate.apply(this,arguments);
+  _loadOrder.loadTemplate = function(name,templateConfig,callback){
+    if(typeof templateConfig !== 'string') callback(null);
+    var self = this,
+        args = arguments;
+
+    func(name,templateConfig,function(){
+      ko.components.defaultLoader.loadTemplate.apply(self,args);
+    })
   }
   return integrateComponents;
 }
@@ -100,7 +116,7 @@ integrateComponents.overwriteLoadViewModel = function(func){
   return integrateComponents;
 }
 
-/* Methods to interact with component loading */
+/******** COMPONENT LOADING ********/
 
 /* returns a list of all unkown elements in a node */
 integrateComponents.getUnkownElements = function(template){
@@ -185,7 +201,7 @@ integrateComponents.parseNodeTemplate = function(type,node,cb){
 
 /* iterates through the element and elements parents till it finds a component */
 integrateComponents.getNearestComponent = function(node){
-  while(node !== null && !node.ko_override){
+  while(!(node instanceof HTMLUnknownElement) && node.parentElement !== null){
     node = node.parentElement;
   }
   return node;
