@@ -4,7 +4,12 @@
     <title>Studiiio</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
+    <script src="/.core/globals.js" type="text/javascript"></script>
+    <script src="/.core/require.config.js" type="text/javascript"></script>
+    <script src="/assets/bower_modules/knockout/dist/knockout.js" type="text/javascript"></script>
+    <script src="/assets/bower_modules/knockout-postbox/build/knockout-postbox.min.js" type="text/javascript"></script>
+    <script src="/assets/bower_modules/knockout.punches/knockout.punches.min.js" type="text/javascript"></script>
+    <script src="/assets/bower_modules/requirejs/require.js" type="text/javascript"></script>
     <!-- build:css -->
       <link href="/assets/css/reset.css" rel="stylesheet">
       <link href="/assets/css/grid.css" rel="stylesheet">
@@ -18,11 +23,6 @@
     <div id="Content" data-bind="component: { name: Content().page, params: Content }"></div>
     <div id="Footer" data-bind="component: { name: Footer().page, params: Footer }"></div>
     <!-- build:js -->
-      <script src="/.core/require.config.js" type="text/javascript"></script>
-      <script src="/assets/bower_modules/knockout/dist/knockout.js" type="text/javascript"></script>
-      <script src="/assets/bower_modules/knockout-postbox/build/knockout-postbox.min.js" type="text/javascript"></script>
-      <script src="/assets/bower_modules/knockout.punches/knockout.punches.min.js" type="text/javascript"></script>
-      <script src="/assets/bower_modules/requirejs/require.js" type="text/javascript"></script>
       <script src="/.core/init.js" type="text/javascript"></script>
     <!-- endbuild -->
   </body>

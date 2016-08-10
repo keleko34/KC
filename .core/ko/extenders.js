@@ -103,7 +103,8 @@ function koExtend(){
   Extend.extendUpdate = function(obs,name,oKey,viewmodel){
 
     obs.subscribe(function(value) {
-      run_event('update',v,target(),options.name,options.key,options.viewmodel);
+      console.log('change on subsribe',value);
+      run_event('update',value,target(),options.name,options.key,options.viewmodel);
     });
     return obs;
   }
