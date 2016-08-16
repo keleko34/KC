@@ -14,7 +14,8 @@ define(['./_blank.bp', './_blank.vm', 'text!./_blank.html', 'text!./_blank.css']
 
 	function Create_blank(){
 
-      var vm = {};
+      var vm = {},
+          modularizer = kc.CreateModularizer();
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -41,6 +42,10 @@ define(['./_blank.bp', './_blank.vm', 'text!./_blank.html', 'text!./_blank.css']
         }
         vm = (v instanceof viewmodel ? v : vm);
         return _blank;
+      }
+
+      _blank.modularizer = function(){
+        return modularizer;
       }
 
       /* add methods for updating and type checking viewmodel properties */

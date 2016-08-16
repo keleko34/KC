@@ -15,7 +15,7 @@ define(['./test_button.bp', './test_button.vm', 'text!./test_button.html', 'text
     function Createtest_button(){
 
       var vm = {},
-          modularizer = CreateModularizer();
+          modularizer = kc.CreateModularizer();
       /* Add Private _variables here */
       var _typeEnum = ['click','toggle','text'];
 
@@ -35,6 +35,10 @@ define(['./test_button.bp', './test_button.vm', 'text!./test_button.html', 'text
         }
         vm = (v instanceof viewmodel ? v : vm);
         return test_button;
+      }
+
+      test_button.modularizer = function(){
+        return modularizer;
       }
 
       modularizer.add({

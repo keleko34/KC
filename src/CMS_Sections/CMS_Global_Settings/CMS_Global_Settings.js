@@ -15,7 +15,7 @@ define(['./CMS_Global_Settings.bp', './CMS_Global_Settings.vm', 'text!./CMS_Glob
     function CreateCMS_Global_Settings(){
 
       var vm = {},
-          modularizer = CreateModularizer();
+          modularizer = kc.CreateModularizer();
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -43,6 +43,10 @@ define(['./CMS_Global_Settings.bp', './CMS_Global_Settings.vm', 'text!./CMS_Glob
         }
         vm = (v instanceof viewmodel ? v : vm);
         return CMS_Global_Settings;
+      }
+
+      CMS_Global_Settings.modularizer = function(){
+        return modularizer;
       }
 
       /* add methods for updating and type checking viewmodel properties */

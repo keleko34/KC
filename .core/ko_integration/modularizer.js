@@ -1,4 +1,4 @@
-function CreateModularizer(){
+kc.CreateModularizer = function(){
     var types = {
       string: function(v){
         return (typeof v === 'string' ? v : undefined);
@@ -162,5 +162,5 @@ function CreateModularizer(){
     return Modularizer;
 }
 
-define([],function(){return CreateModularizer});
-define('Modularizer',function(){return CreateModularizer;});
+define([],function(){return kc.CreateModularizer});
+define('Modularizer',function(){return kc.CreateModularizer;});

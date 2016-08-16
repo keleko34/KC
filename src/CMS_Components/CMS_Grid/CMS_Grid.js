@@ -15,7 +15,7 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
     function CreateCMS_Grid(){
 
       var vm = {},
-          modularizer = CreateModularizer();
+          modularizer = kc.CreateModularizer();
       /* Add Private _variables here */
 
       var _winSizeX = 0,
@@ -44,6 +44,10 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
         }
         vm = (v instanceof viewmodel ? v : vm);
         return CMS_Grid;
+      }
+
+      CMS_Grid.modularizer = function(){
+        return modularizer;
       }
 
       modularizer.add({

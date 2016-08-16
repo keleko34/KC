@@ -15,7 +15,7 @@ define(['./test_content.bp', './test_content.vm', 'text!./test_content.html', 't
 	function Createtest_content(){
 
       var vm = {},
-          modularizer = CreateModularizer();
+          modularizer = kc.CreateModularizer();
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -43,6 +43,10 @@ define(['./test_content.bp', './test_content.vm', 'text!./test_content.html', 't
         }
         vm = (v instanceof viewmodel ? v : vm);
         return test_content;
+      }
+
+      test_content.modularizer = function(){
+        return modularizer;
       }
 
       /* add methods for updating and type checking viewmodel properties */

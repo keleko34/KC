@@ -15,7 +15,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
 	function Create$Name(){
 
       var vm = {},
-          modularizer = CreateModularizer();
+          modularizer = kc.CreateModularizer();
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -43,6 +43,10 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
         }
         vm = (v instanceof viewmodel ? v : vm);
         return $Name;
+      }
+
+      $Name.modularizer = function(){
+        return modularizer;
       }
 
       /* add methods for updating and type checking viewmodel properties */

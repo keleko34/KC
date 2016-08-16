@@ -15,7 +15,7 @@ define(['./CMS_ComponentsListItem.bp', './CMS_ComponentsListItem.vm', 'text!./CM
     function CreateCMS_ComponentsListItem(){
 
       var vm = {},
-          modularizer = CreateModularizer();
+          modularizer = kc.CreateModularizer();
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -43,6 +43,10 @@ define(['./CMS_ComponentsListItem.bp', './CMS_ComponentsListItem.vm', 'text!./CM
         }
         vm = (v instanceof viewmodel ? v : vm);
         return CMS_ComponentsListItem;
+      }
+
+      CMS_ComponentsListItem.modularizer = function(){
+        return modularizer;
       }
 
       /* add methods for updating and type checking viewmodel properties */

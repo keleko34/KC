@@ -15,7 +15,7 @@ define(['./test_footer.bp', './test_footer.vm', 'text!./test_footer.html', 'text
 	function Createtest_footer(){
 
       var vm = {},
-          modularizer = CreateModularizer();
+          modularizer = kc.CreateModularizer();
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -43,6 +43,10 @@ define(['./test_footer.bp', './test_footer.vm', 'text!./test_footer.html', 'text
         }
         vm = (v instanceof viewmodel ? v : vm);
         return test_footer;
+      }
+
+      test_footer.modularizer = function(){
+        return modularizer;
       }
 
       /* add methods for updating and type checking viewmodel properties */

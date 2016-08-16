@@ -1,4 +1,4 @@
-define(['./component','./binding'],function(ComponentOverride,BindingOverride){
+define(['./modularizer','./component','./binding'],function(CreateModularizer,ComponentOverride,BindingOverride){
   function CreateIntegration(){
 
     function Integration(){

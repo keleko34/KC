@@ -43,9 +43,9 @@ function integrateComponents(){
   kb.addAttrUpdateListener('appendChild',function(e){
     var node = integrateComponents.getNearestComponent(e.target);
 
-    if(node.ko_override.postappend) integrateComponents.parseNodeTemplate('append',node);
+    if(node.ko_override && node.ko_override.postappend) integrateComponents.parseNodeTemplate('append',node);
 
-    node.ko_override.postappend = true;
+    if(node.ko_override) node.ko_override.postappend = true;
   });
 
   ko.component.loaders.unshift(_loadOrder);
@@ -181,7 +181,7 @@ integrateComponents.parseNodeTemplate = function(type,node,cb){
           loadCount += 1;
           checkLoadCount();
           if(type === 'html' || type === 'append'){
-            integrateComponents.setBindin(node.getElementsByTagName(tag));
+            integrateComponents.setBinding(node.getElementsByTagName(tag));
           }
         }
         else{
@@ -193,7 +193,7 @@ integrateComponents.parseNodeTemplate = function(type,node,cb){
       loadCount += 1;
       checkLoadCount();
       if(type === 'html' || type === 'append'){
-        integrateComponents.setBindin(node.getElementsByTagName(tag));
+        integrateComponents.setBinding(node.getElementsByTagName(tag));
       }
     }
   });
