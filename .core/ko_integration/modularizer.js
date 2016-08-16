@@ -1,28 +1,44 @@
 kc.CreateModularizer = function(){
     var types = {
-      string: function(v){
-        return (typeof v === 'string' ? v : undefined);
+      string: function(v,c){
+        return (typeof v === 'string' && v !== c ? v : undefined);
       },
-      number: function(v){
-        return (typeof v === 'number' || !isNaN(parseInt(v,10)) ? parseInt(v,10) : undefined);
+      number: function(v,c){
+        return ((typeof v === 'number' || !isNaN(parseInt(v,10))) && parseInt(v,10) !== c ? parseInt(v,10) : undefined);
       },
-      boolean: function(v){
-        return (typeof v === 'boolean' ? !!v : undefined);
+      boolean: function(v,c){
+        return (typeof v === 'boolean' && v !== c ? !!v : undefined);
       },
-      function: function(v){
-        return (typeof v === 'function' ? v : undefined);
+      function: function(v,c){
+        return (typeof v === 'function' && v.toString() !== c.toString() ? v : undefined);
       },
-      object: function(v){
-        return (v.constructor.toString() === Object.toString() ? v : undefined);
+      object: function(v,c){
+        var r = false;
+        try{
+          r = (kc.isObject(v) && JSON.stringify(v) !== JSON.stringify(c));
+        }
+        catch(e){
+          console.warn('Warning circular objects are difficult to keep in sync, try using different methodology old: ',c,' new:',v);
+          r = true;
+        }
+        return (r ? v : undefined);
       },
-      array: function(v){
-        return (v.constructor.toString() === Array.toString() ? v : undefined);
+      array: function(v,c){
+        var r = false;
+        try{
+          r = (kc.isArray(v) && JSON.stringify(v) !== JSON.stringify(c));
+        }
+        catch(e){
+          console.warn('Warning circular arrays are difficult to keep in sync, try using different methodology old: ',c,' new:',v);
+          r = true;
+        }
+        return (r ? v : undefined);
       },
-      instance: function(v,i){
+      instance: function(v,c,i){
         return (v instanceof i ? v : undefined);
       },
-      enum: function(v,e){
-        return (e.indexOf(v) > -1 ? v : undefined);
+      enum: function(v,c,e){
+        return (e.indexOf(v) > -1 && v !== c ? v : undefined);
       }
     },
         module = function(){},
@@ -90,7 +106,7 @@ kc.CreateModularizer = function(){
         if(value === undefined){
           return _value;
         }
-        value = (types[_type](value,_checkAgainst) || false);
+        value = (types[_type](value,_value,_checkAgainst) || false);
         if(value)
         {
           _value = _preprocess(value);

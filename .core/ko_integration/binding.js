@@ -11,9 +11,13 @@
    * NOTE: We do not track class or id, they are problematic props.
    */
 
-/* All text props */
+/* All text properties */
 var _htmlEvents = ['innerHTML','outerHTML','textContent','innerText','outerText'],
+
+    /* standard attributes, more can be added except id and class */
     _attrEvents = ['title','href','value','src'],
+
+    /* list of all possible events on an element */
     _bindEvents = _htmlEvents.concat(_attrEvents).concat(Object.keys(HTMLUnknownElement.prototype).filter(function(k){
       return (k.indexOf('on')  === 0);
     })),
@@ -23,7 +27,11 @@ var _htmlEvents = ['innerHTML','outerHTML','textContent','innerText','outerText'
 
 function integrateBindings(el){
   el.ko_override = (el.ko_override === undefined ? {} : el.ko_override);
+
+  /* top of the chain important object containing all the parent component attributes to bind to the childs */
   el.ko_override.parentBinds = (el.ko_override.parentBinds === undefined ? {} : el.ko_override.parentBinds);
+
+
   _bindEvents.concat(kc.getAttributes(el)).forEach(function(k,i){
     var value = undefined;
     if(k.indexOf('on') === 0){
@@ -33,16 +41,27 @@ function integrateBindings(el){
   });
 
   el.addAttrListener('setAttribute',function(e){
+    e.preventDefault();
+    if(e.attr.indexOf('on') === 0) e.value = integrateBindings.getAttrFunc(e.value);
     if(!el.ko_override.parentBinds[e.attr]){
-      integrateBindings.bindLinker(el,e.attr,e.value);
       if(el.KC){
-        if(el.KC[e.attr]){
+        if(el.KC[e.attr] && el.KC[e.attr].isMethod && !el.KC[e.attr].isMethod()){
           el.KC[e.attr](e.value);
         }
         else{
-
+          integrateBindings.createModule(el,attr,e.value);
         }
       }
+      integrateBindings.bindLinker(el,e.attr,(el.KC ? el.KC[e.attr]() : e.value));
+    }
+    else{
+      el.ko_override.parentBinds[e.attr] = e.value;
+    }
+    if(e.attr.indexOf('on') === 0){
+      _onEventBind(el);
+    }
+    else{
+      _onAttrBind(el);
     }
   })
   el.addAttrListener('appendChild',function(e){
@@ -57,16 +76,19 @@ integrateBindings.getAttrFunc = function(el,attr){
   return eval('(function(e){'+func+'})');
 }
 
+/* ran whenever a textbinding changes */
 integrateBindings.onTextBind = function(func){
   _onTextBind = (typeof func === 'function' ? func : _onTextBind);
   return integrateBindings;
 }
 
+/* ran whenever a attrbinding changes */
 integrateBindings.onAttrBind = function(func){
   _onAttrBind = (typeof func === 'function' ? func : _onAttrBind);
   return integrateBindings;
 }
 
+/* ran whenever an eventbinding changes */
 integrateBindings.onEventBind = function(func){
   _onEventBind = (typeof func === 'function' ? func : _onEventBind);
   return integrateBindings;
@@ -86,6 +108,7 @@ integrateBindings.bindLinker = function(el,attr,value){
       if(el.KC){
         if(el.KC[attr] && el.KC[attr].isMethod && !el.KC[attr].isMethod()){
           el.KC[attr](v);
+          _value = el.KC[attr]();
         }
       }
     }
