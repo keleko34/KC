@@ -108,9 +108,10 @@ integrateComponents.overwriteLoadTemplate = function(func){
 integrateComponents.overwriteLoadViewModel = function(func){
   _loadOrder.loadViewModel = function(){
     ko.components.defaultLoader.loadViewModel(arguments[0],{createViewModel:function(params,componentInfo){
-      var vm = func({target:componentInfo.element,view_model:arguments[1]})
-      componentInfo.element.ko_viewmodel = (isObject(vm) ? vm : new arguments[1](params,componentInfo.element));
-      return componentInfo.element.ko_viewmodel;
+      var vm = func({target:componentInfo.element,view_model:arguments[1]});
+      vm = (kc.isObject(vm) ? vm : new arguments[1](params,componentInfo.element));
+      componentInfo.element.KC = vm.constructor().viewmodel(vm).call();
+      return vm;
     },arguments[2]})
   }
   return integrateComponents;
@@ -152,7 +153,7 @@ integrateComponents.loadComponent = function(name){
 
 /* sets the bindings on a component if it hasnt already been set */
 integrateComponents.setBinding = function(elements){
-  elements = (isArray(elements) ? elements : [elements]);
+  elements = (kc.isArray(elements) ? elements : [elements]);
   for(var x=0;x<elements.length;x++){
     if(!elements[x].ko_override){
       ko.applyBindings({},elements[x]);

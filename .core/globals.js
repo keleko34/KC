@@ -1,16 +1,16 @@
 var ko,
     kb,
-    modularize;
+    kc = {};
 
-var isArray = function(v){
+kc.isArray = function(v){
   return (typeof v === 'object' && !!v && v.constructor.toString() === Array.toString());
 }
 
-var isObject = function(v){
+kc.isObject = function(v){
   return (typeof v === 'object' && !!v && v.constructor.toString() !== Array.toString());
 }
 
-var parseQuery = function(qstr){
+kc.parseQuery = function(qstr){
   var query = {},
       a = qstr.substr(1).split('&');
 
@@ -21,8 +21,15 @@ var parseQuery = function(qstr){
   return query;
 }
 
+kc.getAttributes = function(el){
+  return Array.prototype.slice.call(el.attributes)
+  .map(function(k){return k.name;})
+  .filter(function(k){return (k !== 'data-bind' && k !== 'id' && k !== 'class')});
+}
+
+/* to easily clear console */
 Object.defineProperty(window,'cls',{
   get:function(){
-    clear();
+    if(typeof clear === 'function') clear();
   }
 })

@@ -12,24 +12,28 @@
    */
 
 /* All text props */
-var _textEvents = ['innerHTML','outerHTML','textContent','innerText','outerText'],
-    _onEvents = Object.keys(HTMLUnknownElement.prototype).filter(function(k){
+var _bindEvents = ['innerHTML','outerHTML','textContent','innerText','outerText']
+    .concat(Object.keys(HTMLUnknownElement.prototype).filter(function(k){
       return (k.indexOf('on')  === 0);
-    }),
-    _attrEvents = function(el){
-      return Array.prototype.slice.call(el.attributes)
-        .map(function(k){return k.name;})
-        .filter(function(k){return (k !== 'data-bind' && k !== 'id' && k !== 'class')});
-    }
+    }))
 
 function integrateBindings(el){
-  el.ko_override = {};
-  el.ko_override.binds = {};
+  el.ko_override = (el.ko_override === undefined ? {} : el.ko_override);
+  el.ko_override.binds = (el.ko_override.binds === undefined ? {} : el.ko_override.binds);
+  _bindEvents.concat(kc.getAttributes(el)).forEach(function(k,i){
 
+  });
 
 }
 
-integrateBindings.getClassValue(prop,value){
+/* removes attribute and returns function from attribute, for event based attributes */
+integrateBindings.getAttrFunc = function(el,attr){
+  var func = (kc.isObject(el) ? el.getAttribute(attr) : el.toString());
+  if(kc.isObject(el)) el.removeAttribute(attr);
+  return eval('(function(e){'+func+'})');
+}
+
+integrateBindings.getClassValue = function(prop,value){
 
 }
 

@@ -1,4 +1,4 @@
-define(['./component'],function(ComponentOverride){
+define(['./component','./binding'],function(ComponentOverride,BindingOverride){
   function CreateIntegration(){
 
     function Integration(){
