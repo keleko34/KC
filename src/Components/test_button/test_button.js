@@ -13,17 +13,15 @@ define(['./test_button.bp', './test_button.vm', 'text!./test_button.html', 'text
     /* END BUILD SECTION */
 
     function Createtest_button(){
-      kc.Modularize(test_button);
 
       var _typeEnum = ['click','toggle','text'];
 
-      function test_button(){
+      var test_button = kc.Modularize(function(){
         test_button.viewmodel.mainclass((test_button.disabled() ? ' test_button--disabled' : '')
         + (' test_button--'+(test_button.type()))
         + (test_button.type() === 'toggle' ? (test_button.toggled() ? ' test_button--toggled' : '') : ''));
 
-        return test_button;
-      }
+      });
 
       test_button.add({
         type:'function',

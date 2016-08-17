@@ -13,12 +13,10 @@ define(['./CMS_ComponentsListItem.bp', './CMS_ComponentsListItem.vm', 'text!./CM
     /* END BUILD SECTION */
 
     function CreateCMS_ComponentsListItem(){
-      kc.Modularize(CMS_ComponentsListItem);
 
-      function CMS_ComponentsListItem(){
+      var CMS_ComponentsListItem = kc.Modularize(function(){
 
-        return CMS_ComponentsListItem;
-      }
+      });
 
       return CMS_ComponentsListItem;
 	}

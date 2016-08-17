@@ -1,4 +1,4 @@
-define(['./modularizer','./component','./binding'],function(CreateModularizer,ComponentOverride,BindingOverride){
+define(['./modularizer','./component','./binding','./extenders'],function(CreateModularizer, ComponentOverride, BindingOverride, ExtenderOverride){
   function CreateIntegration(){
 
     function Integration(){
@@ -11,16 +11,19 @@ define(['./modularizer','./component','./binding'],function(CreateModularizer,Co
         /* when loading a component we parse its html to load any sub child components as well */
         ComponentOverride.parseNodeTemplate('load',template,cb);
       })
-      .overwriteLoadViewModel(function(){
+      .overwriteLoadViewModel(function(e){
+
+        e.target.ko_override.setParentBinds(e.view_model,e.target);
 
         /* Here we can control style reading for methods etc. */
-        var css = e.target.querySelector('style').textContent,
-            rules = ComponentOverride.parseCss(css,function(e){
-          /* iterator for each rule, decipher custom css styles */
+        var css = e.target.querySelector('style');
+        if(css){
+            /* iterator for each rule, decipher custom css styles */
+            css = css.textContent,
+            rules = ComponentOverride.parseCSS(css,function(e){
 
-        });
-
-
+            });
+        }
 
       })
       .overwriteBindHandler('component','init',function(e){
@@ -35,10 +38,10 @@ define(['./modularizer','./component','./binding'],function(CreateModularizer,Co
         }
       }).call();
 
+      ExtenderOverride.call();
 
+      return Integration;
     }
-
-
 
     return Integration;
   }

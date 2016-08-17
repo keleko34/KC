@@ -13,13 +13,11 @@ define(['./test_header.bp', './test_header.vm', 'text!./test_header.html', 'text
     /* END BUILD SECTION */
 
 	function Createtest_header(){
-      kc.Modularize(test_header);
       /* Add Private _variables here */
 
-      function test_header(){
+      var test_header = kc.Modularize(function(){
 
-        return test_header;
-      }
+      });
 
       return test_header;
 	}

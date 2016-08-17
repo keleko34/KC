@@ -13,13 +13,11 @@ define(['./test_content.bp', './test_content.vm', 'text!./test_content.html', 't
     /* END BUILD SECTION */
 
 	function Createtest_content(){
-      kc.Modularize(test_content);
       /* Add Private _variables here */
 
-      function test_content(){
+      var test_content = kc.Modularize(function(){
 
-        return test_content;
-      }
+      });
 
       return test_content;
 	}

@@ -13,13 +13,11 @@ define(['./test_footer.bp', './test_footer.vm', 'text!./test_footer.html', 'text
     /* END BUILD SECTION */
 
 	function Createtest_footer(){
-      kc.Modularize(test_footer);
       /* Add Private _variables here */
 
-      function test_footer(){
+      var test_footer = kc.Modularize(function(){
 
-        return test_footer;
-      }
+      });
 
       return test_footer;
 	}

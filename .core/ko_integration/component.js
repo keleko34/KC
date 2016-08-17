@@ -32,9 +32,8 @@ function integrateComponents(){
   /* attach binding changes */
   _textEvents.forEach(function(k){
     kb.addAttrUpdateListener(k,function(e){
-
       /* ko attaches an ignore text at the beggining of html inserts */
-      if(e.value.indexOf('ignore') < 0){
+      if(e.value && e.value.indexOf('ignore') < 0){
         integrateComponents.parseNodeTemplate('html',e.target);
       }
     });
@@ -43,12 +42,12 @@ function integrateComponents(){
   kb.addAttrUpdateListener('appendChild',function(e){
     var node = integrateComponents.getNearestComponent(e.target);
 
-    if(node.ko_override && node.ko_override.postappend) integrateComponents.parseNodeTemplate('append',node);
+    if(node.ko_override && node.ko_override.postappend) integrateComponents.parseNodeTemplate('append',e.target);
 
-    if(node.ko_override) node.ko_override.postappend = true;
+    if(node.KC) node.ko_override.postappend = true;
   });
 
-  ko.component.loaders.unshift(_loadOrder);
+  ko.components.loaders.unshift(_loadOrder);
 }
 
 /******* KO OVERRIDES ********/
@@ -75,7 +74,7 @@ integrateComponents.overwriteGetConfig = function(func){
 
   _loadOrder.getConfig = function(name,callback){
     func(name,function(){
-      ko.components.defaultLoader.getConfig.apply(self,args);
+      ko.components.defaultLoader.getConfig(name,callback);
     });
   }
   return integrateComponents;
@@ -83,9 +82,9 @@ integrateComponents.overwriteGetConfig = function(func){
 
 /* This method runs after the viewmodel and the template are fetched for the component */
 integrateComponents.overwriteLoadComponent = function(func){
-  _loadOrder.loadComponent = function(){
+  _loadOrder.loadComponent = function(name, componentConfig, callback){
     func.apply(this,arguments);
-    ko.components.defaultLoader.loadComponent.apply(this,arguments);
+    ko.components.defaultLoader.loadComponent(name, componentConfig, callback);
   }
   return integrateComponents;
 }
@@ -98,7 +97,7 @@ integrateComponents.overwriteLoadTemplate = function(func){
         args = arguments;
 
     func(name,templateConfig,function(){
-      ko.components.defaultLoader.loadTemplate.apply(self,args);
+      ko.components.defaultLoader.loadTemplate(name,templateConfig,callback);
     })
   }
   return integrateComponents;
@@ -107,12 +106,21 @@ integrateComponents.overwriteLoadTemplate = function(func){
 /* This method runs prior to the viewmodel being binded */
 integrateComponents.overwriteLoadViewModel = function(func){
   _loadOrder.loadViewModel = function(){
-    ko.components.defaultLoader.loadViewModel(arguments[0],{createViewModel:function(params,componentInfo){
-      var vm = func({target:componentInfo.element,view_model:arguments[1]});
-      vm = (kc.isObject(vm) ? vm : new arguments[1](params,componentInfo.element));
-      componentInfo.element.KC = vm.constructor().viewmodel(vm).node(componentInfo.element).call();
+    var args = arguments;
+    ko.components.defaultLoader.loadViewModel(args[0],{createViewModel:function(params,componentInfo){
+      /* Create ViewModel */
+      var vm = new args[1](params,componentInfo.element);
+
+      /* Create Module Class */
+      var vc = vm.constructor();
+      vc.viewmodel = vm;
+      vc.node = componentInfo.element;
+
+      /* attach to Element */
+      componentInfo.element.KC = vc.call();
+      func({target:componentInfo.element,view_model:vm});
       return vm;
-    },arguments[2]})
+    }},args[2])
   }
   return integrateComponents;
 }
@@ -128,21 +136,21 @@ integrateComponents.getUnkownElements = function(template){
     return k.substring(2,k.length-1);
   })
   .filter(function(k,i){
-    return (matched.indexOf(k,(i+1)) < 0);
+    return ((matched.indexOf(k,(i+1)) < 0 && document.createElement(k) instanceof HTMLUnknownElement));
   });
 }
 
 /* loads a component if it hasnt already been loaded */
-integrateComponents.loadComponent = function(name){
+integrateComponents.loadComponent = function(name,cb){
   if(!ko.components.isRegistered(name)){
-      var query = parse_query(location.search),
-      url = '/'(name.toLowerCase().indexOf('cms') > -1 ? 'cms' : 'require')'/'+name;
+      var query = kc.parseQuery(location.search),
+      url = '/'+(name.toLowerCase().indexOf('cms') > -1 ? 'cms' : 'require')+'/'+name;
       url = (query.env !== undefined ? url+'?env='+query.env : url);
       url = (query.debug !== undefined ? url+((query.env !== undefined ? '&' : '?')+'debug='+query.debug) : url);
       if(!require.defined(url)){
          require([url],function(){
            cb();
-         },function(err){console.error(name,' does not exist');});
+         },cb);
       }
     }
     else {
@@ -153,7 +161,7 @@ integrateComponents.loadComponent = function(name){
 
 /* sets the bindings on a component if it hasnt already been set */
 integrateComponents.setBinding = function(elements){
-  elements = (kc.isArray(elements) ? elements : [elements]);
+  elements = ((kc.isHTMLCollection(elements) || kc.isArray(elements)) ? elements : [elements]);
   for(var x=0;x<elements.length;x++){
     if(!elements[x].ko_override){
       ko.applyBindings({},elements[x]);
@@ -164,19 +172,22 @@ integrateComponents.setBinding = function(elements){
 
 /* parses a template or node's children for components needing loaded */
 integrateComponents.parseNodeTemplate = function(type,node,cb){
-  var template = (typeof node === 'string' ? node : new String(node.innerHTML)),
+  var template = (typeof node === 'string' ? node : String.call("",node.innerHTML)),
       unkownElements = integrateComponents.getUnkownElements(template),
       loadCount = 0;
 
   function checkLoadCount(){
     if(loadCount >= unkownElements.length){
       if(cb) cb();
+      return true;
     }
   }
 
+  if(checkLoadCount()) return;
+
   unkownElements.forEach(function(tag){
     if(!ko.components.isRegistered(tag)){
-      unkownElements.loadComponent(tag,function(err){
+      integrateComponents.loadComponent(tag,function(err){
         if(!err){
           loadCount += 1;
           checkLoadCount();
@@ -202,7 +213,21 @@ integrateComponents.parseNodeTemplate = function(type,node,cb){
 
 /* iterates through the element and elements parents till it finds a component */
 integrateComponents.getNearestComponent = function(node){
-  while(!(node instanceof HTMLUnknownElement) && node.parentElement !== null){
+  var loop = true;
+
+  while(loop){
+    if((node instanceof HTMLUnknownElement)){
+      loop = false;
+      break;
+    }
+    else if(node.className && (node.className.indexOf('page_holder') > -1)){
+      loop = false;
+      break;
+    }
+    else if(node.parentElement === null){
+      loop = false;
+      break;
+    }
     node = node.parentElement;
   }
   return node;

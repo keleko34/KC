@@ -13,7 +13,6 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
     /* END BUILD SECTION */
 
     function CreateCMS_Grid(){
-      kc.Modularize(CMS_Grid);
 
       var _winSizeX = 0,
           _winSizeY = window.innerHeight,
@@ -23,16 +22,12 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
             window.removeEventListener('resize',resize);
           }
 
-      function CMS_Grid(){
+      var CMS_Grid = kc.Modularize(function(){
         if(!_initial){
           _initial = true;
           resize();
         }
-        /* 'vm' refers to the viewmodel
-         * whenever you update something in code always call the constructor for updating the viewmodel */
-
-        return CMS_Grid;
-      }
+      })
 
       CMS_Grid.add({
         type:'number',

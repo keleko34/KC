@@ -13,7 +13,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
     /* END BUILD SECTION */
 
     function Create$Name(){
-      /* modulizes this module to keep in sync with viewmodel when constructor is called, creates .add and .viewmodel properties */
+
       kc.Modularize($Name);
 
       /**** PRIVATE ****/
@@ -22,7 +22,10 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
        *   var _example = '';
        */
 
-      function $Name(){
+      /**** CONSTRUCTOR ****/
+
+      /* modulizes this module to keep in sync with viewmodel when constructor is called, creates .add and .viewmodel properties */
+      var $Name = kc.Modularize(function(){
         /* '$Name.viewmodel' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel
          */
@@ -33,9 +36,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
          *
          *   $Name.viewmodel.mainclass('$Name' + (_example ? ' $Name--'+_example : ''));
          */
-
-        return $Name;
-      }
+      });
 
       /**** PUBLIC METHODS ****/
 

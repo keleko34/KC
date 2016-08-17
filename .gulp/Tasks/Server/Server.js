@@ -14,7 +14,8 @@ var base = require('./../../Base'),
 module.exports = function(){
 
   var paths = {
-    "/require":[appPath+'/src/Components',appPath+'/src/Sections',appPath+'/src/Pages',appPath+'/src/CMS_Components',appPath+'/src/CMS_Sections']
+    "/require/":[appPath+'/src/Components',appPath+'/src/Sections',appPath+'/src/Pages'],
+    "/cms/":[appPath+'/src/CMS_Components',appPath+'/src/CMS_Sections']
   }
 
   /* Filter helps to filter prompt inputs after they have been entered,
@@ -71,7 +72,7 @@ module.exports = function(){
       if(req.url.indexOf(path_routes[p]) === 0){
         var _type = '',
             _finished = [],
-            _isCMS = (req.url.indexOf('CMS') > -1),
+            _isCMS = (req.url.indexOf('/cms') === 0),
             _routes = paths[path_routes[p]];
 
         sortQuery(req,res);
@@ -92,6 +93,8 @@ module.exports = function(){
                   if(_type.length > 0){
                     break loop;
                   }
+
+                  if(_isCMS) console.log(dir[x].toLowerCase(),' ', req.params[0].toLowerCase());
                   if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
                     _type = r.replace(appPath+'/src/','');
                     sendRequest(_type,req.params,req.query.env,req.query.debug,res);
@@ -128,8 +131,12 @@ module.exports = function(){
 
       if(!req.params){
         req.params = [];
-        req.params[0] = req.url.replace('/require/','');
+        req.params[0] = req.url;
         req.params[1] = '.js';
+
+        Object.keys(paths).forEach(function(k){
+          if(req.params[0].indexOf(k) === 0) req.params[0] = req.params[0].replace(k,'')
+        });
 
         if(req.params[0].indexOf('.bp') > -1 || req.params[0].indexOf('.vm') > -1){
           _env = 'local';
@@ -157,13 +164,14 @@ module.exports = function(){
   }
 
   function sendRequest(type, params, env, debug, res){
-    if(env)
     var _path = (appPath+'/src/'
     +type+'/'+params[0]
     +(env === undefined ? '/prod' : (env === 'local' ? '' : '/'+env))
     +'/'+params[0]
     +(((env === undefined || env === 'prod' || env === 'stage') || (env === 'qa' && !debug)) ? '.min' : '')
     +params[1]);
+
+    console.log('path ',_path);
 
     fs.stat(_path,function(err,stat){
       if(!err && stat.isFile()){

@@ -1,6 +1,6 @@
-require(['./.core/ko/init', './.core/grid/grid', 'crossroads', 'hasher'],function(override, grid, crossroads, hasher){
+require(['./.core/ko_integration/init', './.core/grid/grid', 'crossroads', 'hasher','kb'],function(override, grid, crossroads, hasher, CreateKB){
 
-
+kb = CreateKB();
 
   function router(){
     var routes = page_routes;
@@ -63,6 +63,8 @@ require(['./.core/ko/init', './.core/grid/grid', 'crossroads', 'hasher'],functio
     return new Router(routes);
   }
   ko.punches.enableAll();
-  ko.applyBindings(router().bindings);
 
+  override().call();
+
+  ko.applyBindings(router().bindings);
 });

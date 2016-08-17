@@ -1,10 +1,10 @@
-kc.Modularize = function(module){
-    var _module = module,
+kc.Modularize = function(func){
+    var _func = func,
         _viewmodel = undefined,
         _node = undefined,
         props = {};
 
-    module = (function(){
+    function module(){
 
       /* Here we update all viewmodel attributes */
       Object.keys(props).forEach(function(k,i){
@@ -13,22 +13,23 @@ kc.Modularize = function(module){
         if(!module[k].isMethod() && module[k].type() !== 'instance'){
 
           /* if property doesnt exist we add it */
-          if(!module.viewmodel()[k+"_binding"]){
-            module.viewmodel()[k+"_binding"] = (module[k].type() !== 'function' ? ko.observable(module[k]()) : module[k]());
-            module.node.ko_override.bindChain(module.node,k,module[k]());
+          if(!_viewmodel[k+"_binding"]){
+            _viewmodel[k+"_binding"] = (module[k].type() !== 'function' ? ko.observable(module[k]()) : module[k]());
+            _node.ko_override.bindChain(_viewmodel,module.node,k,module[k]());
           }
           else{
-            if(ko.isObservable(module.viewmodel[k+"_binding"])){
-              module.viewmodel()[k+"_binding"](module[k]());
+            if(ko.isObservable(_viewmodel[k+"_binding"])){
+              _viewmodel[k+"_binding"](module[k]());
             }
             else{
-              module.viewmodel()[k+"_binding"] = module[k]();
+              _viewmodel[k+"_binding"] = module[k]();
             }
           }
         }
       });
-      return _module.call(module);
-    }).bind(module);
+      if(_node.KC) _func.call(module);
+      return module;
+    }
 
     function add(options){
       props[(options.name !== undefined ? options.name : 'default')] = CreateProperty()
@@ -36,7 +37,7 @@ kc.Modularize = function(module){
       .propName((options.name !== undefined ? options.name : 'default'))
       .preprocess((options.preprocess !== undefined ? options.preprocess : function(v){return v;}))
       .checkAgainst((options.checkAgainst !== undefined ? options.checkAgainst : (options.type === 'enum' ? [] : (options.type === 'instance' ? this : ''))))
-      .isMethod((options.type === 'function' ? options.isMethod : undefined));
+      .isMethod((options.type === 'function' && options.isMethod !== undefined ? options.isMethod : false));
       props[(options.name !== undefined ? options.name : 'default')]((options.value !== undefined ? options.value : ''));
       module[(options.name !== undefined ? options.name : 'default')] = props[(options.name !== undefined ? options.name : 'default')];
       return module;
@@ -119,7 +120,7 @@ kc.Modularize = function(module){
         return Property;
       }
 
-      Property.isMethod = function(){
+      Property.isMethod = function(v){
         if(v === undefined){
           return _isMethod;
         }

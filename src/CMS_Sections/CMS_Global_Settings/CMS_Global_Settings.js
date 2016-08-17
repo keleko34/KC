@@ -13,12 +13,10 @@ define(['./CMS_Global_Settings.bp', './CMS_Global_Settings.vm', 'text!./CMS_Glob
     /* END BUILD SECTION */
 
     function CreateCMS_Global_Settings(){
-      kc.Modularize(CMS_Global_Settings);
 
-      function CMS_Global_Settings(){
+      var CMS_Global_Settings = kc.Modularize(function(){
 
-        return CMS_Global_Settings;
-      }
+      });
 
       return CMS_Global_Settings;
 	}

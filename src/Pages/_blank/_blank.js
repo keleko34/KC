@@ -13,12 +13,10 @@ define(['./_blank.bp', './_blank.vm', 'text!./_blank.html', 'text!./_blank.css']
     /* END BUILD SECTION */
 
 	function Create_blank(){
-      kc.Modularize(_blank);
 
-      function _blank(){
+      var _blank = kc.Modularize(function(){
 
-        return _blank;
-      }
+      });
 
       return _blank;
 	}

@@ -13,10 +13,9 @@ define(['./_test.bp', './_test.vm', 'text!./_test.html', 'text!./_test.css'],fun
     /* END BUILD SECTION */
 
 	function Create_test(){
-      kc.Modularize(_test);
       /* Add Private _variables here */
 
-      function _test(){
+      var _test = kc.Modularize(function(){
 
         /* Update viewmodel properties here */
         _test.node.querySelector('._test__btnfirst').onclick = function(e){
@@ -26,8 +25,7 @@ define(['./_test.bp', './_test.vm', 'text!./_test.html', 'text!./_test.css'],fun
           console.log('second!');
         }
 
-        return _test;
-      }
+      });
 
       return _test;
 	}

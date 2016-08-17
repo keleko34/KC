@@ -19,7 +19,7 @@ var _htmlEvents = ['innerHTML','outerHTML','textContent','innerText','outerText'
 
     /* list of all possible events on an element */
     _bindEvents = _htmlEvents.concat(_attrEvents.filter(function(v){return (['id','class','style'].indexOf(v) < 0)}))
-    .concat(Object.keys(HTMLUnknownElement.prototype).filter(function(k){return (k.indexOf('on')  === 0);})),
+    .concat(Object.keys(HTMLElement.prototype).filter(function(k){return (k.indexOf('on')  === 0);})),
     _onTextBind = function(){},
     _onAttrBind = function(){},
     _onEventBind = function(){}
@@ -31,6 +31,7 @@ function integrateBindings(el){
   el.ko_override.parentBinds = (el.ko_override.parentBinds === undefined ? {} : el.ko_override.parentBinds);
 
   el.ko_override.bindChain = integrateBindings.bindChain;
+  el.ko_override.setParentBinds = integrateBindings.setParentBinds;
 
   _bindEvents.concat(kc.getAttributes(el)).forEach(function(k,i){
     var value = undefined;
@@ -44,6 +45,8 @@ function integrateBindings(el){
   /* whenever a dev does a set attribute on a component we listen and update or add appropriately */
   el.addAttrListener('setAttribute',function(e){
     e.preventDefault();
+    e.p_attr = e.attr;
+    e.attr = e.attr.toLowerCase();
     if(e.attr.indexOf('on') === 0) e.value = integrateBindings.getAttrFunc(e.value);
 
     /* if attr bind doesnt exist we create it */
@@ -53,10 +56,11 @@ function integrateBindings(el){
           el.KC[e.attr](e.value);
         }
         else{
-          integrateBindings.createModuleDef(el,attr,e.value);
+          integrateBindings.createModuleDef(el,e.attr,e.value);
+          el.KC.call();
         }
       }
-      integrateBindings.bindLinker(el,e.attr,(el.KC ? el.KC[e.attr]() : e.value));
+      integrateBindings.bindLinker(el,e.p_attr,(el.KC ? el.KC[e.attr]() : e.value));
     }
     else{
       el.ko_override.parentBinds[e.attr] = e.value;
@@ -71,10 +75,9 @@ function integrateBindings(el){
 
   /* appending or removing children from the component itself is not permitted */
   .addAttrListener('appendChild',function(e){
-    e.preventDefault();
-  })
-  .addAttrListener('removeChild',function(e){
-    e.preventDefault();
+    if(e.target.innerHTML > 0){
+      e.preventDefault();
+    }
   });
 
 }
@@ -106,10 +109,14 @@ integrateBindings.onEventBind = function(func){
 
 /* This method connects the parent element attr to one way flow leading to the viewmodel */
 integrateBindings.bindLinker = function(el,attr,value){
-  var _value = (value ? value : (el.getAttribute(attr) || el[attr]));
+  var _value = (value !== undefined ? value : (el.getAttribute(attr) || el[attr]));
   el.removeAttribute(attr);
-  el[attr] = null;
+  delete el[attr];
+
+  var k_attr = attr;
+  attr = attr.toLowerCase();
   Object.defineProperty(el.ko_override.parentBinds,attr.toLowerCase(),{
+    enumerable:true,
     get:function(){
       return _value;
     },
@@ -120,14 +127,17 @@ integrateBindings.bindLinker = function(el,attr,value){
           el.KC[attr](v);
           _value = el.KC[attr]();
 
-          /* should we call here? */
+          /* should we call here?
+           * This will loop through all attr and set viewmodel each time a value changes
+           */
           el.KC.call();
         }
       }
     }
   });
-  el.addAttrListener(k,function(e){
+  el.addAttrListener(k_attr,function(e){
     e.preventDefault();
+    e.attr = e.attr.toLowerCase();
     el.ko_override.parentBinds[e.attr] = e.value;
     if(_htmlEvents.indexOf(e.attr) > -1){
       _onTextBind(el);
@@ -139,6 +149,7 @@ integrateBindings.bindLinker = function(el,attr,value){
       _onAttrBind(el);
     }
   });
+  return integrateBindings;
 }
 
 integrateBindings.createModuleDef = function(el,attr,value){
@@ -147,31 +158,48 @@ integrateBindings.createModuleDef = function(el,attr,value){
     type:(!isNaN(parseInt(value,10)) ? 'number' : (typeof value)),
     value:value
   })
-  .call();
+  return integrateBindings;
 }
 
-integrateBindings.bindChain = function(el,attr,value){
-  var prop = el.KC.viewmodel()[attr];
-  if(ko.isObservable(prop)){
+integrateBindings.bindChain = function(vm,el,attr,value){
+  var prop = vm[attr+"_binding"];
 
+  function set(v){
+    var _v = kc.isType[el.KC[attr].type()](v,el.ko_override.parentBinds[attr],el.KC[attr].checkAgainst());
+    if(_v) el.ko_override.parentBinds[attr] = _v;
   }
-  else{
-    Object.defineProperty(el.KC.viewmodel(),attr,{
+
+  if(ko.isObservable(prop)){
+    prop.subscribe(set);
+  }
+  else {
+    Object.defineProperty(vm,(attr+"_binding"),{
       get:function(){
-        return el.KC[attr]()
+        return el.KC[attr]();
       },
-      set:function(v){
-        var v = kc.isType[el.KC[attr].type()](v,el.ko_override.parentBinds[attr],el.KC[attr].checkAgainst());
-        if(v){
-          el.ko_override.parentBinds[attr] = v;
-        }
-      }
+      set:set
     });
   }
 }
 
-integrateBindings.getClassValue = function(prop,value){
-
+integrateBindings.setParentBinds = function(vm,el){
+  Object.keys(el.ko_override.parentBinds).forEach(function(k){
+    if(!vm[k+"_binding"]){
+      integrateBindings.createModuleDef(el,k,el.ko_override.parentBinds[k]);
+    }
+    else{
+      if(ko.isObservable(vm[k+"_binding"])){
+        if(vm[k+"_binding"]() === undefined || vm[k+"_binding"] === null){
+          vm[k+"_binding"](el.ko_override.parentBinds[k]);
+        }
+      }
+      else{
+        integrateBindings.bindChain(_viewmodel,el,k,el.ko_override.parentBinds[k]);
+      }
+    }
+  });
+  el.KC.call();
+  return integrateBindings;
 }
 
 

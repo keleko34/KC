@@ -6,6 +6,10 @@ kc.isArray = function(v){
   return (typeof v === 'object' && !!v && v.constructor.toString() === Array.toString());
 }
 
+kc.isHTMLCollection = function(v){
+  return (typeof v === 'object' && !!v && v.constructor.toString() === HTMLCollection.toString());
+}
+
 kc.isObject = function(v){
   return (typeof v === 'object' && !!v && v.constructor.toString() !== Array.toString());
 }
@@ -66,7 +70,8 @@ kc.isType = {
     return ((i !== undefined ? (v instanceof i) : (v instanceof c)) ? v : undefined);
   },
   enum: function(v,c,e){
-    return (e.indexOf(v) > -1 && ((e !== undefined && c !== undefined) ? v !== c : true) ? v : undefined);
+    if(kc.isArray(c) && e === undefined) e = c;
+    return ( ((e !== undefined && c !== undefined) ? v !== c : true) && ((kc.isArray(c) && e === undefined) ? c.indexOf(v) > -1 : e.indexOf(v) > -1) ? v : undefined);
   }
 }
 
