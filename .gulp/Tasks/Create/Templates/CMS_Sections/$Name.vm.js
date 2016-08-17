@@ -6,7 +6,6 @@ define([],function(){
     this.mainclass = ko.observable('$Name').extend({attach:element.getAttribute('class')});
 
     /* Place Properties Here */
-
   }
 
   /* Place Prototypes here */

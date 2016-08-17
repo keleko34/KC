@@ -13,53 +13,12 @@ define(['./_blank.bp', './_blank.vm', 'text!./_blank.html', 'text!./_blank.css']
     /* END BUILD SECTION */
 
 	function Create_blank(){
-
-      var vm = {},
-          modularizer = kc.CreateModularizer();
-      /* Add Private _variables here */
-
-      /* ex: private for functional property
-         *
-         *   var _example = '';
-        */
+      kc.Modularize(_blank);
 
       function _blank(){
-        /* 'vm' refers to the viewmodel
-         * whenever you update something in code always call the constructor for updating the viewmodel */
 
-        /* Update viewmodel properties here */
-
-        /* ex: updates the class attr with a changed state
-         *
-         *   vm.mainclass('_blank' + (_example ? ' _blank--'+_example : ''));
-        */
         return _blank;
       }
-
-      _blank.viewmodel = function(v){
-        if(v === undefined){
-          return vm;
-        }
-        vm = (v instanceof viewmodel ? v : vm);
-        return _blank;
-      }
-
-      _blank.modularizer = function(){
-        return modularizer;
-      }
-
-      /* add methods for updating and type checking viewmodel properties */
-
-      /* ex: functional property, returns value if nothing, sets if value is string
-         *
-         *   _blank.example = function(v){
-         *     if(v === undefined){
-         *        return _example;
-         *     }
-         *     _example = (typeof v === 'string' ? v : _example);
-         *     return _blank;
-         *   }
-        */
 
       return _blank;
 	}

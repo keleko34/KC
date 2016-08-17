@@ -13,10 +13,7 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
     /* END BUILD SECTION */
 
     function CreateCMS_Grid(){
-
-      var vm = {},
-          modularizer = kc.CreateModularizer();
-      /* Add Private _variables here */
+      kc.Modularize(CMS_Grid);
 
       var _winSizeX = 0,
           _winSizeY = window.innerHeight,
@@ -27,7 +24,6 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
           }
 
       function CMS_Grid(){
-        modularizer(CMS_Grid);
         if(!_initial){
           _initial = true;
           resize();
@@ -38,19 +34,7 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
         return CMS_Grid;
       }
 
-      CMS_Grid.viewmodel = function(v){
-        if(v === undefined){
-          return vm;
-        }
-        vm = (v instanceof viewmodel ? v : vm);
-        return CMS_Grid;
-      }
-
-      CMS_Grid.modularizer = function(){
-        return modularizer;
-      }
-
-      modularizer.add({
+      CMS_Grid.add({
         type:'number',
         name:'col',
         value:0
@@ -85,19 +69,6 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
         name:'remove',
         value:_remove
       })
-
-      /* add methods for updating and type checking viewmodel properties */
-
-      /* ex: functional property, returns value if nothing, sets if value is string
-         *
-         *   CMS_Grid.example = function(v){
-         *     if(v === undefined){
-         *        return _example;
-         *     }
-         *     _example = (typeof v === 'string' ? v : _example);
-         *     return CMS_Grid;
-         *   }
-        */
 
       function getIndex(node){
         var i = 0;

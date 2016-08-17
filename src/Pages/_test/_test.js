@@ -13,49 +13,21 @@ define(['./_test.bp', './_test.vm', 'text!./_test.html', 'text!./_test.css'],fun
     /* END BUILD SECTION */
 
 	function Create_test(){
-
-      var vm = {},
-          modularizer = kc.CreateModularizer();
+      kc.Modularize(_test);
       /* Add Private _variables here */
 
       function _test(){
-        modularizer(_test);
 
         /* Update viewmodel properties here */
-        vm.Node.querySelector('._test__btnfirst').onclick = function(e){
+        _test.node.querySelector('._test__btnfirst').onclick = function(e){
           console.log('first!');
         }
-        vm.Node.querySelector('._test__btnsecond').onclick = function(e){
+        _test.node.querySelector('._test__btnsecond').onclick = function(e){
           console.log('second!');
         }
 
         return _test;
       }
-
-      _test.viewmodel = function(v){
-        if(v === undefined){
-          return vm;
-        }
-        vm = (v instanceof viewmodel ? v : vm);
-        return _test;
-      }
-
-      _test.modularizer = function(){
-        return modularizer;
-      }
-
-      /* add methods for updating and type checking viewmodel properties */
-
-      /* ex: functional property, returns value if nothing, sets if value is string
-         *
-         *   _test.example = function(v){
-         *     if(v === undefined){
-         *        return _example;
-         *     }
-         *     _example = (typeof v === 'string' ? v : _example);
-         *     return _test;
-         *   }
-        */
 
       return _test;
 	}

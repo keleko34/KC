@@ -13,32 +13,16 @@ define(['./test_button.bp', './test_button.vm', 'text!./test_button.html', 'text
     /* END BUILD SECTION */
 
     function Createtest_button(){
+      kc.Modularize(test_button);
 
-      var vm = {};
-
-      kc.CreateModularizer(test_button);
-      /* Add Private _variables here */
       var _typeEnum = ['click','toggle','text'];
 
       function test_button(){
-
-        vm.mainclass((test_button.disabled() ? ' test_button--disabled' : '')
+        test_button.viewmodel.mainclass((test_button.disabled() ? ' test_button--disabled' : '')
         + (' test_button--'+(test_button.type()))
         + (test_button.type() === 'toggle' ? (test_button.toggled() ? ' test_button--toggled' : '') : ''));
 
         return test_button;
-      }
-
-      test_button.viewmodel = function(v){
-        if(v === undefined){
-          return vm;
-        }
-        vm = (v instanceof viewmodel ? v : vm);
-        return test_button;
-      }
-
-      test_button.modularizer = function(){
-        return modularizer;
       }
 
       test_button.add({

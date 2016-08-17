@@ -13,54 +13,54 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
     /* END BUILD SECTION */
 
 	function Create$Name(){
+      /* modulizes this module to keep in sync with viewmodel when constructor is called, creates .add and .viewmodel properties */
+      kc.Modularize($Name);
 
-      var vm = {},
-          modularizer = kc.CreateModularizer();
-      /* Add Private _variables here */
+      /**** PRIVATE ****/
 
-      /* ex: private for functional property
-         *
-         *   var _example = '';
-        */
+      /* example: private for functional property
+       *   var _example = '';
+       */
 
       function $Name(){
-        modularizer($Name);
-        /* 'vm' refers to the viewmodel
-         * whenever you update something in code always call the constructor for updating the viewmodel */
+        /* '$Name.viewmodel' refers to the viewmodel
+         * whenever you update something in code always call the constructor for updating the viewmodel
+         */
 
-        /* Update viewmodel and node properties here */
+        /**** VIEWMODEL UPDATES */
 
         /* ex: updates the class attr with a changed state
          *
-         *   vm.mainclass('$Name' + (_example ? ' $Name--'+_example : ''));
-        */
+         *   $Name.viewmodel.mainclass('$Name' + (_example ? ' $Name--'+_example : ''));
+         */
+
         return $Name;
       }
 
-      $Name.viewmodel = function(v){
-        if(v === undefined){
-          return vm;
-        }
-        vm = (v instanceof viewmodel ? v : vm);
-        return $Name;
-      }
+      /**** PUBLIC METHODS ****/
 
-      $Name.modularizer = function(){
-        return modularizer;
-      }
-
-      /* add methods for updating and type checking viewmodel properties */
+      /* ex: simplified type checked functional property
+       *
+       *   $Name.add({
+       *      name:<name of property>,
+       *      type:<(number|string|boolean|function|object|array|instance|enum)>,
+       *      value:<value>, *optional default: 'undefined'
+       *      preprocess:<function, ran on update and must return value>, *optional
+       *      checkAgainst:<(string/number enum array|class instance)>, *enum and instance only
+       *      isMethod:<Boolean, if type function this tells if prop is non bindable but simple method> *function type only default: false
+       *    })
+       */
 
       /* ex: functional property, returns value if nothing, sets if value is string
-         *
-         *   $Name.example = function(v){
-         *     if(v === undefined){
-         *        return _example;
-         *     }
-         *     _example = (typeof v === 'string' ? v : _example);
-         *     return $Name;
-         *   }
-        */
+       *
+       *   $Name.example = function(v){
+       *     if(v === undefined){
+       *        return _example;
+       *     }
+       *     _example = (typeof v === 'string' ? v : _example);
+       *     return $Name;
+       *   }
+      */
 
       return $Name;
 	}

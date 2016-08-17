@@ -1,4 +1,4 @@
-kc.CreateModularizer = function(module){
+kc.Modularize = function(module){
     var types = {
       string: function(v,c){
         return (typeof v === 'string' && v !== c ? v : undefined);
@@ -42,55 +42,45 @@ kc.CreateModularizer = function(module){
       }
     },
         _module = module,
-        _viewmodel = {},
+        _viewmodel = undefined,
+        _node = undefined,
         props = {};
 
     module = (function(){
-      var m = _module();
+
+      /* Here we update all viewmodel attributes */
       Object.keys(props).forEach(function(k,i){
-        if(!module[k]){
-          module[k] = props[k];
-        }
-        if(module.vm){
-          if(module.vm[k+"_binding"]){
-            if(ko.isObservable(module.vm[k+"_binding"])){
-              if(module[k].type() !== 'array' && module[k].type() !== 'object' && module.vm[k+"_binding"]().toString() !== module[k]().toString()){
-                module[k](module.vm[k+"_binding"]());
-                /* in case of a preprocess */
-                module.vm[k+"_binding"](module[k]());
-              }
-              else if(module[k].type() === 'array' && module[k].type() === 'object'){
-                module[k](module.vm[k+"_binding"]());
-                /* in case of a preprocess */
-                module.vm[k+"_binding"](module[k]());
-              }
+
+        /* we do not add or update isMethods or instances */
+        if(!module[k].isMethod() && module[k].type() !== 'instance'){
+
+          /* if property doesnt exist we add it */
+          if(!module.viewmodel()[k+"_binding"]){
+            module.viewmodel()[k+"_binding"] = (module[k].type() !== 'function' ? ko.observable(module[k]()) : module[k]());
+            module.node.ko_override.bindChain(module.node,k,module[k]());
+          }
+          else{
+            if(ko.isObservable(module.viewmodel[k+"_binding"])){
+              module.viewmodel()[k+"_binding"](module[k]());
             }
             else{
-              if(module[k].type() !== 'array' && module[k].type() !== 'object' && module.vm[k+"_binding"].toString() !== module[k]().toString()){
-                module[k](module.vm[k+"_binding"]);
-                /* in case of a preprocess */
-                module.vm[k+"_binding"] = module[k]();
-              }
-              else if(module[k].type() === 'array' && module[k].type() === 'object'){
-                module[k](module.vm[k+"_binding"]);
-                /* in case of a preprocess */
-                module.vm[k+"_binding"] = module[k]();
-              }
+              module.viewmodel()[k+"_binding"] = module[k]();
             }
           }
         }
       });
-      return m;
-    }).bind(module)
-
+      return _module.call(module);
+    }).bind(module);
 
     function add(options){
       props[(options.name !== undefined ? options.name : 'default')] = CreateProperty()
       .type((options.type !== undefined ? options.type : 'string'))
       .propName((options.name !== undefined ? options.name : 'default'))
       .preprocess((options.preprocess !== undefined ? options.preprocess : function(v){return v;}))
-      .checkAgainst((options.checkAgainst !== undefined ? options.checkAgainst : (options.type === 'enum' ? [] : (options.type === 'instance' ? this : ''))));
+      .checkAgainst((options.checkAgainst !== undefined ? options.checkAgainst : (options.type === 'enum' ? [] : (options.type === 'instance' ? this : ''))))
+      .isMethod((options.type === 'function' ? options.isMethod : undefined));
       props[(options.name !== undefined ? options.name : 'default')]((options.value !== undefined ? options.value : ''));
+      module[(options.name !== undefined ? options.name : 'default')] = props[(options.name !== undefined ? options.name : 'default')];
       return module;
     }
 
@@ -113,8 +103,10 @@ kc.CreateModularizer = function(module){
         if(value)
         {
           _value = _preprocess(value);
-          /* may no longer needed as we apply updates based on constructor call
-          if(typeof this.viewmodel === 'function' && this.viewmodel()[_name+"_binding"]){
+
+          /* may no longer needed as we apply updates based on constructor call */
+
+          /* if(typeof this.viewmodel === 'function' && this.viewmodel()[_name+"_binding"]){
             if(ko.isObservable(this.viewmodel()[_name+"_binding"])){
               if(_type !== 'array' && _type !== 'object' && this.viewmodel()[_name+"_binding"]().toString() !== _value.toString()){
                 this.viewmodel()[_name+"_binding"](_value);
@@ -180,7 +172,6 @@ kc.CreateModularizer = function(module){
       return Property;
     }
 
-
     Object.defineProperty(module,'add',{
       get:function(){
         return add;
@@ -195,13 +186,30 @@ kc.CreateModularizer = function(module){
         return _viewmodel;
       },
       set:function(v){
-        console.error('You cannot reset the viewmodel');
+        if(_viewmodel === undefined){
+          _viewmodel = v;
+        }
+        else{
+          console.error('You cannot overwrite the viewmodel');
+        }
       }
     });
 
+    Object.defineProperty(module,'node',{
+      get:function(){
+        return _node;
+      },
+      set:function(v){
+        if(_node === undefined){
+          _node = v;
+        }
+        else{
+          console.error('You cannot overwrite the base node');
+        }
+      }
+    });
 
-
-    return Modularizer;
+    return module;
 }
 
 define([],function(){return kc.CreateModularizer});

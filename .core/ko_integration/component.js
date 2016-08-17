@@ -110,7 +110,7 @@ integrateComponents.overwriteLoadViewModel = function(func){
     ko.components.defaultLoader.loadViewModel(arguments[0],{createViewModel:function(params,componentInfo){
       var vm = func({target:componentInfo.element,view_model:arguments[1]});
       vm = (kc.isObject(vm) ? vm : new arguments[1](params,componentInfo.element));
-      componentInfo.element.KC = vm.constructor().viewmodel(vm).call();
+      componentInfo.element.KC = vm.constructor().viewmodel(vm).node(componentInfo.element).call();
       return vm;
     },arguments[2]})
   }

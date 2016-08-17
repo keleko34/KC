@@ -27,6 +27,10 @@ kc.getAttributes = function(el){
   .filter(function(k){return (k !== 'data-bind' && k !== 'id' && k !== 'class')});
 }
 
+kc.types = {
+
+}
+
 /* to easily clear console */
 Object.defineProperty(window,'cls',{
   get:function(){

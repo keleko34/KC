@@ -30,6 +30,7 @@ function integrateBindings(el){
   /* top of the chain important object containing all the parent component attributes to bind to the childs */
   el.ko_override.parentBinds = (el.ko_override.parentBinds === undefined ? {} : el.ko_override.parentBinds);
 
+  el.ko_override.bindChain = integrateBindings.bindChain;
 
   _bindEvents.concat(kc.getAttributes(el)).forEach(function(k,i){
     var value = undefined;
@@ -74,7 +75,8 @@ function integrateBindings(el){
   })
   .addAttrListener('removeChild',function(e){
     e.preventDefault();
-  })
+  });
+
 }
 
 /* removes attribute and returns function from attribute, for event based attributes */
@@ -117,6 +119,8 @@ integrateBindings.bindLinker = function(el,attr,value){
         if(el.KC[attr] && el.KC[attr].isMethod && !el.KC[attr].isMethod()){
           el.KC[attr](v);
           _value = el.KC[attr]();
+
+          /* should we call here? */
           el.KC.call();
         }
       }
@@ -138,13 +142,29 @@ integrateBindings.bindLinker = function(el,attr,value){
 }
 
 integrateBindings.createModuleDef = function(el,attr,value){
-  var modularizer = el.KC.modularizer();
-  modularizer.add({
+  el.KC.add({
     name:attr,
     type:(!isNaN(parseInt(value,10)) ? 'number' : (typeof value)),
     value:value
   })
-  .call(null,el.KC);
+  .call();
+}
+
+integrateBindings.bindChain = function(el,attr,value){
+  var prop = el.KC.viewmodel()[attr];
+  if(ko.isObservable(prop)){
+
+  }
+  else{
+    Object.defineProperty(el.KC.viewmodel(),attr,{
+      get:function(){
+        return el.KC[attr]()
+      },
+      set:function(v){
+
+      }
+    });
+  }
 }
 
 integrateBindings.getClassValue = function(prop,value){

@@ -13,54 +13,12 @@ define(['./CMS_Global_Settings.bp', './CMS_Global_Settings.vm', 'text!./CMS_Glob
     /* END BUILD SECTION */
 
     function CreateCMS_Global_Settings(){
-
-      var vm = {},
-          modularizer = kc.CreateModularizer();
-      /* Add Private _variables here */
-
-      /* ex: private for functional property
-         *
-         *   var _example = '';
-        */
+      kc.Modularize(CMS_Global_Settings);
 
       function CMS_Global_Settings(){
-        modularizer(CMS_Global_Settings);
-        /* 'vm' refers to the viewmodel
-         * whenever you update something in code always call the constructor for updating the viewmodel */
 
-        /* Update viewmodel and node properties here */
-
-        /* ex: updates the class attr with a changed state
-         *
-         *   vm.mainclass('CMS_Global_Settings' + (_example ? ' CMS_Global_Settings--'+_example : ''));
-        */
         return CMS_Global_Settings;
       }
-
-      CMS_Global_Settings.viewmodel = function(v){
-        if(v === undefined){
-          return vm;
-        }
-        vm = (v instanceof viewmodel ? v : vm);
-        return CMS_Global_Settings;
-      }
-
-      CMS_Global_Settings.modularizer = function(){
-        return modularizer;
-      }
-
-      /* add methods for updating and type checking viewmodel properties */
-
-      /* ex: functional property, returns value if nothing, sets if value is string
-         *
-         *   CMS_Global_Settings.example = function(v){
-         *     if(v === undefined){
-         *        return _example;
-         *     }
-         *     _example = (typeof v === 'string' ? v : _example);
-         *     return CMS_Global_Settings;
-         *   }
-        */
 
       return CMS_Global_Settings;
 	}

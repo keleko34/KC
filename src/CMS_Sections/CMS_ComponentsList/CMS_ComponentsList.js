@@ -13,54 +13,12 @@ define(['./CMS_ComponentsList.bp', './CMS_ComponentsList.vm', 'text!./CMS_Compon
     /* END BUILD SECTION */
 
     function CreateCMS_ComponentsList(){
-
-      var vm = {},
-          modularizer = kc.CreateModularizer();
-      /* Add Private _variables here */
-
-      /* ex: private for functional property
-         *
-         *   var _example = '';
-        */
+      kc.Modularize(CMS_ComponentsList);
 
       function CMS_ComponentsList(){
-        modularizer(CMS_ComponentsList);
-        /* 'vm' refers to the viewmodel
-         * whenever you update something in code always call the constructor for updating the viewmodel */
 
-        /* Update viewmodel and node properties here */
-
-        /* ex: updates the class attr with a changed state
-         *
-         *   vm.mainclass('CMS_ComponentsList' + (_example ? ' CMS_ComponentsList--'+_example : ''));
-        */
         return CMS_ComponentsList;
       }
-
-      CMS_ComponentsList.viewmodel = function(v){
-        if(v === undefined){
-          return vm;
-        }
-        vm = (v instanceof viewmodel ? v : vm);
-        return CMS_ComponentsList;
-      }
-
-      CMS_Grid.modularizer = function(){
-        return modularizer;
-      }
-
-      /* add methods for updating and type checking viewmodel properties */
-
-      /* ex: functional property, returns value if nothing, sets if value is string
-         *
-         *   CMS_ComponentsList.example = function(v){
-         *     if(v === undefined){
-         *        return _example;
-         *     }
-         *     _example = (typeof v === 'string' ? v : _example);
-         *     return CMS_ComponentsList;
-         *   }
-        */
 
       return CMS_ComponentsList;
 	}

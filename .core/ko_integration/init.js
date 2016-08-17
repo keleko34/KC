@@ -25,7 +25,7 @@ define(['./modularizer','./component','./binding'],function(CreateModularizer,Co
       })
       .overwriteBindHandler('component','init',function(e){
         /* Set bind rules */
-
+        BindingOverride(e.target);
       })
       .overwriteBindHandler('html','update',function(e){
         /* When an html bind updates it checks to make sure no new components need initialized */

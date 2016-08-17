@@ -13,54 +13,12 @@ define(['./CMS_ComponentsListItem.bp', './CMS_ComponentsListItem.vm', 'text!./CM
     /* END BUILD SECTION */
 
     function CreateCMS_ComponentsListItem(){
-
-      var vm = {},
-          modularizer = kc.CreateModularizer();
-      /* Add Private _variables here */
-
-      /* ex: private for functional property
-         *
-         *   var _example = '';
-        */
+      kc.Modularize(CMS_ComponentsListItem);
 
       function CMS_ComponentsListItem(){
-        modularizer(CMS_ComponentsListItem);
-        /* 'vm' refers to the viewmodel
-         * whenever you update something in code always call the constructor for updating the viewmodel */
 
-        /* Update viewmodel and node properties here */
-
-        /* ex: updates the class attr with a changed state
-         *
-         *   vm.mainclass('CMS_ComponentsListItem' + (_example ? ' CMS_ComponentsListItem--'+_example : ''));
-        */
         return CMS_ComponentsListItem;
       }
-
-      CMS_ComponentsListItem.viewmodel = function(v){
-        if(v === undefined){
-          return vm;
-        }
-        vm = (v instanceof viewmodel ? v : vm);
-        return CMS_ComponentsListItem;
-      }
-
-      CMS_ComponentsListItem.modularizer = function(){
-        return modularizer;
-      }
-
-      /* add methods for updating and type checking viewmodel properties */
-
-      /* ex: functional property, returns value if nothing, sets if value is string
-         *
-         *   CMS_ComponentsListItem.example = function(v){
-         *     if(v === undefined){
-         *        return _example;
-         *     }
-         *     _example = (typeof v === 'string' ? v : _example);
-         *     return CMS_ComponentsListItem;
-         *   }
-        */
 
       return CMS_ComponentsListItem;
 	}
