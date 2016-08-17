@@ -14,13 +14,13 @@ define(['./test_button.bp', './test_button.vm', 'text!./test_button.html', 'text
 
     function Createtest_button(){
 
-      var vm = {},
-          modularizer = kc.CreateModularizer();
+      var vm = {};
+
+      kc.CreateModularizer(test_button);
       /* Add Private _variables here */
       var _typeEnum = ['click','toggle','text'];
 
       function test_button(){
-        modularizer(test_button);
 
         vm.mainclass((test_button.disabled() ? ' test_button--disabled' : '')
         + (' test_button--'+(test_button.type()))
@@ -41,7 +41,7 @@ define(['./test_button.bp', './test_button.vm', 'text!./test_button.html', 'text
         return modularizer;
       }
 
-      modularizer.add({
+      test_button.add({
         type:'function',
         name:'onclick',
         value:function(){},

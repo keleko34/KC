@@ -13,9 +13,9 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
     /* END BUILD SECTION */
 
     function Create$Name(){
+      /* modulizes this module to keep in sync with viewmodel when constructor is called */
+      kc.CreateModularizer($Name);
 
-      var vm = {},
-          modularizer = kc.CreateModularizer();
       /* Add Private _variables here */
 
       /* ex: private for functional property
@@ -24,8 +24,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
         */
 
       function $Name(){
-        modularizer($Name);
-        /* 'vm' refers to the viewmodel
+        /* '$Name.viewmodel' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel */
 
         /* Update viewmodel and node properties here */
@@ -37,19 +36,15 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
         return $Name;
       }
 
-      $Name.viewmodel = function(v){
-        if(v === undefined){
-          return vm;
-        }
-        vm = (v instanceof viewmodel ? v : vm);
-        return $Name;
-      }
-
-      $Name.modularizer = function(){
-        return modularizer;
-      }
-
       /* add methods for updating and type checking viewmodel properties */
+
+      /* ex: simplified type checked functional property
+         *
+         *   $Name.add({
+                name:<name of property>,
+                type:<>
+              })
+        */
 
       /* ex: functional property, returns value if nothing, sets if value is string
          *

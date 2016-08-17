@@ -7,20 +7,19 @@
   /* Changes we need to keep track of on a component:
    * Text: html(properties), appendChild
    * Events: on(properties|attributes), addEventListener
-   * Attributes: setAttribute, title, href, value !(id|class)
+   * Attributes: setAttribute, title, href, value !(id|class|style)
    * NOTE: We do not track class or id, they are problematic props.
    */
 
 /* All text properties */
 var _htmlEvents = ['innerHTML','outerHTML','textContent','innerText','outerText'],
 
-    /* standard attributes, more can be added except id and class */
+    /* standard attributes, more can be added except id and class and style */
     _attrEvents = ['title','href','value','src'],
 
     /* list of all possible events on an element */
-    _bindEvents = _htmlEvents.concat(_attrEvents).concat(Object.keys(HTMLUnknownElement.prototype).filter(function(k){
-      return (k.indexOf('on')  === 0);
-    })),
+    _bindEvents = _htmlEvents.concat(_attrEvents.filter(function(v){return (['id','class','style'].indexOf(v) < 0)}))
+    .concat(Object.keys(HTMLUnknownElement.prototype).filter(function(k){return (k.indexOf('on')  === 0);})),
     _onTextBind = function(){},
     _onAttrBind = function(){},
     _onEventBind = function(){}
@@ -37,19 +36,23 @@ function integrateBindings(el){
     if(k.indexOf('on') === 0){
       if(el.getAttribute(k)) value = integrateBindings.getAttrFunc(el,k);
     }
+    /* we link and bind the attribute here */
     integrateBindings.bindLinker(el,k,value);
   });
 
+  /* whenever a dev does a set attribute on a component we listen and update or add appropriately */
   el.addAttrListener('setAttribute',function(e){
     e.preventDefault();
     if(e.attr.indexOf('on') === 0) e.value = integrateBindings.getAttrFunc(e.value);
+
+    /* if attr bind doesnt exist we create it */
     if(!el.ko_override.parentBinds[e.attr]){
       if(el.KC){
         if(el.KC[e.attr] && el.KC[e.attr].isMethod && !el.KC[e.attr].isMethod()){
           el.KC[e.attr](e.value);
         }
         else{
-          integrateBindings.createModule(el,attr,e.value);
+          integrateBindings.createModuleDef(el,attr,e.value);
         }
       }
       integrateBindings.bindLinker(el,e.attr,(el.KC ? el.KC[e.attr]() : e.value));
@@ -64,8 +67,13 @@ function integrateBindings(el){
       _onAttrBind(el);
     }
   })
-  el.addAttrListener('appendChild',function(e){
 
+  /* appending or removing children from the component itself is not permitted */
+  .addAttrListener('appendChild',function(e){
+    e.preventDefault();
+  })
+  .addAttrListener('removeChild',function(e){
+    e.preventDefault();
   })
 }
 
@@ -109,6 +117,7 @@ integrateBindings.bindLinker = function(el,attr,value){
         if(el.KC[attr] && el.KC[attr].isMethod && !el.KC[attr].isMethod()){
           el.KC[attr](v);
           _value = el.KC[attr]();
+          el.KC.call();
         }
       }
     }
@@ -126,6 +135,16 @@ integrateBindings.bindLinker = function(el,attr,value){
       _onAttrBind(el);
     }
   });
+}
+
+integrateBindings.createModuleDef = function(el,attr,value){
+  var modularizer = el.KC.modularizer();
+  modularizer.add({
+    name:attr,
+    type:(!isNaN(parseInt(value,10)) ? 'number' : (typeof value)),
+    value:value
+  })
+  .call(null,el.KC);
 }
 
 integrateBindings.getClassValue = function(prop,value){

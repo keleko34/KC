@@ -1,4 +1,4 @@
-kc.CreateModularizer = function(){
+kc.CreateModularizer = function(module){
     var types = {
       string: function(v,c){
         return (typeof v === 'string' && v !== c ? v : undefined);
@@ -41,11 +41,12 @@ kc.CreateModularizer = function(){
         return (e.indexOf(v) > -1 && v !== c ? v : undefined);
       }
     },
-        module = function(){},
+        _module = module,
+        _viewmodel = {},
         props = {};
 
-    function Modularizer(module){
-      module = module;
+    module = (function(){
+      var m = _module();
       Object.keys(props).forEach(function(k,i){
         if(!module[k]){
           module[k] = props[k];
@@ -79,16 +80,18 @@ kc.CreateModularizer = function(){
           }
         }
       });
-    }
+      return m;
+    }).bind(module)
 
-    Modularizer.add = function(options){
+
+    function add(options){
       props[(options.name !== undefined ? options.name : 'default')] = CreateProperty()
       .type((options.type !== undefined ? options.type : 'string'))
       .propName((options.name !== undefined ? options.name : 'default'))
       .preprocess((options.preprocess !== undefined ? options.preprocess : function(v){return v;}))
       .checkAgainst((options.checkAgainst !== undefined ? options.checkAgainst : (options.type === 'enum' ? [] : (options.type === 'instance' ? this : ''))));
       props[(options.name !== undefined ? options.name : 'default')]((options.value !== undefined ? options.value : ''));
-      return Modularizer;
+      return module;
     }
 
     function CreateProperty(){
@@ -110,6 +113,7 @@ kc.CreateModularizer = function(){
         if(value)
         {
           _value = _preprocess(value);
+          /* may no longer needed as we apply updates based on constructor call
           if(typeof this.viewmodel === 'function' && this.viewmodel()[_name+"_binding"]){
             if(ko.isObservable(this.viewmodel()[_name+"_binding"])){
               if(_type !== 'array' && _type !== 'object' && this.viewmodel()[_name+"_binding"]().toString() !== _value.toString()){
@@ -128,6 +132,7 @@ kc.CreateModularizer = function(){
               }
             }
           }
+          */
         }
         return this;
       }
@@ -174,6 +179,27 @@ kc.CreateModularizer = function(){
 
       return Property;
     }
+
+
+    Object.defineProperty(module,'add',{
+      get:function(){
+        return add;
+      },
+      set:function(v){
+        console.error('You cannot create an add method on a module as this method already exists, please declare differently');
+      }
+    });
+
+    Object.defineProperty(module,'viewmodel',{
+      get:function(){
+        return _viewmodel;
+      },
+      set:function(v){
+        console.error('You cannot reset the viewmodel');
+      }
+    });
+
+
 
     return Modularizer;
 }
