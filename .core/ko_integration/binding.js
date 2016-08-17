@@ -161,7 +161,10 @@ integrateBindings.bindChain = function(el,attr,value){
         return el.KC[attr]()
       },
       set:function(v){
-
+        var v = kc.isType[el.KC[attr].type()](v,el.ko_override.parentBinds[attr],el.KC[attr].checkAgainst());
+        if(v){
+          el.ko_override.parentBinds[attr] = v;
+        }
       }
     });
   }
