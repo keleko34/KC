@@ -18,7 +18,7 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
           _winSizeY = window.innerHeight,
           _initial = false,
           _remove = function(){
-            vm.Node.parentElement.removeChild(vm.Node);
+            CMS_Grid.node.parentElement.removeChild(CMS_Grid.node);
             window.removeEventListener('resize',resize);
           }
 
@@ -52,7 +52,7 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
       .add({
         type:'number',
         name:'minWidth',
-        value:300
+        value:275
       })
       .add({
         type:'number',
@@ -80,8 +80,8 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
         if(_winSizeX === window.innerWidth) return;
         /* if width is same need to check columns */
         if(CMS_Grid.width() === window.innerWidth){
-          var parent = vm.Node.parentElement,
-              index = getIndex(vm.Node),
+          var parent = CMS_Grid.viewmodel.Node.parentElement,
+              index = getIndex(CMS_Grid.viewmodel.Node),
               siblings = Array.prototype.slice.call(parent.children).filter(function(k){
                 return (k.KViewModel && k.KViewModel.methods.col && k.KViewModel.methods.col() === CMS_Grid.col());
               });
@@ -102,6 +102,9 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
               newW = (w-dif);
           if(newW <= CMS_Grid.minWidth()){
             newW = CMS_Grid.minWidth();
+          }
+          else if(newW >= CMS_Grid.minWidth() && document.body.scrollWidth > window.innerWidth){
+            newW = newW-(document.body.scrollWidth-window.innerWidth);
           }
           _winSizeX = window.innerWidth;
           CMS_Grid.width(newW).call();

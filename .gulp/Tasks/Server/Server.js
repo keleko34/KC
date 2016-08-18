@@ -169,8 +169,6 @@ module.exports = function(){
     +(((env === undefined || env === 'prod' || env === 'stage') || (env === 'qa' && !debug)) ? '.min' : '')
     +params[1]);
 
-    console.log('path ',_path);
-
     fs.stat(_path,function(err,stat){
       if(!err && stat.isFile()){
          fs.createReadStream(_path).pipe(res);

@@ -42,9 +42,22 @@ function integrateComponents(){
   kb.addAttrUpdateListener('appendChild',function(e){
     var node = integrateComponents.getNearestComponent(e.target);
 
-    if(node.ko_override && node.ko_override.postappend) integrateComponents.parseNodeTemplate('append',e.target);
+    if(node.ko_override && !node.KC){
+      node.ko_override.postappend = true;
+    }
+    if(node.ko_override && node.KC){
+      node.ko_override.postappend = false;
+      node.ko_override.postcheck = true;
+    }
 
-    if(node.KC) node.ko_override.postappend = true;
+    if(node.ko_override && node.ko_override.postappend){
+
+    }
+
+    if(node.ko_override && node.ko_override.postcheck){
+      integrateComponents.parseNodeTemplate('html',e.target);
+    }
+
   });
 
   ko.components.loaders.unshift(_loadOrder);
@@ -83,7 +96,7 @@ integrateComponents.overwriteGetConfig = function(func){
 /* This method runs after the viewmodel and the template are fetched for the component */
 integrateComponents.overwriteLoadComponent = function(func){
   _loadOrder.loadComponent = function(name, componentConfig, callback){
-    func.apply(this,arguments);
+    func({name:name,view_model:componentConfig.viewModel,template:componentConfig.template});
     ko.components.defaultLoader.loadComponent(name, componentConfig, callback);
   }
   return integrateComponents;
@@ -105,7 +118,7 @@ integrateComponents.overwriteLoadTemplate = function(func){
 
 /* This method runs prior to the viewmodel being binded */
 integrateComponents.overwriteLoadViewModel = function(func){
-  _loadOrder.loadViewModel = function(){
+  _loadOrder.loadViewModel = function(name,templateConfig,callback){
     var args = arguments;
     ko.components.defaultLoader.loadViewModel(args[0],{createViewModel:function(params,componentInfo){
       /* Create ViewModel */
@@ -163,7 +176,7 @@ integrateComponents.loadComponent = function(name,cb){
 integrateComponents.setBinding = function(elements){
   elements = ((kc.isHTMLCollection(elements) || kc.isArray(elements)) ? elements : [elements]);
   for(var x=0;x<elements.length;x++){
-    if(!elements[x].ko_override){
+    if(!elements[x].ko_override && !!ko.dataFor(elements[x])){
       ko.applyBindings({},elements[x]);
     }
   }

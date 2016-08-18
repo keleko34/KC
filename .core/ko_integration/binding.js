@@ -75,10 +75,10 @@ function integrateBindings(el){
 
   /* appending or removing children from the component itself is not permitted */
   .addAttrListener('appendChild',function(e){
-    if(e.target.innerHTML > 0){
+    if(e.target.KC){
       e.preventDefault();
     }
-  });
+  })
 
 }
 
@@ -198,9 +198,13 @@ integrateBindings.setParentBinds = function(vm,el){
       }
     }
   });
+
   el.KC.call();
   return integrateBindings;
 }
+
+integrateBindings.htmlEvents = _htmlEvents;
+integrateBindings.attrEvents = _attrEvents;
 
 
 
