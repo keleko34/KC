@@ -94,7 +94,6 @@ module.exports = function(){
                     break loop;
                   }
 
-                  if(_isCMS) console.log(dir[x].toLowerCase(),' ', req.params[0].toLowerCase());
                   if(dir[x].toLowerCase() === req.params[0].toLowerCase()){
                     _type = r.replace(appPath+'/src/','');
                     sendRequest(_type,req.params,req.query.env,req.query.debug,res);
@@ -106,7 +105,6 @@ module.exports = function(){
                 }
               }
               else{
-                console.error(err,_routes[c]);
                 _finished.push(true);
               }
               if(_finished.length >= _routes.length){
