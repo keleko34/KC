@@ -1,4 +1,4 @@
-require(['./.core/ko/init', 'crossroads', 'hasher','kb'],function(override, crossroads, hasher, CreateKB){
+require(['./.core/ko/init', './.core/cms', 'crossroads', 'hasher','kb'],function(override, CMS, crossroads, hasher, CreateKB){
 
 kb = CreateKB();
 
@@ -67,4 +67,6 @@ kb = CreateKB();
   override().call();
 
   ko.applyBindings(router().bindings);
+
+  kc.CMS.start();
 });

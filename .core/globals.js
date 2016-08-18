@@ -33,21 +33,21 @@ kc.getAttributes = function(el){
 
 kc.isType = {
   string: function(v,c){
-    return (typeof v === 'string' && (c !== undefined ? v !== c : true) ? v : undefined);
+    return (typeof v === 'string' && (c ? v !== c : true) ? v : undefined);
   },
   number: function(v,c){
-    return ((typeof v === 'number' || !isNaN(parseInt(v,10))) && (c !== undefined ? parseInt(v,10) !== c : true) ? parseInt(v,10) : undefined);
+    return ((typeof v === 'number' || !isNaN(parseInt(v,10))) && (((c || parseInt(c,10) === 0)) ? parseInt(v,10) !== c : true) ? parseInt(v,10) : undefined);
   },
   boolean: function(v,c){
     return (typeof v === 'boolean' && (c !== undefined ? v !== c : true) ? !!v : undefined);
   },
   function: function(v,c){
-    return (typeof v === 'function' && (c !== undefined ? v.toString() !== c.toString() : true) ? v : undefined);
+    return (typeof v === 'function' && (c ? v.toString() !== c.toString() : true) ? v : undefined);
   },
   object: function(v,c){
     var r = false;
     try{
-      r = (kc.isObject(v) && (c !== undefined ? JSON.stringify(v) !== JSON.stringify(c) : true));
+      r = (kc.isObject(v) && (c ? JSON.stringify(v) !== JSON.stringify(c) : true));
     }
     catch(e){
       console.warn('Warning circular objects are difficult to keep in sync, try using different methodology old: ',c,' new:',v);
@@ -58,7 +58,7 @@ kc.isType = {
   array: function(v,c){
     var r = false;
     try{
-      r = (kc.isArray(v) && (c !== undefined ? JSON.stringify(v) !== JSON.stringify(c) : true));
+      r = (kc.isArray(v) && (c ? JSON.stringify(v) !== JSON.stringify(c) : true));
     }
     catch(e){
       console.warn('Warning circular arrays are difficult to keep in sync, try using different methodology old: ',c,' new:',v);
@@ -75,9 +75,20 @@ kc.isType = {
   }
 }
 
+kc.templates = {};
+
+kc.settings = {};
+
+kc.appendScript = function(url){
+  var script = document.createElement('script');
+  script.type = "text/javascript";
+  script.src = url;
+  document.body.appendChild(script);
+}
+
 /* to easily clear console */
 Object.defineProperty(window,'cls',{
   get:function(){
     if(typeof clear === 'function') clear();
   }
-})
+});

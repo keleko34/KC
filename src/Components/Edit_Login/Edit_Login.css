@@ -1,0 +1,20 @@
+.Edit_Login {
+  height:200px;
+  width:270px;
+  background:#fff;
+  position: fixed;
+  z-index: 2;
+  top:30px;
+  left:50%;
+  margin-left:-135px;
+}
+
+.Edit_Login_Overlay {
+  width: 100%;
+  height: 100%;
+  background: rgba(70, 70, 70, 0.50);
+  z-index: 1;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}

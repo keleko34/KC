@@ -64,6 +64,21 @@ module.exports = function(){
   /* Default authorizer, normally ran through login system with permissions */
   var isAuthorized = true;
 
+  function init(req,res,next){
+    if(req.url.indexOf('/.core/init.js') === 0){
+      sortQuery(req,res);
+      console.log(req.url,req.query);
+      if(req.query.edit){
+        req.url = req.url.replace('init','init_cms');
+      }
+      fs.createReadStream(appPath+req.url).pipe(res);
+    }
+    else{
+      next();
+    }
+  }
+
+
   function Route(req,res,next){
 
     var path_routes = Object.keys(paths);
@@ -159,6 +174,7 @@ module.exports = function(){
     }
     req.query.env = _env;
     req.query.debug = _debug;
+    req.query.edit = (req.query.edit === 'true');
   }
 
   function sendRequest(type, params, env, debug, res){
@@ -193,7 +209,7 @@ module.exports = function(){
       port: parseInt(res.Port,10),
       livereload: res.Reload,
       middleware: function(connect, opt){
-        return [Route]
+        return [init,Route]
       }
     })
   }

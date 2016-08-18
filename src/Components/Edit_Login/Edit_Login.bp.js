@@ -1,5 +1,5 @@
 /*********************************
- *  CMS_Grid
+ *  Edit_Login
  *  Created by Keleko34
  *  This file is a blueprint that registers the
  *  component with requirejs, knockoutjs and commonjs
@@ -10,39 +10,28 @@ if (typeof define === "function" && define.amd)
 {
   define([],function(){
     return {
-      register_CMS_Grid:register_CMS_Grid,
-      get_CMS_Grid:get_CMS_Grid
+      register_Edit_Login:register_Edit_Login
     }
   });
 }
 else if (typeof module === "object" && module.exports)
 {
     module.exports = {
-      register_CMS_Grid:register_CMS_Grid,
-      get_CMS_Grid:get_CMS_Grid
+      register_Edit_Login:register_Edit_Login
     }
 }
 
 /* This method is the method that will be put into the main file when it is compiled during dev build */
-function register_CMS_Grid(CreateCMS_Grid,viewmodel,template,css){
+function register_Edit_Login(CreateEdit_Login,viewmodel,template,css){
   if(typeof define === 'function' && define.amd){
-    define('CreateCMS_Grid',[],function(){return CreateCMS_Grid});
+    define('CreateEdit_Login',[],function(){return CreateEdit_Login});
   }
   else if(typeof module === "object" && module.exports){
-    module.exports = CreateCMS_Grid;
+    module.exports = CreateEdit_Login;
   }
-  viewmodel.prototype.constructor = CreateCMS_Grid;
-}
-
-function get_CMS_Grid(template){
-  var elements = [],
-      name = 'CMS_Grid'.replace('CMS_','').toLowerCase();
-  for(var x=0;x<document.all.length;x++){
-    if(document.all[x].tagName.toLowerCase() === name){
-      elements.push(document.all[x]);
-    }
+  viewmodel.prototype.constructor = CreateEdit_Login;
+  if(ko && !ko.components.isRegistered(('Edit_Login').toLowerCase())){
+    template = "<style>\r\n"+css+"\r\n</style>"+template;
+    ko.components.register(('Edit_Login').toLowerCase(),{viewModel:viewmodel,template:template});
   }
-
-
-
 }

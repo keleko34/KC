@@ -14,8 +14,6 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
 
     function Create$Name(){
 
-      kc.Modularize($Name);
-
       /**** PRIVATE ****/
 
       /* example: private for functional property

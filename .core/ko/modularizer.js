@@ -14,16 +14,17 @@ kc.Modularize = function(func){
 
           /* if property doesnt exist we add it */
           if(!_viewmodel[k+"_binding"]){
-            _viewmodel[k+"_binding"] = (module[k].type() !== 'function' ? ko.observable(module[k]()) : module[k]());
+            _viewmodel[k+"_binding"] = (module[k].type() !== 'function' ? ko.observable() : module[k]());
             _node.ko_override.bindChain(_viewmodel,module.node,k,module[k]());
           }
           else{
-            if(ko.isObservable(_viewmodel[k+"_binding"])){
-              _viewmodel[k+"_binding"](module[k]());
-            }
-            else{
-              _viewmodel[k+"_binding"] = module[k]();
-            }
+            _node.ko_override.bindChain(_viewmodel,module.node,k,module[k]());
+          }
+          if(ko.isObservable(_viewmodel[k+"_binding"])){
+            _viewmodel[k+"_binding"](module[k]());
+          }
+          else{
+            _viewmodel[k+"_binding"] = module[k]();
           }
         }
       });

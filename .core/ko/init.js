@@ -1,39 +1,55 @@
-define(['./component','./extenders', './binding', 'kb'],function(CreateComponentOverride, CreateExtendersOverride, CreateBindingOverride, CreateKB){
-  kb = CreateKB();
-  kb.call();
+define(['./modularizer','./component','./binding','./extenders'],function(CreateModularizer, ComponentOverride, BindingOverride, ExtenderOverride){
+  function CreateIntegration(){
 
-  var ComponentOverride = CreateComponentOverride(),
-      ExtenderOverride = CreateExtendersOverride();
+    function Integration(){
 
-  ComponentOverride.addListener('init',function(e){
-    e.target.ko_binder = CreateBindingOverride().injector(ExtenderOverride.extendUpdate)
-    .addListener('element',function(e){
-      e.target.ko_binds[e.key] = e.value;
-      e.target.ko_binder.call(null,e.view_model,e.target);
-    })
-    .getDefaults(e.target);
-  })
-  .addListener('viewmodel',function(e){
-    var css = e.view_model.Node.querySelector('style').textContent;
-    /* Here we can control style reading for methods etc. */
+      ComponentOverride.overwriteGetConfig(function(name,cb){
+        /* Here we auto load the component if it doesnt alredy exist */
+        ComponentOverride.loadComponent(name,cb);
+      })
+      .overwriteLoadTemplate(function(name,template,cb){
+        /* when loading a component we parse its html to load any sub child components as well */
+        ComponentOverride.parseNodeTemplate('load',template,cb);
+      })
+      .overwriteLoadComponent(function(e){
+        e.view_model.prototype.template = e.template;
+      })
+      .overwriteLoadViewModel(function(e){
+        e.target.ko_override.template = e.view_model.template;
+        e.target.ko_override.setParentBinds(e.view_model,e.target);
 
-    var rules = ComponentOverride.parseCss(css,function(e){
-      /* iterator for each rule */
-    });
+        /* Here we can control style reading for methods etc. */
+        var css = e.target.querySelector('style');
+        if(css){
+            /* iterator for each rule, decipher custom css styles */
+            css = css.textContent,
+            rules = ComponentOverride.parseCSS(css,function(e){
 
+            });
+        }
 
-    e.target.ko_binder.call(null,e.view_model,e.target);
+      })
+      .overwriteBindHandler('component','init',function(e){
+        /* Set bind rules */
+        BindingOverride.onTextBind(function(el){
+            integrateComponents.parseNodeTemplate(el.innerHTML);
+        }).call(null,e.target);
 
-    ExtenderOverride.addListener('update',e.target.ko_binder.update);
-    //console.log(e.target,e.target.children);
-    //ko.override.parseNodeChildren(e.target);
-  })
-  .call();
+      })
+      .overwriteBindHandler('html','update',function(e){
+        /* When an html bind updates it checks to make sure no new components need initialized */
+        e.target = ComponentOverride.getNearestComponent(e.target);
+        if(e.target.ko_override && e.target.KC){
+          ComponentOverride.parseNodeTemplate(e.type,e.target);
+        }
+      }).call();
 
-  ExtenderOverride.call();
+      ExtenderOverride.call();
 
-  return {
-    ComponentOverride : ComponentOverride,
-    ExtenderOverride : ExtenderOverride
+      return Integration;
+    }
+
+    return Integration;
   }
-})
+  return CreateIntegration;
+});
