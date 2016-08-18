@@ -23,6 +23,32 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
 
       });
 
+      Edit_Login.submit = function(vm,e){
+        e = (e === undefined ? vm : e);
+        e.stopPropagation();
+        e.preventDefault();
+        console.log(Edit_Login.user(),Edit_Login.pass());
+      }
+
+      Edit_Login.add({
+        name:'onclick',
+        type:'function',
+        value:Edit_Login.submit
+      })
+      .add({
+        name:'onkeyup',
+        type:'function',
+        value:Edit_Login.submit
+      })
+      .add({
+        name:'user',
+        type:'string'
+      })
+      .add({
+        name:'pass',
+        type:'string'
+      })
+
       return Edit_Login;
 	}
     blueprint.register_Edit_Login(CreateEdit_Login,viewmodel,template,css);

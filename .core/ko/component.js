@@ -130,7 +130,8 @@ integrateComponents.overwriteLoadViewModel = function(func){
       vc.node = componentInfo.element;
 
       /* attach to Element */
-      componentInfo.element.KC = vc.call();
+      componentInfo.element.KC = vc;
+      componentInfo.element.KC.call()
       func({target:componentInfo.element,view_model:vm});
       return vm;
     }},args[2])

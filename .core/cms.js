@@ -11,8 +11,7 @@ define([],function(){
     integrateComponents.loadComponent('Edit_Login',function(err){
       if(!err){
         var el = document.createElement('Edit_Login');
-        el.onclick = submitLogin;
-        el.onkeyup = submitLogin;
+
         document.body.appendChild(el);
         ko.applyBindings({},el);
       }

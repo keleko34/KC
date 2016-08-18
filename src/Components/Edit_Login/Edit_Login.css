@@ -1,12 +1,13 @@
 .Edit_Login {
-  height:200px;
-  width:270px;
-  background:#fff;
+  height: 210px;
+  width: 240px;
+  background: #fff;
   position: fixed;
   z-index: 2;
-  top:30px;
-  left:50%;
-  margin-left:-135px;
+  top: 30px;
+  left: 50%;
+  margin-left: -120px;
+  border-radius: 10px;
 }
 
 .Edit_Login_Overlay {
@@ -17,4 +18,50 @@
   position: absolute;
   top: 0px;
   left: 0px;
+}
+
+.Edit_Login_Title {
+    height: 20px;
+    text-align: center;
+    line-height: 40px;
+    color: #A9A9A9;
+    font-size: 18px;
+    font-family: sans-serif;
+}
+
+.Edit_Login_Form input {
+  height: 30px;
+  width: 200px;
+  margin-left: 18px;
+  margin-top: 20px;
+  border-radius: 5px;
+  border: 1px solid rgb(230, 228, 228);
+  box-shadow: #333 0px 2px 5px -2px inset;
+  text-align: center;
+  font-size: 14px;
+  color: #a9a9a9;
+}
+
+.Edit_Login_Form input:focus {
+  outline:none;
+  border:1px solid rgb(171, 196, 255);
+}
+
+.Edit_Login_Submit {
+  width: 200px;
+  height: 40px;
+  margin-top: 20px;
+  margin-left: 20px;
+  text-align: center;
+  background: #89bfef;
+  line-height: 40px;
+  color: #ffffff;
+  border-radius: 5px;
+  border: 1px solid #b5b5b5;
+  box-shadow: #000 0px 4px 6px -6px;
+  cursor: pointer;
+}
+
+.Edit_Login_Submit:active {
+  box-shadow: #000 0px 2px 9px -4px inset;
 }
