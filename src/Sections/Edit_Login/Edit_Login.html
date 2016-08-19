@@ -8,7 +8,7 @@
   <div class="Edit_Login_Submit" data-bind="event:{click:onclick_binding}">Login</div>
   <div class="Edit_Login_Remember" data-bind="event:{click:onremember_binding},style:{color:rememberColor}">{{rememberText}}</div>
 </div>
-<div class="Edit_Login_Warning" data-bind="style:{display:warning_binding}">
-  <div class="Edit_Login_Warning_close"></div>
+<div class="Edit_Login_Warning" data-bind="style:{display:warning,background:warningtype}">
+  <div class="Edit_Login_Warning_Close" data-bind="event:{click:warningclose_binding}">X</div>
   <div class="Edit_Login_Warning_Message">{{message_binding}}</div>
 </div>

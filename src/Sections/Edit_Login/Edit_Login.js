@@ -16,6 +16,7 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
 
       /**** PRIVATE ****/
       var _isRemembered = false,
+          _isWarning = false,
           _fetched = false;
 
       /**** CONSTRUCTOR ****/
@@ -34,23 +35,31 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
         }
         Edit_Login.viewmodel.rememberText(_isRemembered);
         Edit_Login.viewmodel.rememberColor(_isRemembered);
+        Edit_Login.viewmodel.warning(_isWarning);
       });
 
       Edit_Login.submit = function(vm,e){
         e = (e === undefined ? vm : e);
         if(e.type === 'keyup' && (e.which || e.keyCode) === 13){
-
+          Edit_Login.send();
         }
-        else{
-
+        else if(e.type !== 'keyup'){
+          Edit_Login.send();
         }
       }
 
       Edit_Login.send = function(){
-
+        if(Edit_Login.user().length === 0 || Edit_Login.pass().length === 0){
+          _isWarning = true;
+          Edit_Login.message("A field is missing, please fill in both fields").call();
+          return;
+        }
         function response(data){
+          console.log(data);
+          data = JSON.parse(data);
           if(data.err){
-
+            _isWarning = true;
+            Edit_Login.message(data.message).call();
           }
           else{
 
@@ -58,15 +67,27 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
         }
 
         if(io && io.socket && io.socket.post){
-          io.socket.post(Edit_Login.url(),{},response);
+          io.socket.post(Edit_Login.url('cms_login'),{},response);
         }
         else{
-
+          var io = new XMLHttpRequest();
+          io.onreadystatechange = function(e){
+            if(io.readyState === 4 && io.status === 200){
+              response(io.responseText);
+            }
+          }
+          io.open("POST", Edit_Login.url('cms_login'), true);
+          io.send();
         }
       }
 
       Edit_Login.remember = function(){
         _isRemembered = !_isRemembered;
+        Edit_Login.call();
+      }
+
+      Edit_Login.closeWarning = function(){
+        _isWarning = false;
         Edit_Login.call();
       }
 
@@ -97,9 +118,14 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
         type:'function',
         value:Edit_Login.remember
       })
+      .add({
+        name:'warningclose',
+        type:'function',
+        value:Edit_Login.closeWarning
+      })
 
-      Edit_Login.url = function(){
-        return '/cms/?user='+Edit_Login.user()+'&pass='+Edit_Login.pass();
+      Edit_Login.url = function(url){
+        return '/'+url+'/?'+location.search.replace('?','')+'&user='+Edit_Login.user()+'&pass='+Edit_Login.pass();
       }
 
       return Edit_Login;

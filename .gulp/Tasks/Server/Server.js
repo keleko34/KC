@@ -62,12 +62,13 @@ module.exports = function(){
   }
 
   /* Default authorizer, normally ran through login system with permissions */
-  var isAuthorized = true;
+  var isAuthorized = false,
+      localUser = 'admin',
+      localPass = 'pass';
 
   function init(req,res,next){
     if(req.url.indexOf('/.core/init.js') === 0){
       sortQuery(req,res);
-      console.log(req.url,req.query);
       if(req.query.edit){
         req.url = req.url.replace('init','init_cms');
       }
@@ -78,6 +79,24 @@ module.exports = function(){
     }
   }
 
+  function cms_login(req,res,next){
+    if(req.url.indexOf('/cms_login') === 0){
+      sortQuery(req,res);
+      if(req.query.env !== 'local' && req.query.env !== 'dev'){
+        next();
+      }
+      var respond = {success:true};
+      res.setHeader('content-type','application/x-javascript');
+      if(req.query.user !== localUser || req.query.pass !== localPass){
+        respond = {err:true,message:"Failed login, wrong user or pass"};
+      }
+      res.statusCode = 200;
+      res.end(JSON.stringify(respond));
+    }
+    else{
+      next();
+    }
+  }
 
   function Route(req,res,next){
 
@@ -209,7 +228,7 @@ module.exports = function(){
       port: parseInt(res.Port,10),
       livereload: res.Reload,
       middleware: function(connect, opt){
-        return [init,Route]
+        return [init,cms_login,Route]
       }
     })
   }

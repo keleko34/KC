@@ -95,3 +95,36 @@
 .Edit_Login_Remember:active {
   color:#CCC;
 }
+
+.Edit_Login_Warning {
+  display: block;
+  width: 360px;
+  background: #ff9e9e;
+  position: fixed;
+  z-index: 2;
+  top: 391px;
+  left: 50%;
+  margin-left: -180px;
+  border-radius: 10px;
+  font-family: sans-serif;
+}
+
+.Edit_Login_Warning_Message {
+    padding: 15px;
+    color: #fff;
+    font-size: 16px;
+}
+.Edit_Login_Warning_Close {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  right: 10px;
+  top: 13px;
+  color: #cd7f7f;
+  cursor: pointer;
+  font-size:20px;
+}
+
+.Edit_Login_Warning_Close:active {
+  color: #e79090;
+}

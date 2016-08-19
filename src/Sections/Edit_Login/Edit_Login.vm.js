@@ -5,9 +5,10 @@ define([],function(){
     this.Node = element;
     this.mainclass = ko.observable('Edit_Login').extend({attach:element.getAttribute('class')});
 
-    this.warning_binding = ko.observable(false).extend({translateBool:['none','block']});
+    this.warning = ko.observable(false).extend({translateBool:['block','none']});
+    this.warningtype = ko.observable('error')
 
-    this.rememberText = ko.observable(false).extend({translateBool:['Remembered','Remember Me']});
+    this.rememberText = ko.observable(false).extend({translateBool:['Your Remembered!','Remember Me']});
     this.rememberColor = ko.observable(false).extend({translateBool:['#67a350','#A9A9A9']});
     /* Place Properties Here */
   }
