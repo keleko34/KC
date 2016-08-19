@@ -109,11 +109,16 @@ integrateBindings.onEventBind = function(func){
 
 /* This method connects the parent element attr to one way flow leading to the viewmodel */
 integrateBindings.bindLinker = function(el,attr,value){
-  var _value = (value !== undefined ? value : (el.getAttribute(attr) || el[attr]));
   el.removeAttribute(attr);
   if(_htmlEvents.indexOf(attr) < 0) el[attr] = undefined;
+  integrateBindings.createParentBind(el,attr,(value !== undefined ? value : (el.getAttribute(attr) || el[attr])));
+  return integrateBindings;
+}
 
-  var k_attr = attr;
+/* Creates a binderchain to the parent object */
+integrateBindings.createParentBind = function(el,attr,value){
+  var _value = value,
+      k_attr = attr;
   attr = attr.toLowerCase();
   Object.defineProperty(el.ko_override.parentBinds,attr.toLowerCase(),{
     enumerable:true,
@@ -152,9 +157,9 @@ integrateBindings.bindLinker = function(el,attr,value){
       }
     }
   });
-  return integrateBindings;
 }
 
+/* creates a method on the module */
 integrateBindings.createModuleDef = function(el,attr,value){
   el.KC.add({
     name:attr,
@@ -168,6 +173,9 @@ integrateBindings.bindChain = function(vm,el,attr,value){
   var prop = vm[attr+"_binding"];
 
   function set(v){
+    if(!el.ko_override.parentBinds.hasOwnProperty(attr)){
+      integrateBindings.createParentBind(el,attr,el.KC[attr]());
+    }
     if(el.KC){
       var _v = kc.isType[el.KC[attr].type()](v,el.ko_override.parentBinds[attr],el.KC[attr].checkAgainst());
       if(_v) el.ko_override.parentBinds[attr] = _v;
