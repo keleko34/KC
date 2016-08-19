@@ -15,6 +15,14 @@ function integrateExtenders(){
       target((typeof v !== 'string' ? (v ? enu[0] : enu[1]) : v));
     });
   }
+
+  ko.extenders.translate = function(target,ts){
+    return integrateExtenders.compute(target,function(v){
+      if(ts[v]){
+        target(ts[v]);
+      }
+    });
+  }
 }
 
 integrateExtenders.compute = function(target,write){

@@ -15,10 +15,10 @@ define([],function(){
         ko.applyBindings({},el);
       }
     })
+  }
 
-    function attachCMSComponents(){
+  kc.CMS.load = function(){
 
-    }
   }
 
   kc.CMS.addToggleListener = function(){
