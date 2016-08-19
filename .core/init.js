@@ -1,4 +1,4 @@
-require(['./.core/ko/init', 'crossroads', 'hasher','kb'],function(override, crossroads, hasher, CreateKB){
+require(['./.core/ko/init', 'crossroads', 'hasher','kb','./.core/device'],function(override, crossroads, hasher, CreateKB){
 
 kb = CreateKB();
 

@@ -25,9 +25,31 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
 
       Edit_Login.submit = function(vm,e){
         e = (e === undefined ? vm : e);
-        e.stopPropagation();
-        e.preventDefault();
-        console.log(Edit_Login.user(),Edit_Login.pass());
+        if(type === 'keyup' && (e.which || e.keyCode) === 13){
+
+        }
+        else{
+
+        }
+      }
+
+      Edit_Login.send = function(){
+
+        function response(data){
+          if(data.err){
+
+          }
+          else{
+
+          }
+        }
+
+        if(io && io.socket && io.socket.post){
+          io.socket.post(Edit_Login.url(),{},response);
+        }
+        else{
+
+        }
       }
 
       Edit_Login.add({
@@ -48,6 +70,14 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
         name:'pass',
         type:'string'
       })
+      .add({
+        name:'message',
+        type:'string'
+      })
+
+      Edit_Login.url = function(){
+        return '/cms/?user='+Edit_Login.user()+'&pass='+Edit_Login.pass();
+      }
 
       return Edit_Login;
 	}

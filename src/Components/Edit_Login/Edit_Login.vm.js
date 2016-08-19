@@ -5,6 +5,7 @@ define([],function(){
     this.Node = element;
     this.mainclass = ko.observable('Edit_Login').extend({attach:element.getAttribute('class')});
 
+    this.warning_binding = ko.observable(false).extend({translateBool:['none','block']});
     /* Place Properties Here */
   }
 

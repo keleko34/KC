@@ -9,6 +9,12 @@ function integrateExtenders(){
       target((parseInt(v,10)+(isPX ? 'px' : '')));
     });
   }
+
+  ko.extenders.translateBool = function(target,enu){
+    return integrateExtenders.compute(target,function(v){
+      target((typeof v !== 'string' ? (v ? enu[0] : enu[1]) : v));
+    });
+  }
 }
 
 integrateExtenders.compute = function(target,write){

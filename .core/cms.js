@@ -11,19 +11,10 @@ define([],function(){
     integrateComponents.loadComponent('Edit_Login',function(err){
       if(!err){
         var el = document.createElement('Edit_Login');
-
         document.body.appendChild(el);
         ko.applyBindings({},el);
       }
     })
-
-
-    function submitLogin(vm,e){
-      e = (e === undefined ? vm : e);
-      console.log(e);
-      e.stopPropagation();
-      e.preventDefault();
-    }
 
     function attachCMSComponents(){
 
