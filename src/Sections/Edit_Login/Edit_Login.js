@@ -15,17 +15,30 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
     function CreateEdit_Login(){
 
       /**** PRIVATE ****/
+      var _isRemembered = false,
+          _fetched = false;
 
       /**** CONSTRUCTOR ****/
 
       /* modulizes this module to keep in sync with viewmodel when constructor is called, creates .add and .viewmodel properties */
       var Edit_Login = kc.Modularize(function(){
-
+        if(!_fetched){
+          var ls = localStorage.getItem('cms_l');
+          if(ls){
+            ls = JSON.parse(ls);
+            _isRemembered = ls.r;
+            Edit_Login.user(ls.u);
+            Edit_Login.pass(ls.p);
+          }
+          _fetched = true;
+        }
+        Edit_Login.viewmodel.rememberText(_isRemembered);
+        Edit_Login.viewmodel.rememberColor(_isRemembered);
       });
 
       Edit_Login.submit = function(vm,e){
         e = (e === undefined ? vm : e);
-        if(type === 'keyup' && (e.which || e.keyCode) === 13){
+        if(e.type === 'keyup' && (e.which || e.keyCode) === 13){
 
         }
         else{
@@ -52,6 +65,11 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
         }
       }
 
+      Edit_Login.remember = function(){
+        _isRemembered = !_isRemembered;
+        Edit_Login.call();
+      }
+
       Edit_Login.add({
         name:'onclick',
         type:'function',
@@ -73,6 +91,11 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
       .add({
         name:'message',
         type:'string'
+      })
+      .add({
+        name:'onremember',
+        type:'function',
+        value:Edit_Login.remember
       })
 
       Edit_Login.url = function(){

@@ -1,12 +1,12 @@
 .Edit_Login {
-  height: 210px;
-  width: 240px;
+  height: 345px;
+  width: 360px;
   background: #fff;
   position: fixed;
   z-index: 2;
   top: 30px;
   left: 50%;
-  margin-left: -120px;
+  margin-left: -180px;
   border-radius: 10px;
 }
 
@@ -21,25 +21,34 @@
 }
 
 .Edit_Login_Title {
-    height: 20px;
+    height: 60px;
     text-align: center;
-    line-height: 40px;
+    line-height: 60px;
     color: #A9A9A9;
-    font-size: 18px;
+    font-size: 30px;
     font-family: sans-serif;
 }
 
 .Edit_Login_Form input {
-  height: 30px;
-  width: 200px;
-  margin-left: 18px;
-  margin-top: 20px;
+  width: 260px;
+  padding:15px;
+  position: absolute;
+  left: 50%;
+  margin-left: -145px;
   border-radius: 5px;
   border: 1px solid rgb(230, 228, 228);
   box-shadow: #333 0px 2px 5px -2px inset;
   text-align: center;
-  font-size: 14px;
+  font-size: 20px;
   color: #a9a9a9;
+}
+
+.Edit_Login_Form_User {
+  top:60px;
+}
+
+.Edit_Login_Form_Pass {
+  top:135px;
 }
 
 .Edit_Login_Form input:focus {
@@ -48,20 +57,41 @@
 }
 
 .Edit_Login_Submit {
-  width: 200px;
-  height: 40px;
-  margin-top: 20px;
-  margin-left: 20px;
+  width: 260px;
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  padding: 15px;
+  margin-left: -145px;
   text-align: center;
   background: #89bfef;
-  line-height: 40px;
   color: #ffffff;
   border-radius: 5px;
   border: 1px solid #b5b5b5;
   box-shadow: #000 0px 4px 6px -6px;
   cursor: pointer;
+  font-size: 20px;
+  font-family: sans-serif;
 }
 
 .Edit_Login_Submit:active {
   box-shadow: #000 0px 2px 9px -4px inset;
+}
+
+.Edit_Login_Remember {
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 20px;
+  color: #A9A9A9;
+  position: absolute;
+  bottom: 20px;
+  width: 265px;
+  left: 50%;
+  margin-left: -145px;
+  padding: 15px;
+  cursor: pointer;
+}
+
+.Edit_Login_Remember:active {
+  color:#CCC;
 }
