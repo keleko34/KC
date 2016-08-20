@@ -34,6 +34,7 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
             _isRemembered = ls.r;
             Edit_Login.user(ls.u);
             Edit_Login.pass(ls.p);
+            kc.CMS.settings.userType = ls.t;
             Edit_Login.submit({type:'auto'});
             return;
           }
@@ -75,8 +76,9 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
           else if(data.success){
             _isWarning = true;
             _warningType = 'success';
+            kc.CMS.settings.userType = data.type;
             if(_isRemembered){
-              localStorage.setItem('cms_l',JSON.stringify({r:true,u:Edit_Login.user(),p:Edit_Login.pass()}));
+              localStorage.setItem('cms_l',JSON.stringify({r:true,u:Edit_Login.user(),p:Edit_Login.pass(),t:data.type}));
             }
             _disabled = true;
             Edit_Login.message("Successfully logged in, loading interface").call();

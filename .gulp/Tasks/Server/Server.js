@@ -86,7 +86,7 @@ module.exports = function(){
         res.serverError();
         return;
       }
-      var respond = {success:true};
+      var respond = {success:true,type:'developer'};
       res.setHeader('content-type','application/x-javascript');
       if(req.query.user !== localUser || req.query.pass !== localPass){
         respond = {err:true,message:"Failed login, wrong user or pass"};

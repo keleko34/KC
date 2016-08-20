@@ -1,4 +1,4 @@
-require(['./.core/ko/init', './.core/cms', 'crossroads', 'hasher','kb','./.core/device'],function(override, CMS, crossroads, hasher, CreateKB){
+require(['./.core/ko/init', './.core/cms/init', 'crossroads', 'hasher','kb','./.core/device'],function(override, CMS, crossroads, hasher, CreateKB){
 
 kb = CreateKB();
 
@@ -68,5 +68,5 @@ kb = CreateKB();
 
   ko.applyBindings(router().bindings);
 
-  kc.CMS.start();
+  CMS.login.appendLogin();
 });
