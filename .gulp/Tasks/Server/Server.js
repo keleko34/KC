@@ -83,7 +83,8 @@ module.exports = function(){
     if(req.url.indexOf('/cms_login') === 0){
       sortQuery(req,res);
       if(req.query.env !== 'local' && req.query.env !== 'dev'){
-        next();
+        res.serverError();
+        return;
       }
       var respond = {success:true};
       res.setHeader('content-type','application/x-javascript');

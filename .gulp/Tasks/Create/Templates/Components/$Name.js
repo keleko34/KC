@@ -28,7 +28,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
          * whenever you update something in code always call the constructor for updating the viewmodel
          */
 
-        /**** VIEWMODEL UPDATES */
+        /**** VIEWMODEL UPDATES ****/
 
         /* ex: updates the class attr with a changed state
          *
