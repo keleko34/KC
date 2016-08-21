@@ -16,7 +16,9 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
 
       var CMS_Grid = kc.Modularize(function(){
 
-      })
+      });
+
+      CMS_Grid.cms_node = this;
 
       CMS_Grid.constructor = function(grid){
 
@@ -25,7 +27,6 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
       CMS_Grid.destructor = function(grid){
 
       }
-
       return CMS_Grid;
 	}
     blueprint.register_CMS_Grid(CreateCMS_Grid,viewmodel,template,css);

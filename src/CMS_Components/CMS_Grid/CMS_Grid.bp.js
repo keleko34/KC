@@ -32,6 +32,10 @@ function register_CMS_Grid(CreateCMS_Grid,viewmodel,template,css){
     module.exports = CreateCMS_Grid;
   }
   viewmodel.prototype.constructor = CreateCMS_Grid;
+  if(ko && !ko.components.isRegistered(('CMS_Grid').toLowerCase())){
+    template = "<style>\r\n"+css+"\r\n</style>"+template;
+    ko.components.register(('CMS_Grid').toLowerCase(),{viewModel:viewmodel,template:template});
+  }
 }
 
 function get_CMS_Grid(template){
