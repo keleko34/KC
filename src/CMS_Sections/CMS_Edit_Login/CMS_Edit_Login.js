@@ -1,18 +1,18 @@
 /*********************************
- *  $Name
- *  Created by $Author
- *  $Description
+ *  CMS_Edit_Login
+ *  Created by Keleko34
+ *  cms for edit login
  ********************************/
 
 
 /* This is Your class file, it controls the states as well as the fetching of data etc. */
-define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],function(blueprint, viewmodel, template, css){
+define(['./CMS_Edit_Login.bp', './CMS_Edit_Login.vm', 'text!./CMS_Edit_Login.html', 'text!./CMS_Edit_Login.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
     /* BUILD SECTION */
     /* END BUILD SECTION */
 
-    function Create$Name(){
+    function CreateCMS_Edit_Login(){
 
       /**** PRIVATE ****/
 
@@ -23,20 +23,16 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
       /**** CONSTRUCTOR ****/
 
       /* modulizes this module to keep in sync with viewmodel when constructor is called, creates .add and .viewmodel properties */
-      var $Name = kc.Modularize(function(){
-        /* '$Name.viewmodel' refers to the viewmodel
+      var CMS_Edit_Login = kc.Modularize(function(){
+        /* 'CMS_Edit_Login.viewmodel' refers to the viewmodel
          * whenever you update something in code always call the constructor for updating the viewmodel
          */
-
-       /* '$Name.cms_node' refers to the parent cms node
-        * whenever you update something in code always call the constructor for updating the viewmodel
-        */
 
         /**** VIEWMODEL UPDATES */
 
         /* ex: updates the class attr with a changed state
          *
-         *   $Name.viewmodel.mainclass('$Name' + (_example ? ' $Name--'+_example : ''));
+         *   CMS_Edit_Login.viewmodel.mainclass('CMS_Edit_Login' + (_example ? ' CMS_Edit_Login--'+_example : ''));
          */
       });
 
@@ -44,7 +40,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
 
       /* ex: simplified type checked functional property
        *
-       *   $Name.add({
+       *   CMS_Edit_Login.add({
        *      name:<name of property>,
        *      type:<(number|string|boolean|function|object|array|instance|enum)>,
        *      value:<value>, *optional default: 'undefined'
@@ -56,17 +52,17 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
 
       /* ex: functional property, returns value if nothing, sets if value is string
        *
-       *   $Name.example = function(v){
+       *   CMS_Edit_Login.example = function(v){
        *     if(v === undefined){
        *        return _example;
        *     }
        *     _example = (typeof v === 'string' ? v : _example);
-       *     return $Name;
+       *     return CMS_Edit_Login;
        *   }
       */
 
-      return $Name;
+      return CMS_Edit_Login;
 	}
-    blueprint.register_$Name(Create$Name,viewmodel,template,css);
-	return Create$Name;
+    blueprint.register_CMS_Edit_Login(CreateCMS_Edit_Login,viewmodel,template,css);
+	return CreateCMS_Edit_Login;
 });

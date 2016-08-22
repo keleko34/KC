@@ -28,6 +28,11 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
       var Edit_Login = kc.Modularize(function(){
         if(!_fetched){
           _fetched = true;
+          kc.CMS.addLoadListener(function(percent){
+            if(percent === 100){
+              document.body.removeChild(Edit_Login.node);
+            }
+          });
           var ls = localStorage.getItem('cms_l');
           if(ls){
             ls = JSON.parse(ls);
@@ -35,7 +40,6 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
             Edit_Login.user(ls.u);
             Edit_Login.pass(ls.p);
             kc.CMS.settings.userType = ls.t;
-            Edit_Login.submit({type:'auto'});
             return;
           }
         }
@@ -81,8 +85,9 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
               localStorage.setItem('cms_l',JSON.stringify({r:true,u:Edit_Login.user(),p:Edit_Login.pass(),t:data.type}));
             }
             _disabled = true;
-            Edit_Login.message("Successfully logged in, loading interface").call();
+            kc.CMS.loggedIn = true;
             kc.CMS.load();
+            Edit_Login.message("Successfully logged in, loading interface").call();
           }
         }
 

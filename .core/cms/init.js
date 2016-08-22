@@ -1,37 +1,40 @@
-define(['./login','./settings','./modules'],function(login,settings,modules){
+define(['./login','./settings'],function(login,settings){
 
-  kc.CMS.loadPercent = 0;
-
-  kc.CMS = function(){
-
-  }
+  var _onload = [];
 
   kc.CMS.load = function(){
-    var h = false;
-    for(var x=0;x<document.all.length;x++){
-      var el = document.all[x];
-      if(el.nodeName.toLowerCase() === 'body') h = true;
-      if(h){
-        if(el instanceof HTMLUnknownElement){
-          kc.CMS.getElementModule(el.nodeName.toLowerCase(),el.KC);
-        }
-      }
+    var els = Array.prototype.slice.call(document.all).filter(function(el){
+        return (el instanceof HTMLUnknownElement);
+      });
+    var loaded = [];
+
+    function onLoad(curr,total,percent){
+      _onload.forEach(function(f){
+        f(percent,curr,total);
+      });
+    }
+
+    function onLoaded(){
+      loaded.push(true);
+      onLoad(loaded.length,els.length,kc.getPercent(0,els.length,loaded.length));
+    }
+
+    for(var x=0;x<els.length;x++){
+      var el = els[x];
+      var cms_app = document.createElement('CMS_'+el.tagName.toLowerCase());
+      cms_app.ko_override = {cms:{}};
+      cms_app.ko_override.cms.node = el;
+      cms_app.ko_override.cms.onloaded = onLoaded;
+
+      el.appendChild(cms_app);
     }
   }
 
-  kc.CMS.getElementModule = function(name,KC){
-    function attach(create_cmmodule){
-      KC.CMS = create_cmmodule(KC.node);
+  kc.CMS.addLoadListener = function(func){
+    if(typeof func === 'function'){
+      _onload.push(func);
     }
-
-    if(!modules.isRegistered(name)){
-      modules.load(name,function(create_cmmodule){
-        attach(create_cmmodule);
-      });
-    }
-    else{
-      attach(modules(name));
-    }
+    return kc.CMS;
   }
 
   return kc.CMS;

@@ -1,6 +1,8 @@
 define(['./modularizer','./component','./binding','./extenders'],function(CreateModularizer, ComponentOverride, BindingOverride, ExtenderOverride){
   function CreateIntegration(){
 
+    var _onLoaded = [];
+
     function Integration(){
 
       ComponentOverride.overwriteGetConfig(function(name,cb){
@@ -28,6 +30,8 @@ define(['./modularizer','./component','./binding','./extenders'],function(Create
             });
         }
 
+        integrateComponents.resetLoadTimer();
+
       })
       .overwriteBindHandler('component','init',function(e){
         /* Set bind rules */
@@ -42,10 +46,22 @@ define(['./modularizer','./component','./binding','./extenders'],function(Create
         if(e.target.ko_override && e.target.KC){
           ComponentOverride.parseNodeTemplate(e.type,e.target);
         }
+      })
+      .onFinishedLoad(function(){
+        _onLoaded.forEach(function(f){
+          f();
+        });
       }).call();
 
       ExtenderOverride.call();
 
+      return Integration;
+    }
+
+    Integration.addLoadListener = function(func){
+      if(typeof func == 'function'){
+        _onLoaded.push(func);
+      }
       return Integration;
     }
 

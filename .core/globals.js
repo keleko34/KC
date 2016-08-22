@@ -31,6 +31,10 @@ kc.getAttributes = function(el){
   .filter(function(k){return (k !== 'data-bind' && k !== 'id' && k !== 'class')});
 }
 
+kc.getPercent = function(min,max,curr){
+  return parseInt((1.0-(((max-min)-(curr-min))/(max-min)))*100,10);
+}
+
 kc.isType = {
   string: function(v,c){
     return (typeof v === 'string' && (c ? v !== c : true) ? v : undefined);
@@ -78,6 +82,8 @@ kc.isType = {
 kc.templates = {};
 
 kc.settings = {};
+
+kc.CMS = {};
 
 kc.appendScript = function(url){
   var script = document.createElement('script');

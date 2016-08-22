@@ -58,6 +58,10 @@ function integrateComponents(){
       integrateComponents.parseNodeTemplate('html',e.target);
     }
 
+    if(e.target.KC && e.arguments[0].tagName.toLowerCase().indexOf('cms') > -1){
+      integrateComponents.parseNodeTemplate('append',e.target);
+    }
+
   });
 
   ko.components.loaders.unshift(_loadOrder);
@@ -128,6 +132,7 @@ integrateComponents.overwriteLoadViewModel = function(func){
       var vc = vm.constructor();
       vc.viewmodel = vm;
       vc.node = componentInfo.element;
+      if(componentInfo.element.ko_override && componentInfo.element.ko_override.cms_node) vc.cms_node = componentInfo.element.ko_override.cms_node;
 
       /* attach to Element */
       componentInfo.element.KC = vc;
@@ -178,7 +183,7 @@ integrateComponents.loadComponent = function(name,cb){
 integrateComponents.setBinding = function(elements){
   elements = ((kc.isHTMLCollection(elements) || kc.isArray(elements)) ? elements : [elements]);
   for(var x=0;x<elements.length;x++){
-    if(!elements[x].ko_override && !!ko.dataFor(elements[x])){
+    if((!elements[x].ko_override || !elements[x].ko_override.parentBinds)  && !!ko.dataFor(elements[x])){
       ko.applyBindings({},elements[x]);
     }
   }
@@ -277,6 +282,42 @@ integrateComponents.parseCSS = function(cssString,iterator){
     },{})
   }
 
+var _loadTimer = 0,
+    _timer = [],
+    _finished = function(){},
+    _stop = false;
+
+integrateComponents.Timeout = 50;
+
+integrateComponents.resetLoadTimer = function(){
+  _loadTimer = 0;
+  return integrateComponents;
+}
+
+integrateComponents.onFinishedLoad = function(func){
+  if(func === undefined){
+    _finished();
+  }
+  else if(typeof func === 'function'){
+    _finished = func;
+  }
+  return integrateComponents;
+};
+
+function timer(){
+  _loadTimer += 1;
+  if(_loadTimer >= integrateComponents.Timeout){
+    clearTimeout(_timer);
+    _stop = true;
+    integrateComponents.onFinishedLoad();
+  }
+  if(!_stop){
+    clearTimeout(_timer);
+    _timer = setTimeout(timer,1);
+  }
+}
+
+_timer = setTimeout(timer,1);
 
 define([],function(){return integrateComponents});
 define('integrateComponents',function(){return integrateComponents;});

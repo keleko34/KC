@@ -75,7 +75,7 @@ function integrateBindings(el){
 
   /* appending or removing children from the component itself is not permitted */
   .addAttrListener('appendChild',function(e){
-    if(e.target.KC){
+    if(e.target.KC && e.arguments[0].tagName.toLowerCase().indexOf('cms') < 0){
       e.preventDefault();
     }
   })
@@ -110,7 +110,7 @@ integrateBindings.onEventBind = function(func){
 /* This method connects the parent element attr to one way flow leading to the viewmodel */
 integrateBindings.bindLinker = function(el,attr,value){
   el.removeAttribute(attr);
-  if(_htmlEvents.indexOf(attr) < 0) el[attr] = undefined;
+  if(_htmlEvents.indexOf(attr) < 0 && attr !== 'title') el[attr] = undefined, delete el[attr];
   integrateBindings.createParentBind(el,attr,(value !== undefined ? value : (el.getAttribute(attr) || el[attr])));
   return integrateBindings;
 }
@@ -211,7 +211,7 @@ integrateBindings.setParentBinds = function(vm,el){
       }
     }
   });
-
+  if(el.ko_override.cms) el.ko_override.cms.onloaded();
   el.KC.call();
   return integrateBindings;
 }

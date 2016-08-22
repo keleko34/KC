@@ -1,6 +1,6 @@
-require(['./.core/ko/init', 'crossroads', 'hasher','kb','./.core/device'],function(override, crossroads, hasher, CreateKB){
+require(['./.core/ko/init', 'crossroads', 'hasher','kb','./.core/device'],function(CreateOverride, crossroads, hasher, CreateKB){
 
-kb = CreateKB();
+  kb = CreateKB();
 
   function router(){
     var routes = page_routes;
@@ -64,7 +64,7 @@ kb = CreateKB();
   }
   ko.punches.enableAll();
 
-  override().call();
+  var override = CreateOverride().call();
 
   ko.applyBindings(router().bindings);
 });

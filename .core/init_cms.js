@@ -1,4 +1,4 @@
-require(['./.core/ko/init', './.core/cms/init', 'crossroads', 'hasher','kb','./.core/device'],function(override, CMS, crossroads, hasher, CreateKB){
+require(['./.core/ko/init', './.core/cms/init', 'crossroads', 'hasher','kb','./.core/device'],function(CreateOverride, CMS, crossroads, hasher, CreateKB){
 
 kb = CreateKB();
 
@@ -64,9 +64,11 @@ kb = CreateKB();
   }
   ko.punches.enableAll();
 
-  override().call();
+  var override = CreateOverride().call();
 
   ko.applyBindings(router().bindings);
 
-  CMS.login.appendLogin();
+  override.addLoadListener(function(){
+    CMS.login.appendLogin();
+  });
 });
