@@ -6,6 +6,20 @@ Grid Grid:nth-child(even) .Grid{
   background: #67a350;
 }
 
-Grid {
+.Grid {
+  position: relative;
+}
 
+.Grid--left {
+  float:left;
+}
+
+.Grid--middle {
+  float:left;
+  position: relative;
+  left:50%;
+}
+
+.Grid--right {
+  float:right;
 }

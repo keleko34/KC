@@ -59,8 +59,8 @@ kc.Modularize = function(func){
         if(value === undefined){
           return _value;
         }
-        value = (kc.isType[_type](value,_value,_checkAgainst) || false);
-        if(value)
+        value = kc.isType[_type](value,_value,_checkAgainst);
+        if(value !== undefined)
         {
           _value = _preprocess(value);
 
