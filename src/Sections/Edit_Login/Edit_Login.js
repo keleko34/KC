@@ -85,7 +85,7 @@ define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./
               localStorage.setItem('cms_l',JSON.stringify({r:true,u:Edit_Login.user(),p:Edit_Login.pass(),t:data.type}));
             }
             _disabled = true;
-            kc.CMS.loggedIn = true;
+            kc.CMS.isAuth = true;
             kc.CMS.load();
             Edit_Login.message("Successfully logged in, loading interface").call();
           }

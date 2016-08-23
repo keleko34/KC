@@ -64,7 +64,7 @@ kb = CreateKB();
   }
   ko.punches.interpolationMarkup.enable();
 
-  kc.override = CreateOverride().call();
+  kc.override = CreateOverride();
 
   ko.applyBindings(router().bindings);
 

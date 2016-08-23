@@ -25,8 +25,12 @@ define(['./login','./settings'],function(login,settings){
       cms_app.ko_override = {cms:{}};
       cms_app.ko_override.cms.node = el;
       cms_app.ko_override.cms.onloaded = onLoaded;
-
-      el.appendChild(cms_app);
+      (function(element,cms_node){
+        kc.override.bindings.load('CMS_'+element.tagName.toLowerCase(),function(){
+          element.appendChild(cms_node);
+          onLoaded();
+        });
+      }(el,cms_app))
     }
   }
 

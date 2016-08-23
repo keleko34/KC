@@ -102,7 +102,7 @@ define([],function(){
             }
           }
 
-          if(kc.CMS.isAuth) element.appendChild(document.createElement('CMS_'+name));
+          if(kc.CMS.isAuth && name.toLowerCase().indexOf('cms') !== 0) element.appendChild(document.createElement('CMS_'+name));
 
           return element.KC.viewmodel;
         }
@@ -144,14 +144,18 @@ define([],function(){
       }
     })
     .addAttrUpdateListener('appendChild',function(e){
-      if(!(e.target instanceof HTMLUnknownElement) && (e.target.className.indexOf('page_holder') < 0)  && (e.arguments[0] instanceof HTMLUnknownElement)){
-        console.log(e.arguments[0]);
+      if((!(e.target instanceof HTMLUnknownElement) || e.arguments[0].nodeName.toLowerCase().indexOf('cms') === 0) && (e.target.className.indexOf('page_holder') < 0)  && (e.arguments[0] instanceof HTMLUnknownElement)){
         override.load(e.arguments[0].tagName.toLowerCase(),function(){
           ko.cleanNode(e.arguments[0]);
           ko.applyBindings({},e.arguments[0]);
         });
       }
-    });
+    })
+    .addAttrListener('removeChild',function(e){
+      if(e.arguments[0] instanceof HTMLUnknownElement){
+        ko.cleanNode(e.arguments[0]);
+      }
+    })
   }
 
   /* loads a single component or an array of components */

@@ -64,7 +64,7 @@ require(['./.core/ko/init', 'crossroads', 'hasher','kb','./.core/device'],functi
   }
   ko.punches.enableAll();
 
-  kc.override = CreateOverride().call();
+  kc.override = CreateOverride();
 
   ko.applyBindings(router().bindings);
 });
