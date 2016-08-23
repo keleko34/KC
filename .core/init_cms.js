@@ -64,11 +64,10 @@ kb = CreateKB();
   }
   ko.punches.interpolationMarkup.enable();
 
-  var override = CreateOverride().call();
+  kc.override = CreateOverride().call();
 
   ko.applyBindings(router().bindings);
 
-  override.addLoadListener(function(){
-    CMS.login.appendLogin();
-  });
+  CMS.login.appendLogin();
+
 });

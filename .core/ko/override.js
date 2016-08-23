@@ -89,6 +89,21 @@ define([],function(){
 
           element.KC();
 
+          var viewKeys = Object.keys(element.KC.viewmodel);
+          for(var x=0;x<viewKeys.length;x++){
+            if(ko.isObservable(element.KC.viewmodel[viewKeys[x]])){
+              (function(key){
+                element.KC.viewmodel[key].subscribe(function(val){
+                  if(element.KC[key.replace('_binding','')] && element.KC[key.replace('_binding','')].isMethod && !element.KC[key.replace('_binding','')].isMethod()){
+                    element.KC[key.replace('_binding','')](val);
+                  }
+                });
+              }(viewKeys[x]))
+            }
+          }
+
+          if(kc.CMS.isAuth) element.appendChild(document.createElement('CMS_'+name));
+
           return element.KC.viewmodel;
         }
       },callback);
@@ -260,18 +275,19 @@ define([],function(){
       .addToViewModel(viewmodel,e.attr,module[e.attr]());
     })
     .addAttrListener('appendChild',function(e){
-      e.preventDefault();
-      e.target.KC.innerHTML(e.target.KC.innerHTML()+e.arguments[0].outerHTML).call();
+      if(e.arguments[0].nodeName.toLowerCase().indexOf('cms') !== 0){
+        e.preventDefault();
+        e.target.KC.innerHTML(e.target.KC.innerHTML()+e.arguments[0].outerHTML).call();
+      }
     });
 
     return override;
   }
 
   override.callParents = function(el){
-    if(el.KC) el.KC._main();
     while(el && el.nodeName.toLowerCase() !== 'body'){
-        el = el.parentElement;
       if(el.KC) el.KC._main();
+      el = el.parentElement;
     }
   }
 

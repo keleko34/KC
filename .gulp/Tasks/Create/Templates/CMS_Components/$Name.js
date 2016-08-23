@@ -29,7 +29,7 @@ define(['./$Name.bp', './$Name.vm', 'text!./$Name.html', 'text!./$Name.css'],fun
          */
 
        /* '$Name.cms_node' refers to the parent cms node
-        * whenever you update something in code always call the constructor for updating the viewmodel
+        *
         */
 
         /**** VIEWMODEL UPDATES */

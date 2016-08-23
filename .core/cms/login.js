@@ -7,11 +7,10 @@ define([],function(){
   kc.CMS.login.appendLogin = function(){
 
     function append(){
-      integrateComponents.loadComponent('Edit_Login',function(err){
+      kc.override.bindings.load('Edit_Login',function(err){
         if(!err){
           var el = document.createElement('Edit_Login');
           document.body.appendChild(el);
-          ko.applyBindings({},el);
         }
       })
     }
@@ -30,7 +29,7 @@ define([],function(){
         }
         else if(data.success){
           kc.CMS.settings.userType = data.type;
-          kc.CMS.loggedIn = true;
+          kc.CMS.isAuth = true;
           kc.CMS.load();
         }
       }

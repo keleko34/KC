@@ -18,8 +18,6 @@ define(['./CMS_Grid.bp', './CMS_Grid.vm', 'text!./CMS_Grid.html', 'text!./CMS_Gr
 
       });
 
-      CMS_Grid.cms_node = this;
-
       CMS_Grid.constructor = function(grid){
 
       }

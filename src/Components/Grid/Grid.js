@@ -156,8 +156,10 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
           function loopSiblings(){
             loop:for(var x=0;x<sibs.length;x++){
               if(sibs[x].KC.width() < sibs[x].KC.minWidth()){
-                sibs[x].KC.width(sibs[x].KC.minWidth()).call();
-                sibs[(sibs.length-1)].KC.width(parent.clientWidth).clearfloat(true).call();
+                if(sibs[x].KC.width() !== sibs[x].KC.minWidth()) sibs[x].KC.width(sibs[x].KC.minWidth()).call();
+                if(sibs[(sibs.length-1)].KC.width() !== parent.clientWidth || !sibs[(sibs.length-1)].KC.clearfloat()){
+                  sibs[(sibs.length-1)].KC.width(parent.clientWidth).clearfloat(true).call();
+                }
                 uSibs.push(sibs[x]);
                 sibs = sibs.slice(0,sibs.length-1);
                 colTotals = sibs.length;
@@ -167,7 +169,9 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
                 return;
               }
               else{
-                sibs[x].KC.width(((parent.clientWidth/colTotals)+sibs[x].KC.offsetX())).clearfloat(false).call();
+                if(sibs[x].KC.width() !== ((parent.clientWidth/colTotals)+sibs[x].KC.offsetX()) || sibs[x].KC.clearfloat()){
+                  sibs[x].KC.width(((parent.clientWidth/colTotals)+sibs[x].KC.offsetX())).clearfloat(false).call();
+                }
               }
             }
 
@@ -176,7 +180,9 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
                 sibs.push(uSibs[(uSibs.length-1)]);
                 uSibs = uSibs.slice(0,uSibs.length-1);
                 colTotals = sibs.length;
-                sibs[(sibs.length-1)].KC.clearfloat(false).width(((parent.clientWidth/colTotals)+sibs[(sibs.length-1)].KC.offsetX()));
+                if(sibs[(sibs.length-1)].KC.width() !== ((parent.clientWidth/colTotals)+sibs[(sibs.length-1)].KC.offsetX()) || sibs[(sibs.length-1)].KC.clearfloat()){
+                  sibs[(sibs.length-1)].KC.clearfloat(false).width(((parent.clientWidth/colTotals)+sibs[(sibs.length-1)].KC.offsetX()));
+                }
                 setTimeout(function(){
                   loopSiblings();
                 },0);
@@ -184,7 +190,7 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
               }
 
               loop2:for(var x=0;x<uSibs.length;x++){
-                uSibs[x].KC.width(parent.clientWidth).call();
+                if(uSibs[x].KC.width() !== parent.clientWidth) uSibs[x].KC.width(parent.clientWidth).call();
               }
             }
           }

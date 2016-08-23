@@ -11,7 +11,7 @@ kc.Modularize = function(func){
       Object.keys(props).forEach(function(k,i){
 
         /* we do not add or update isMethods or instances */
-        if(!module[k].isMethod() && module[k].type() !== 'instance'){
+        if(module[k].isMethod && !module[k].isMethod() && module[k].type() !== 'instance'){
 
           /* if property doesnt exist we add it */
           if(!_viewmodel[k+"_binding"]){
@@ -171,6 +171,7 @@ kc.Modularize = function(func){
       set:function(v){
         if(_node === undefined){
           _node = v;
+          module.cms_node = (_node.ko_override.cms ? _node.ko_override.cms.node : undefined);
         }
         else{
           console.error('You cannot overwrite the base node');
