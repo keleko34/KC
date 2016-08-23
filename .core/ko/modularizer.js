@@ -1,7 +1,8 @@
 kc.Modularize = function(func){
     var _func = func,
-        _viewmodel = undefined,
-        _node = undefined,
+        _viewmodel,
+        _node,
+        _cms_node,
         props = {};
 
     function module(){
@@ -36,7 +37,7 @@ kc.Modularize = function(func){
         }
       });
 
-      if(_node.KC) _func.call(module);
+      if(_node.KC) module._main.call(module);
       return module;
     }
 
@@ -176,6 +177,29 @@ kc.Modularize = function(func){
         }
       }
     });
+
+    Object.defineProperty(module,'cms_node',{
+      get:function(){
+        return _cms_node;
+      },
+      set:function(v){
+        if(_cms_node === undefined){
+          _cms_node = v;
+        }
+        else{
+          console.error('You cannot overwrite the base cms_node');
+        }
+      }
+    });
+
+    Object.defineProperty(module,'_main',{
+        get:function(){
+          return _func;
+        },
+        set:function(v){
+            console.error('You cannot overwrite the base method');
+        }
+      });
 
     return module;
 }

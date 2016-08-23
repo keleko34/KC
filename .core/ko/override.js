@@ -118,6 +118,25 @@ define([],function(){
       _init(element, valueAccessor, allBindings, viewModel, bindingContext);
     }
 
+    kb.addAttrUpdateListener('innerHTML',function(e){
+      if(e.value.indexOf('ignore') !== 0 && override.getUnkownElements(e.value).length > 0){
+        console.log(e.value);
+        override.loadFromTemplate(e.value,function(){
+          ko.cleanNode(e.target);
+          ko.applyBindingsToNode({},e.target);
+          ko.applyBindingsToDescendants({},e.target);
+        })
+      }
+    })
+    .addAttrUpdateListener('appendChild',function(e){
+      if(!(e.target instanceof HTMLUnknownElement) && (e.target.className.indexOf('page_holder') < 0)  && (e.arguments[0] instanceof HTMLUnknownElement)){
+        console.log(e.arguments[0]);
+        override.load(e.arguments[0].tagName.toLowerCase(),function(){
+          ko.cleanNode(e.arguments[0]);
+          ko.applyBindings({},e.arguments[0]);
+        });
+      }
+    });
   }
 
   /* loads a single component or an array of components */
@@ -249,10 +268,10 @@ define([],function(){
   }
 
   override.callParents = function(el){
-    if(el.KC) el.KC();
+    if(el.KC) el.KC._main();
     while(el && el.nodeName.toLowerCase() !== 'body'){
         el = el.parentElement;
-      if(el.KC) el.KC();
+      if(el.KC) el.KC._main();
     }
   }
 
