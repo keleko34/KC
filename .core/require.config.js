@@ -25,7 +25,7 @@ var page_routes = {
       { "url": "", "params": { "page": "test_header"}}
     ],
     "Content":[
-      { "url": "",    "params": { "page": "test_content" } }
+      { "url": "", "params": { "page": "test_content" }}
     ],
     "Footer":[
       { "url":"", "params": { "page": "test_footer"}}

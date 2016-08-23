@@ -62,7 +62,7 @@ kb = CreateKB();
     // Create and export router instance
     return new Router(routes);
   }
-  ko.punches.enableAll();
+  ko.punches.interpolationMarkup.enable();
 
   var override = CreateOverride().call();
 

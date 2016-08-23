@@ -25,6 +25,15 @@ kc.parseQuery = function(qstr){
   return query;
 }
 
+kc.stringifyQuery = function(qobj){
+  var keys = Object.keys(qobj),
+      str = "?";
+  for(var x=0;x<keys.length;x++){
+    str += (x !== 0 ? "&" : "")+keys[x]+"="+qobj[keys[x]];
+  }
+  return str;
+}
+
 kc.getAttributes = function(el){
   return Array.prototype.slice.call(el.attributes)
   .map(function(k){return k.name;})
@@ -85,11 +94,86 @@ kc.settings = {};
 
 kc.CMS = {};
 
+kc.cssrules = {};
+
+kc.post = function(url,post,cb){
+  var xhtp = new XMLHttpRequest();
+  post = (typeof post === 'string' ? ("?"+post.replace("?","")) : (kc.isObject(post) ? kc.stringifyQuery(post) : ""));
+  xhtp.onreadystatechange = function(e){
+    var state = xhtp.readyState,
+        status = xhtp.status;
+    if(state === 4 && status === 200){
+      cb(null,xhtp.responseText);
+    }
+    else if(state === 4 && status !== 200){
+      cb((status === 404 ? (url+post+" Url not found") : (url+post+" There was a Server Error")));
+    }
+  }
+  xhtp.open("POST",url+post,true);
+  xhtp.send();
+}
+
+kc.require = function(url,post,cb){
+  post = (typeof post === 'string' ? ("?"+post.replace("?","")) : (kc.isObject(post) ? kc.stringifyQuery(post) : ""));
+  require([url+post],function(module){
+    cb(null,module);
+  },function(err){
+    cb(err);
+  })
+}
+
 kc.appendScript = function(url){
   var script = document.createElement('script');
   script.type = "text/javascript";
   script.src = url;
   document.body.appendChild(script);
+}
+
+kc.parseCSS = function(css){
+   return css.split(/(.*?{.*?})/g)
+    .filter(function(r){
+      return (r.length > 0 && (r !== '\r\n' && r !== '\n'));
+    })
+    .map(function(r){
+      return r.split(/(.*?)({)(.*?)(})/)
+      .filter(function(k){
+        return (k.length > 0 && (k !== '\r\n' && k !== '\n'));
+      })
+    })
+    .reduce(function(o,r){
+      o[r[0].replace(/\s/g,'')] = (r.length < 4 ? "" : r[2].split(/(.*?:.*?;)/)
+      .filter(function(k){
+        return (k.length > 0 && (k !== '\r\n' && k !== '\n'));
+      })
+      .reduce(function(ro,k){
+        k = k.substring(2,k.length)
+        ro[k.substring(0,k.indexOf(':')).replace(/\s/g,'')] = k.substring((k.indexOf(':')+1),k.indexOf(';'));
+        return ro;
+      },{}));
+      return o;
+    },{})
+}
+
+kc.runCSSRules = function(element,cssRulesFromParseCSS){
+
+  function runRule(selector,rule,value){
+    var els = element.querySelectorAll(selector);
+    if(els.length > 0){
+      if(kc.cssrules[rule]){
+        for(var x=0;x<els.length;x++){
+          kc.cssrules[rule].call(els[x],value);
+        }
+      }
+    }
+  }
+
+  var selectors = Object.keys(cssRulesFromParseCSS);
+  for(var x=0;x<selectors.length;x++){
+    var rules = Object.keys(cssRulesFromParseCSS[selectors[x]]);
+    for(var i=0;i<rules.length;i++){
+      runRule(selectors[x],rules[i],cssRulesFromParseCSS[selectors[x]][rules[i]]);
+    }
+  }
 }
 
 /* to easily clear console */

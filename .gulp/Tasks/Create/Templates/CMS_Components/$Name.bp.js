@@ -32,6 +32,6 @@ function register_$Name(Create$Name,viewmodel,template,css){
   viewmodel.prototype.constructor = Create$Name;
   if(ko && !ko.components.isRegistered(('$Name').toLowerCase())){
     template = "<style>\r\n"+css+"\r\n</style>"+template;
-    ko.components.register(('$Name').toLowerCase(),{viewModel:viewmodel,template:template});
+    ko.components.register(('$Name').toLowerCase(),{viewModel:viewmodel,template:template,synchronous:true});
   }
 }

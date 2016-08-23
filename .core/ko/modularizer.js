@@ -15,10 +15,10 @@ kc.Modularize = function(func){
           /* if property doesnt exist we add it */
           if(!_viewmodel[k+"_binding"]){
             _viewmodel[k+"_binding"] = (module[k].type() !== 'function' ? ko.observable() : module[k]());
-            _node.ko_override.bindChain(_viewmodel,module.node,k,module[k]());
+            kc.override.bindings.addToViewModel(_viewmodel,k,module[k]());
           }
           else{
-            _node.ko_override.bindChain(_viewmodel,module.node,k,module[k]());
+            kc.override.bindings.addToViewModel(_viewmodel,k,module[k]());
           }
           if(ko.isObservable(_viewmodel[k+"_binding"])){
             _viewmodel[k+"_binding"](module[k]());
@@ -28,6 +28,14 @@ kc.Modularize = function(func){
           }
         }
       });
+
+      Object.keys(_viewmodel).forEach(function(k,i){
+        if(module[k] === undefined && k.indexOf('_binding') < 0){
+          var val = (ko.isObservable(_viewmodel[k]) ? _viewmodel[k]() : _viewmodel[k]);
+          kc.override.bindings.addToModule(module,k,val);
+        }
+      });
+
       if(_node.KC) _func.call(module);
       return module;
     }
@@ -172,5 +180,5 @@ kc.Modularize = function(func){
     return module;
 }
 
-define([],function(){return kc.CreateModularizer});
-define('Modularizer',function(){return kc.CreateModularizer;});
+define([],function(){return kc.Modularize});
+define('Modularizer',function(){return kc.Modularize;});
