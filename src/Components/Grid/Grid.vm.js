@@ -10,6 +10,8 @@ define([],function(){
     this.minHeight_binding = ko.observable('').extend({px:true});
     this.minWidth_binding = ko.observable('').extend({px:true});
 
+    this.marginLeft_binding = ko.observable('').extend({px:true});
+
     this.clearfloat_binding = ko.observable(false).extend({translateBool:['both','none']});
 
     /* Place Properties Here */

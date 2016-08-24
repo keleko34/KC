@@ -21,48 +21,12 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
 
       var Grid = kc.Modularize(function(){
         if(!_initial){
-          Grid.width(Grid.node.parentElement.clientWidth)
-          .height((Grid.height() === 0 ? (Grid.node.parentElement.clientHeight+Grid.offsetY()) : Grid.height()));
+          Grid.width(Grid.node.parentElement.clientWidth+Grid.offsetX())
+          .height((Grid.height() === 0 ? (Grid.node.parentElement.clientHeight+Grid.offsetY()) : Grid.height()+Grid.offsetY()));
           _initial = true;
-          resize();
-        }
-
-        Grid.viewmodel.mainclass("Grid--"+Grid.align());
-
-        if(Grid.align() === 'center'){
-          var parent = Grid.node.parentElement,
-              siblings = Array.prototype.slice.call(parent.children).filter(function(k){
-                return (k.KC && k.KC.col && k.KC.row() === Grid.row() && !k.KC.clearfloat());
-              }),
-              widths = siblings.reduce(function(o,k){
-                return o+k.KC.width();
-              },0);
-          if(siblings.length === 1){
-            siblings[0].style.marginLeft = '-'+(siblings[0].KC.width()/2)+'px';
-          }
-          else{
-            var margins = ((parent.clientWidth-widths)/2),
-                middle = (parent.clientWidth/2);
-            loop:for(var x=0;x<siblings.length;x++){
-              if(x === 0){
-                 siblings[x].style.marginLeft = '-'+(middle-margins)+'px';
-              }
-              else{
-                if(siblings[(x-1)].style.marginLeft){
-                  var prevMargin = parseInt(siblings[(x-1)].style.marginLeft,10),
-                      prevWidth = siblings[(x-1)].KC.width();
-                  if((prevMargin+prevWidth) > 0){
-                    siblings[x].style.marginLeft = undefined;
-                  }
-                  else{
-                    siblings[x].style.marginLeft = '-'+(prevMargin+prevWidth)+'px';
-                  }
-                }
-                else{
-                  siblings[x].style.marginLeft = undefined;
-                }
-              }
-            }
+          Grid.resize();
+          if(getParentGrid(Grid.node)){
+            getParentGrid(Grid.node).KC.resize();
           }
         }
 
@@ -116,6 +80,11 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         name:'minWidth',
         value:275
       })
+      .add({
+        type:'number',
+        name:'marginLeft',
+        value:0
+      })
 
       function getIndex(node){
         var i = 0;
@@ -128,83 +97,166 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         return i;
       }
 
-      function resize(e){
-
-        var parent = Grid.node.parentElement,
-            index = getIndex(Grid.node),
-            siblings = Array.prototype.slice.call(parent.children).filter(function(k){
-              return (k.KC && k.KC.col && k.KC.row() === Grid.row());
-            });
-
-
-        if(siblings.length > 1){
-          /* width checks */
-          var colTotals = siblings.length,
-              sibs = siblings.filter(function(el,x){
-                return (x === 0 || !el.KC.clearfloat());
-              }),
-              uSibs = siblings.filter(function(el,x){
-                return (x !== 0 && el.KC.clearfloat());
-              });
-
-          function getWidths(){
-            return sibs.reduce(function(o,k){
-              return o+k.KC.minWidth();
-            },0);
-          }
-
-          function loopSiblings(){
-            loop:for(var x=0;x<sibs.length;x++){
-              if(sibs[x].KC.width() < sibs[x].KC.minWidth()){
-                if(sibs[x].KC.width() !== sibs[x].KC.minWidth()) sibs[x].KC.width(sibs[x].KC.minWidth()).call();
-                if(sibs[(sibs.length-1)].KC.width() !== parent.clientWidth || !sibs[(sibs.length-1)].KC.clearfloat()){
-                  sibs[(sibs.length-1)].KC.width(parent.clientWidth).clearfloat(true).call();
-                }
-                uSibs.push(sibs[x]);
-                sibs = sibs.slice(0,sibs.length-1);
-                colTotals = sibs.length;
-                setTimeout(function(){
-                  loopSiblings();
-                },0);
-                return;
-              }
-              else{
-                if(sibs[x].KC.width() !== ((parent.clientWidth/colTotals)+sibs[x].KC.offsetX()) || sibs[x].KC.clearfloat()){
-                  sibs[x].KC.width(((parent.clientWidth/colTotals)+sibs[x].KC.offsetX())).clearfloat(false).call();
-                }
-              }
-            }
-
-            if(uSibs.length > 0){
-              if(parent.clientWidth >= getWidths()+uSibs[(uSibs.length-1)].KC.minWidth()){
-                sibs.push(uSibs[(uSibs.length-1)]);
-                uSibs = uSibs.slice(0,uSibs.length-1);
-                colTotals = sibs.length;
-                if(sibs[(sibs.length-1)].KC.width() !== ((parent.clientWidth/colTotals)+sibs[(sibs.length-1)].KC.offsetX()) || sibs[(sibs.length-1)].KC.clearfloat()){
-                  sibs[(sibs.length-1)].KC.clearfloat(false).width(((parent.clientWidth/colTotals)+sibs[(sibs.length-1)].KC.offsetX()));
-                }
-                setTimeout(function(){
-                  loopSiblings();
-                },0);
-                return;
-              }
-
-              loop2:for(var x=0;x<uSibs.length;x++){
-                if(uSibs[x].KC.width() !== parent.clientWidth) uSibs[x].KC.width(parent.clientWidth).call();
-              }
-            }
-          }
-
-          loopSiblings();
-
+      function getParentGrid(node){
+        node = node.parentElement;
+        while(node && node.nodeName.toLowerCase() !== 'grid'){
+          node = node.parentElement;
         }
-        else{
-          Grid.width(parent.clientWidth+Grid.offsetX()).call();
-        }
-
+        return (node && node.nodeName.toLowerCase() === 'grid' ? node : null);
       }
 
-      window.addEventListener('resize',resize);
+      Grid.resize = function(e){
+
+        function splitGrids(grids){
+          var arr = [];
+          for(var x=0;x<grids.length;x++){
+            if(grids[x].KC){
+              if(grids[x].KC.row && grids[x].KC.col){
+                if(!arr[grids[x].KC.row()]){
+                  arr[grids[x].KC.row()] = [];
+                  arr[grids[x].KC.row()][grids[x].KC.col()] = grids[x];
+                }
+                else{
+                  arr[grids[x].KC.row()][grids[x].KC.col()] = grids[x];
+                }
+              }
+            }
+          }
+          return (arr.length > 0 ? arr : null);
+        }
+
+        function checkRecallWidths(grids){
+          var foundLast = false;
+          return grids.filter(function(k,i){
+            if(foundLast) return false;
+            if(i !== 0 && k && k.KC.clearfloat()){
+              foundLast = true;
+            }
+            return ((i === 0 || (k && k.KC.clearfloat())));
+          }).reduce(function(o,k){
+            return o+(k ? k.KC.minWidth() : 0);
+          },0);
+        }
+
+        function getSoonestClearFloat(grids){
+          for(var x=1;x<grids.length;x++){
+            if(grids[x] && grids[x].KC.clearfloat()){
+              return grids[x];
+            }
+          }
+          return null;
+        }
+
+        function getWidths(grids){
+          return grids.filter(function(k,i){
+            return ((i === 0 || !k.KC.clearfloat()));
+          }).reduce(function(o,k){
+            return o+k.KC.width();
+          },0);
+        }
+
+        /* Grids control their child grids, if no parent grid exists they also control themselves, ie topmost grid */
+        var children = splitGrids(Array.prototype.slice.call(Grid.node.querySelector('.Grid').children).filter(function(k){
+              return (k.nodeName.toLowerCase() === 'grid')
+            })),
+            parent = getParentGrid(Grid.node);
+
+        if(!parent){
+          Grid.width(Grid.node.parentElement.clientWidth+Grid.offsetX()).clearfloat(true).call();
+          Grid.viewmodel.mainclass("Grid--middle");
+          Grid.marginLeft(-Math.floor(Grid.width()/2));
+        }
+
+        function resizeGrids(){
+
+          for(var i=0;i<children.length;i++){
+            if(children[i].length > 1 && children[i][0]){
+              var colTotals = children[i].length;
+
+              if(children[i][0].KC.width() <= children[i][0].KC.minWidth()){
+                children[i][(children[i].length-1)].KC.clearfloat(true).call();
+              }
+
+              if(checkRecallWidths(children[i]) < Grid.width() && getSoonestClearFloat(children[i])){
+                getSoonestClearFloat(children[i]).KC.clearfloat(false).call();
+              }
+
+              colTotals = children[i].filter(function(k){
+                return (k.KC.col() === 0 || !k.KC.clearfloat());
+              }).length
+
+              function loopSet(){
+                for(var x=0;x<children[i].length;x++){
+                  if(children[i][x]){
+                    if(children[i][x].KC.col() === 0){
+                      children[i][x].KC.clearfloat(true).call();
+                    }
+                    if(x !== 0 && children[i][x].KC.clearfloat()){
+                      children[i][x].KC.width(Math.floor(Grid.width()+children[i][x].KC.offsetX())).call();
+                    }
+                    else if(x === 0 && children[i][(x+1)].KC.clearfloat()){
+                      children[i][x].KC.width(Math.floor(Grid.width()+children[i][x].KC.offsetX())).call();
+                    }
+                    else{
+                      children[i][x].KC.width(Math.floor(Grid.width()/colTotals+children[i][x].KC.offsetX())).call();
+                    }
+                  }
+                }
+              }
+
+              loopSet();
+
+            }
+            else if(children[i][0]){
+              children[i][0].KC.width(Math.floor(Grid.width()+children[i][0].KC.offsetX())).call();
+            }
+          }
+        }
+
+        function alignGrids(){
+
+          for(var i=0;i<children.length;i++){
+            for(var x=0;x<children[i].length;x++){
+              if(children[i][x]) children[i][x].KC.viewmodel.mainclass("Grid--"+Grid.align());
+            }
+
+            if(Grid.align() === 'middle' && children[i].length > 1 && children[i][0]){
+
+              var margins = ((Grid.width()-getWidths(children[i]))/2),
+                  middle = (Grid.width()/2);
+
+              children[i][0].KC.marginLeft(-Math.floor(middle-margins));
+
+              for(var x=1;x<children[i].length;x++){
+                if(children[i][x].KC.clearfloat()){
+                  children[i][x].KC.marginLeft(-Math.floor(children[i][x].KC.width()/2));
+                }
+                else{
+                  var prevMargin = parseInt(children[i][(x-1)].style.marginLeft,10),
+                      prevWidth = children[i][(x-1)].KC.width();
+                  if((prevMargin+prevWidth) < 0){
+                    children[i][x].KC.marginLeft(-Math.floor(prevMargin+prevWidth));
+                  }
+                  else{
+                    children[i][x].KC.marginLeft(0);
+                  }
+                }
+              }
+            }
+            else if(Grid.align() === 'middle'){
+              if(children[i][0]) children[i][0].KC.marginLeft(-Math.floor(children[i][0].KC.width()/2));
+            }
+          }
+        }
+
+        if(children && children.length > 0){
+          resizeGrids();
+          resizeGrids();
+          alignGrids();
+        }
+      }
+
+      window.addEventListener('resize',Grid.resize);
 
       return Grid;
 	}
