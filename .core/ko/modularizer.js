@@ -7,6 +7,13 @@ kc.Modularize = function(func){
 
     function module(){
 
+      _update();
+
+      if(_node.KC) module._main.call(module);
+      return module;
+    }
+
+    function _update(){
       /* Here we update all viewmodel attributes */
       Object.keys(props).forEach(function(k,i){
 
@@ -36,9 +43,6 @@ kc.Modularize = function(func){
           kc.override.bindings.addToModule(module,k,val);
         }
       });
-
-      if(_node.KC) module._main.call(module);
-      return module;
     }
 
     function add(options){
@@ -75,7 +79,7 @@ kc.Modularize = function(func){
 
           /* may no longer needed as we apply updates based on constructor call */
 
-          /* if(typeof this.viewmodel === 'function' && this.viewmodel()[_name+"_binding"]){
+           if(typeof this.viewmodel === 'function' && this.viewmodel()[_name+"_binding"]){
             if(ko.isObservable(this.viewmodel()[_name+"_binding"])){
               if(_type !== 'array' && _type !== 'object' && this.viewmodel()[_name+"_binding"]().toString() !== _value.toString()){
                 this.viewmodel()[_name+"_binding"](_value);
@@ -93,7 +97,7 @@ kc.Modularize = function(func){
               }
             }
           }
-          */
+
         }
         return this;
       }
@@ -196,6 +200,15 @@ kc.Modularize = function(func){
     Object.defineProperty(module,'_main',{
         get:function(){
           return _func;
+        },
+        set:function(v){
+            console.error('You cannot overwrite the base method');
+        }
+      });
+
+    Object.defineProperty(module,'_update',{
+        get:function(){
+          return _update;
         },
         set:function(v){
             console.error('You cannot overwrite the base method');

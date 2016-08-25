@@ -6,11 +6,9 @@ define([],function(){
     this.mainclass = ko.observable('Grid').extend({attach:'Grid'});
 
     this.width_binding = ko.observable('').extend({px:true});
-    this.height_binding = ko.observable('').extend({px:true});
-    this.minHeight_binding = ko.observable('').extend({px:true});
-    this.minWidth_binding = ko.observable('').extend({px:true});
+    this.minwidth_binding = ko.observable('').extend({px:true});
 
-    this.marginLeft_binding = ko.observable('').extend({px:true});
+    this.marginleft_binding = ko.observable('').extend({px:true});
 
     this.clearfloat_binding = ko.observable(false).extend({translateBool:['both','none']});
 

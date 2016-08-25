@@ -112,7 +112,7 @@ define([],function(){
 
           if(kc.CMS.isAuth && name.toLowerCase().indexOf('cms') !== 0) element.appendChild(document.createElement('CMS_'+name));
 
-          if(element.KC && element.KC.innerHTML().length === 0){
+          if(element.KC && (element.KC.innerHTML().length === 0) || (override.getUnkownElements(element.innerHTML).length === 0 && element.innerHTML.indexOf('{{innerhtml_binding}}') < 0)){
             element.KC.onCompleteChildRender();
           }
 
@@ -143,7 +143,7 @@ define([],function(){
           nodes.concat(node.querySelectorAll(unkown[x]));
         }
         if(node.KC) node.KC.childRenderers = nodes;
-        if(node.KC && nodes.length === 0){
+        if(node.KC && unkown.length === 0){
           node.KC.onCompleteChildRender();
         }
       })
