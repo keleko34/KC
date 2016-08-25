@@ -170,7 +170,7 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         function resizeGrids(){
 
           for(var i=0;i<children.length;i++){
-            if(children[i].length > 1 && children[i][0]){
+            if(children[i] && children[i].length > 1 && children[i][0]){
               var colTotals = children[i].length;
 
               if(children[i][0].KC.width() <= children[i][0].KC.minWidth()){
@@ -194,7 +194,7 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
                     if(x !== 0 && children[i][x].KC.clearfloat()){
                       children[i][x].KC.width(Math.floor(Grid.width()+children[i][x].KC.offsetX())).call();
                     }
-                    else if(x === 0 && children[i][(x+1)].KC.clearfloat()){
+                    else if(x === 0 &&children[i][(x+1)] && children[i][(x+1)].KC.clearfloat()){
                       children[i][x].KC.width(Math.floor(Grid.width()+children[i][x].KC.offsetX())).call();
                     }
                     else{
@@ -207,7 +207,7 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
               loopSet();
 
             }
-            else if(children[i][0]){
+            else if(children[i] && children[i][0]){
               children[i][0].KC.width(Math.floor(Grid.width()+children[i][0].KC.offsetX())).call();
             }
           }
@@ -216,35 +216,36 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         function alignGrids(){
 
           for(var i=0;i<children.length;i++){
-            for(var x=0;x<children[i].length;x++){
-              if(children[i][x]) children[i][x].KC.viewmodel.mainclass("Grid--"+Grid.align());
-            }
+            if(children[i]){
+              for(var x=0;x<children[i].length;x++){
+                if(children[i][x]) children[i][x].KC.viewmodel.mainclass("Grid--"+Grid.align());
+              }
+              if(Grid.align() === 'middle' && children[i].length > 1 && children[i][0]){
 
-            if(Grid.align() === 'middle' && children[i].length > 1 && children[i][0]){
+                var margins = ((Grid.width()-getWidths(children[i]))/2),
+                    middle = (Grid.width()/2);
 
-              var margins = ((Grid.width()-getWidths(children[i]))/2),
-                  middle = (Grid.width()/2);
+                children[i][0].KC.marginLeft(-Math.floor(middle-margins));
 
-              children[i][0].KC.marginLeft(-Math.floor(middle-margins));
-
-              for(var x=1;x<children[i].length;x++){
-                if(children[i][x].KC.clearfloat()){
-                  children[i][x].KC.marginLeft(-Math.floor(children[i][x].KC.width()/2));
-                }
-                else{
-                  var prevMargin = parseInt(children[i][(x-1)].style.marginLeft,10),
-                      prevWidth = children[i][(x-1)].KC.width();
-                  if((prevMargin+prevWidth) < 0){
-                    children[i][x].KC.marginLeft(-Math.floor(prevMargin+prevWidth));
+                for(var x=1;x<children[i].length;x++){
+                  if(children[i][x].KC.clearfloat()){
+                    children[i][x].KC.marginLeft(-Math.floor(children[i][x].KC.width()/2));
                   }
                   else{
-                    children[i][x].KC.marginLeft(0);
+                    var prevMargin = parseInt(children[i][(x-1)].style.marginLeft,10),
+                        prevWidth = children[i][(x-1)].KC.width();
+                    if((prevMargin+prevWidth) < 0){
+                      children[i][x].KC.marginLeft(-Math.floor(prevMargin+prevWidth));
+                    }
+                    else{
+                      children[i][x].KC.marginLeft(0);
+                    }
                   }
                 }
               }
-            }
-            else if(Grid.align() === 'middle'){
-              if(children[i][0]) children[i][0].KC.marginLeft(-Math.floor(children[i][0].KC.width()/2));
+              else if(Grid.align() === 'middle'){
+                if(children[i][0]) children[i][0].KC.marginLeft(-Math.floor(children[i][0].KC.width()/2));
+              }
             }
           }
         }

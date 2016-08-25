@@ -79,6 +79,14 @@ define([],function(){
           element.KC.cssText = (css ? css.textContent : "");
           element.KC.css = (css ? kc.parseCSS(css.textContent) : {});
           element.KC.templateNodes = config.templateNodes;
+          element.KC.childRenderers = [];
+          element.KC.parentRenderer = override.getParentModule(element);
+          element.KC.onCompleteChildRender = function(){
+            this._main();
+            if(element.KC.parentRenderer && element.KC.parentRenderer.KC){
+              element.KC.parentRenderer.KC.onCompleteChildRender();
+            }
+          }
 
           for(var x=0;x<parentBinds.length;x++){
             override.addToModule(module,parentBinds[x].name,parentBinds[x].value)
@@ -104,6 +112,10 @@ define([],function(){
 
           if(kc.CMS.isAuth && name.toLowerCase().indexOf('cms') !== 0) element.appendChild(document.createElement('CMS_'+name));
 
+          if(element.KC && element.KC.innerHTML().length === 0){
+            element.KC.onCompleteChildRender();
+          }
+
           return element.KC.viewmodel;
         }
       },callback);
@@ -124,16 +136,34 @@ define([],function(){
           ko.utils.setHtml(element,valueAccessor());
         }
         ko.applyBindingsToDescendants(bindingContext,element);
+        var node = (!(element instanceof HTMLUnknownElement) ? override.getParentModule(element) : element),
+            unkown = override.getUnkownElements(node.innerHTML);
+        var nodes = [];
+        for(var x=0;x<unkown.length;x++){
+          nodes.concat(node.querySelectorAll(unkown[x]));
+        }
+        if(node.KC) node.KC.childRenderers = nodes;
+        if(node.KC && nodes.length === 0){
+          node.KC.onCompleteChildRender();
+        }
       })
     }
 
     function initComponent(element, valueAccessor, allBindings, viewModel, bindingContext){
-      override.callParents(element);
+      //override.callParents(element);
       element.ko_override = {html:element.innerHTML};
       _init(element, valueAccessor, allBindings, viewModel, bindingContext);
     }
 
-    kb.addAttrUpdateListener('innerHTML',function(e){
+    kb.addAttrListener('innerHTML',function(e){
+      if(e.value.indexOf('ignore') !== 0){
+        var node = override.getClosestNode(e.target);
+        if(node){
+          //we need to update template here
+        }
+      }
+    })
+    .addAttrUpdateListener('innerHTML',function(e){
       if(e.value.indexOf('ignore') !== 0 && override.getUnkownElements(e.value).length > 0){
         console.log(e.value);
         override.loadFromTemplate(e.value,function(){
@@ -149,6 +179,12 @@ define([],function(){
           ko.cleanNode(e.arguments[0]);
           ko.applyBindings({},e.arguments[0]);
         });
+      }
+      else{
+        var node = override.getParentModule(e.arguments[0]);
+        if(node && node.KC){
+          node.KC.onCompleteChildRender();
+        }
       }
     })
     .addAttrListener('removeChild',function(e){
@@ -286,6 +322,18 @@ define([],function(){
     });
 
     return override;
+  }
+
+  override.getClosestNode = function(element){
+    return (!(element instanceof HTMLUnknownElement) ? override.getParentModule(element) : element);
+  }
+
+  override.getParentModule = function(element){
+    var node = element.parentElement;
+    while(node && !(node instanceof HTMLUnknownElement) && (node.className.indexOf('page_holder') < 0)){
+      node = node.parentElement;
+    }
+    return node;
   }
 
   override.callParents = function(el){
