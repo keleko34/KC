@@ -1,11 +1,3 @@
-Grid Grid:nth-child(odd) .Grid{
-  background: #729bc4;
-}
-
-Grid Grid:nth-child(even) .Grid{
-  background: #67a350;
-}
-
 .Grid {
   position: relative;
 }

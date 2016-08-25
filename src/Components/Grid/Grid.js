@@ -107,6 +107,22 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
 
       Grid.resize = function(e){
 
+        function checkAllLoaded(grids){
+          return grids.filter(function(x,i){
+            return (x !== undefined);
+          })
+          .filter(function(k,i){
+            var found = true;
+            loop:for(var x=0;x<k.length;x++){
+              if(k[x] === undefined){
+                found = false;
+                break loop;
+              }
+            }
+            return found;
+          });
+        }
+
         function splitGrids(grids){
           var arr = [];
           for(var x=0;x<grids.length;x++){
@@ -128,13 +144,12 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         function checkRecallWidths(grids){
           var foundLast = false;
           return grids.filter(function(k,i){
-            if(foundLast) return false;
-            if(i !== 0 && k && k.KC.clearfloat()){
-              foundLast = true;
+            if(i !== 0 && k.KC.clearfloat()){
+              return false;
             }
-            return ((i === 0 || (k && k.KC.clearfloat())));
+            return ((i === 0 || (!k.KC.clearfloat())));
           }).reduce(function(o,k){
-            return o+(k ? k.KC.minWidth() : 0);
+            return o+k.KC.minWidth();
           },0);
         }
 
@@ -145,6 +160,15 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
             }
           }
           return null;
+        }
+
+        function getLastNonClearFloat(grids){
+          for(var x=1;x<grids.length;x++){
+            if(grids[x] && grids[x].KC.clearfloat()){
+              return grids[(x-1)];
+            }
+          }
+          return grids[(grids.length-1)];
         }
 
         function getWidths(grids){
@@ -161,44 +185,52 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
             })),
             parent = getParentGrid(Grid.node);
 
-        if(!parent){
+        if(Grid.node.parentElement.className.indexOf('Grid') < 0){
           Grid.width(Grid.node.parentElement.clientWidth+Grid.offsetX()).clearfloat(true).call();
-          Grid.viewmodel.mainclass("Grid--middle");
-          Grid.marginLeft(-Math.floor(Grid.width()/2));
+          Grid.viewmodel.mainclass("Grid--left");
         }
 
         function resizeGrids(){
+          children = checkAllLoaded(children);
 
-          for(var i=0;i<children.length;i++){
-            if(children[i] && children[i].length > 1 && children[i][0]){
-              var colTotals = children[i].length;
+         for(var i=0;i<children.length;i++){
 
-              if(children[i][0].KC.width() <= children[i][0].KC.minWidth()){
-                children[i][(children[i].length-1)].KC.clearfloat(true).call();
-              }
+           if(children[i].length > 1){
+             var colTotals = children[i].length;
 
-              if(checkRecallWidths(children[i]) < Grid.width() && getSoonestClearFloat(children[i])){
-                getSoonestClearFloat(children[i]).KC.clearfloat(false).call();
-              }
+             if(children[i][0].KC.width() <= children[i][0].KC.minWidth()){
+               var last = getLastNonClearFloat(children[i]);
+               if(last){
+                 last.KC.clearfloat(true);
+               }
+             }
 
-              colTotals = children[i].filter(function(k){
+             var soonest = getSoonestClearFloat(children[i]);
+             if(soonest){
+               if(Grid.width() >= checkRecallWidths(children[i])+soonest.KC.minWidth()){
+                 soonest.KC.clearfloat(false).call();
+               }
+             }
+
+             colTotals = children[i].filter(function(k){
                 return (k.KC.col() === 0 || !k.KC.clearfloat());
               }).length
 
-              function loopSet(){
+
+             function loopSet(){
                 for(var x=0;x<children[i].length;x++){
                   if(children[i][x]){
                     if(children[i][x].KC.col() === 0){
                       children[i][x].KC.clearfloat(true).call();
                     }
                     if(x !== 0 && children[i][x].KC.clearfloat()){
-                      children[i][x].KC.width(Math.floor(Grid.width()+children[i][x].KC.offsetX())).call();
+                      children[i][x].KC.width(Grid.width()+children[i][x].KC.offsetX()).call();
                     }
                     else if(x === 0 &&children[i][(x+1)] && children[i][(x+1)].KC.clearfloat()){
-                      children[i][x].KC.width(Math.floor(Grid.width()+children[i][x].KC.offsetX())).call();
+                      children[i][x].KC.width(Grid.width()+children[i][x].KC.offsetX()).call();
                     }
                     else{
-                      children[i][x].KC.width(Math.floor(Grid.width()/colTotals+children[i][x].KC.offsetX())).call();
+                      children[i][x].KC.width(~~(Grid.width()/colTotals+children[i][x].KC.offsetX())).call();
                     }
                   }
                 }
@@ -206,10 +238,10 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
 
               loopSet();
 
-            }
-            else if(children[i] && children[i][0]){
-              children[i][0].KC.width(Math.floor(Grid.width()+children[i][0].KC.offsetX())).call();
-            }
+           }
+           else{
+             children[i][0].KC.width(Grid.width()+children[i][0].KC.offsetX()).call();
+           }
           }
         }
 
@@ -252,12 +284,11 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
 
         if(children && children.length > 0){
           resizeGrids();
-          resizeGrids();
           alignGrids();
         }
       }
 
-      window.addEventListener('resize',Grid.resize);
+      window.addEventListener('resize',Grid.resize.bind({fromWindow:true}));
 
       return Grid;
 	}

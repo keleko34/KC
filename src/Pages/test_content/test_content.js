@@ -17,9 +17,7 @@ define(['./test_content.bp', './test_content.vm', 'text!./test_content.html', 't
 
       var test_content = kc.Modularize(function(){
 
-        test_content.node.querySelector('test_button').onclick = function(){
-          console.log('i was clicked!');
-        }
+
 
       });
 

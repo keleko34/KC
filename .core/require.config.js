@@ -21,13 +21,7 @@ var require = {
 };
 
 var page_routes = {
-    "Header":[
-      { "url": "", "params": { "page": "test_header"}}
-    ],
     "Content":[
       { "url": "", "params": { "page": "test_content" }}
-    ],
-    "Footer":[
-      { "url":"", "params": { "page": "test_footer"}}
     ]
   }

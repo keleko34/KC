@@ -176,6 +176,10 @@ kc.runCSSRules = function(element,cssRulesFromParseCSS){
   }
 }
 
+kc.hasScrollBar = function(element){
+  return ((element.scrollHeight > element.clientHeight) || (element.scrollHeight > window.innerHeight) || (window.scrollheight > window.innerHeight));
+}
+
 /* to easily clear console */
 Object.defineProperty(window,'cls',{
   get:function(){
