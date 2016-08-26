@@ -43,8 +43,23 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
       })
       .add({
         type:'number',
+        name:'minwidth',
+        value:275
+      })
+      .add({
+        type:'number',
         name:'offsetx',
-        value:0
+        value:0,
+        preprocess:function(v){
+          if((Grid.minwidth()+v < 0)){
+            v = Grid.minWidth();
+            Grid.minwidth(0);
+          }
+          else{
+            Grid.minwidth(Grid.minwidth()+v);
+          }
+          return v;
+        }
       })
       .add({
         type:'number',
@@ -58,11 +73,6 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
       })
       .add({
         type:'number',
-        name:'minwidth',
-        value:275
-      })
-      .add({
-        type:'number',
         name:'marginleft',
         value:0
       })
@@ -73,22 +83,6 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
       })
 
       Grid.resize = function(e){
-
-        function checkAllLoaded(grids){
-          return grids.filter(function(x,i){
-            return (x !== undefined);
-          })
-          .filter(function(k,i){
-            var found = true;
-            loop:for(var x=0;x<k.length;x++){
-              if(k[x] === undefined){
-                found = false;
-                break loop;
-              }
-            }
-            return found;
-          });
-        }
 
         function splitGrids(grids){
           var arr = [];
@@ -108,17 +102,67 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
           return (arr.length > 0 ? arr : null);
         }
 
-        function checkRecallWidths(grids){
-          return grids.filter(function(k,i){
-            return ((i === 0 || !k.KC.clearfloat()));
-          }).reduce(function(o,k){
-            return o+k.KC.minwidth();
+        function getColTotals(grids){
+          return getColGrids(grids).length;
+        }
+
+        function getColGrids(grids){
+          return grids.filter(function(k){
+            return (k.KC.col() === 0 || !k.KC.clearfloat());
+          })
+        }
+
+        function getMin(grids,colGrids){
+          return (colGrids || getColGrids(grids)).reduce(function(t,k){
+            return t+k.KC.minwidth();
           },0);
+        }
+
+        function getSplitWidth(grids,totals){ //divide
+          return Grid.width()/(totals || getColTotals(grids));
+        }
+
+        function setOffsets(grids,totals){
+          var splitWidths = getSplitWidth(grids,totals),
+              mod = 0;
+          for(var x=0;x<(totals || getColTotals(grids));x++){
+            mod += (splitWidths%1);
+            var s = (~~splitWidths)+(~~mod);
+            mod = mod-(~~mod);
+            grids[x].KC.width(s+grids[x].KC.offsetx());
+          }
+          return grids;
+        }
+
+        function getWidths(grids,colGrids){
+          return (colGrids || getColGrids(grids)).reduce(function(t,k){
+            return t+k.KC.width();
+          },0);
+        }
+
+        function getSplitChange(grids,totals,colGrids){ //divide
+          return ((getWidths(grids,colGrids)-Grid.width())/(totals || getColTotals(grids)));
+        }
+
+        function setSplitChange(grids,totals,colGrids){
+          var splitChange = getSplitChange(grids,totals,colGrids),
+              mod = 0;
+          for(var x=0;x<(totals || getColTotals(grids));x++){
+            mod += (splitChange%1);
+            var s = (~~splitChange)+(~~mod);
+            mod = mod-(~~mod);
+            grids[x].KC.width((grids[x].KC.width()-s));
+          }
+          return grids;
+        }
+
+        function checkSize(grids,colGrids){
+          return (getMin(grids,colGrids) < Grid.width());
         }
 
         function getSoonestClearFloat(grids){
           for(var x=1;x<grids.length;x++){
-            if(grids[x] && grids[x].KC.clearfloat()){
+            if(grids[x].KC.clearfloat()){
               return grids[x];
             }
           }
@@ -127,29 +171,11 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
 
         function getLastNonClearFloat(grids){
           for(var x=1;x<grids.length;x++){
-            if(grids[x] && grids[x].KC.clearfloat()){
+            if(grids[x].KC.clearfloat()){
               return grids[(x-1)];
             }
           }
           return grids[(grids.length-1)];
-        }
-
-        function getWidths(grids){
-          return grids.filter(function(k,i){
-            return ((i === 0 || !k.KC.clearfloat()));
-          }).reduce(function(o,k){
-            return o+k.KC.width();
-          },0);
-        }
-
-        function getOffset(grids){
-          return grids.reduce(function(o,k){
-            return ((k.KC.col() == 0 || !k.KC.clearfloat()) ? o+k.KC.offsetx() : o+0);
-          },0);
-        }
-
-        function getFullOffset(grid){
-          return (grid.KC.offsetx() < 0 ? grid.KC.offsetx() : 0);
         }
 
         /* Grids control their child grids, if no parent grid exists they also control themselves, ie topmost grid */
@@ -158,69 +184,8 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
             });
 
         if(Grid.node.parentElement.className.indexOf('Grid') < 0){
-          Grid.width(Grid.node.parentElement.clientWidth+Grid.offsetx()).clearfloat(true)._update();
+          Grid.width(Grid.node.parentElement.clientWidth+Grid.offsetx()).clearfloat(true);
           Grid.viewmodel.mainclass("Grid--left");
-        }
-
-        function getColTotals(grids){
-          return grids.filter(function(k){
-            return (k.KC.col() === 0 || !k.KC.clearfloat());
-          }).length
-        }
-
-        function resizeGrids(){
-         for(var i=0;i<children.length;i++){
-           if(children[i].length > 1){
-             children[i][0].KC.clearfloat(true)._update();
-             console.log(getOffset(children[i]),(children[i][0].KC.width() - getOffset(children[i])),children[i][0].KC.minwidth());
-             for(var x=0;x<children[i].length;x++){
-                var child = children[i][x];
-                child.KC.viewmodel.mainclass("Grid--"+Grid.align());
-             }
-
-
-             resloop:for(var x=0;x<children[i].length;x++){
-                var child = children[i][x];
-                if(child.KC.locked()){
-                  child.KC.width(child.KC.minwidth())._update();
-                }
-                else if(child.KC.col() !== 0 && child.KC.clearfloat()){
-                  child.KC.width(Grid.width())._update();
-                }
-                else if(child.KC.col() === 0 && getColTotals(children[i]) === 1){
-                  child.KC.width(Grid.width())._update();
-                }
-                else{
-                  function getNextWidth(){
-                    var colTotal = getColTotals(children[i]),
-                        offsets = getOffset(children[i]),
-                        nextWidth = function(c){
-                          return (~~( ((Grid.width()/getColTotals(children[i])) + c.KC.offsetx()) - ((getOffset(children[i])-c.KC.offsetx())/ (getColTotals(children[i])-1)) ))
-                        },
-                        soonest = getSoonestClearFloat(children[i]);
-                    if(colTotal === 1){
-                      return (!child.KC.locked() ? Grid.width() : child.KC.minwidth());
-                    }
-                    if(nextWidth(child) < child.KC.minwidth()){
-                      var nonclear = getLastNonClearFloat(children[i]);
-                      nonclear.KC.clearfloat(true).width((!nonclear.KC.locked() ? Grid.width() : nonclear.KC.minwidth()))._update();
-                      return getNextWidth();
-                    }
-                    if(soonest && Grid.width() >= ((checkRecallWidths(children[i]) + soonest.KC.minwidth()) + (offsets+soonest.KC.offsetx())) ){
-                      soonest.KC.clearfloat(false)._update();
-                      soonest.KC.width(nextWidth(soonest))._update();
-                      return getNextWidth();
-                    }
-                    return nextWidth(child);
-                  }
-                  child.KC.width(getNextWidth())._update();
-                }
-              }
-           }
-           else{
-             children[i][0].KC.width(Grid.width()+getFullOffset(children[i][0]))._update();
-           }
-          }
         }
 
         function alignGrids(){
@@ -231,33 +196,66 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
                 var margins = ((Grid.width()-getWidths(children[i]))/2),
                     middle = (Grid.width()/2);
 
-                children[i][0].KC.marginleft(-Math.floor(middle-margins))._update();
+                children[i][0].KC.marginleft(-Math.floor(middle-margins));
 
                 for(var x=1;x<children[i].length;x++){
                   if(children[i][x].KC.clearfloat()){
-                    children[i][x].KC.marginleft(-Math.floor(children[i][x].KC.width()/2))._update();
+                    children[i][x].KC.marginleft(-Math.floor(children[i][x].KC.width()/2));
                   }
                   else{
                     var prevMargin = parseInt(children[i][(x-1)].style.marginleft,10),
                         prevWidth = children[i][(x-1)].KC.width();
                     if((prevMargin+prevWidth) < 0){
-                      children[i][x].KC.marginleft(-Math.floor(prevMargin+prevWidth))._update();
+                      children[i][x].KC.marginleft(-Math.floor(prevMargin+prevWidth));
                     }
                     else{
-                      children[i][x].KC.marginleft(0)._update();
+                      children[i][x].KC.marginleft(0);
                     }
                   }
                 }
               }
               else if(Grid.align() === 'middle'){
-                if(children[i][0]) children[i][0].KC.marginleft(-Math.floor(children[i][0].KC.width()/2))._update();
+                if(children[i][0]) children[i][0].KC.marginleft(-Math.floor(children[i][0].KC.width()/2));
               }
           }
         }
 
         if(children && children.length > 0 && children.length === children.filter(function(k){return (k.KC)}).length){
           children = splitGrids(children);
-          resizeGrids();
+
+          for(var i=0;i<children.length;i++){
+           if(children[i].length > 1){
+             children[i][0].KC.clearfloat(true);
+
+             for(var x=0;x<children[i].length;x++){
+                var child = children[i][x];
+                child.KC.viewmodel.mainclass("Grid--"+Grid.align());
+               if(child.KC.row() !== 0 && child.KC.clearfloat()){
+                 child.KC.width(Grid.width());
+               }
+             }
+
+             var colGrids = getColGrids(children[i]);
+
+             if(!checkSize(children[i],colGrids)){
+               var nonclear = getLastNonClearFloat(children[i]);
+               nonclear.KC.clearfloat(true).width(Grid.width());
+             }
+             else{
+               var soonest = getSoonestClearFloat(children[i]);
+               if(soonest && ((getMin(children[i],colGrids)+soonest.KC.minwidth()) < Grid.width())){
+                 soonest.KC.clearfloat(false);
+               }
+             }
+             colGrids = getColGrids(children[i]);
+             setOffsets(children[i],colGrids.length);
+             setSplitChange(children[i],colGrids.length,colGrids);
+           }
+           else{
+             children[i][0].KC.width(Grid.width());
+           }
+          }
+
           alignGrids();
         }
       }

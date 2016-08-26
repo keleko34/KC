@@ -78,26 +78,21 @@ kc.Modularize = function(func){
           _value = _preprocess(value);
 
           /* may no longer needed as we apply updates based on constructor call */
-
-           if(typeof this.viewmodel === 'function' && this.viewmodel()[_name+"_binding"]){
-            if(ko.isObservable(this.viewmodel()[_name+"_binding"])){
-              if(_type !== 'array' && _type !== 'object' && this.viewmodel()[_name+"_binding"]().toString() !== _value.toString()){
-                this.viewmodel()[_name+"_binding"](_value);
-              }
-              else if(_type === 'array' && _type === 'object'){
-                this.viewmodel()[_name+"_binding"](_value);
-              }
+          if(module[_name] !== undefined){
+            if(!_viewmodel[_name+"_binding"]){
+              _viewmodel[_name+"_binding"] = (module[_name].type() !== 'function' ? ko.observable() : module[_name]());
+              kc.override.bindings.addToViewModel(_viewmodel,_name,module[_name]());
             }
             else{
-              if(_type !== 'array' && _type !== 'object' && this.viewmodel()[_name+"_binding"].toString() !== _value.toString()){
-                this.viewmodel()[_name+"_binding"] = _value;
-              }
-              else if(_type === 'array' && _type === 'object'){
-                this.viewmodel()[_name+"_binding"] = _value;
-              }
+              kc.override.bindings.addToViewModel(_viewmodel,_name,module[_name]());
+            }
+            if(ko.isObservable(_viewmodel[_name+"_binding"])){
+              _viewmodel[_name+"_binding"](module[_name]());
+            }
+            else{
+              _viewmodel[_name+"_binding"] = module[_name]();
             }
           }
-
         }
         return this;
       }
