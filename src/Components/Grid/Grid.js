@@ -18,7 +18,6 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
       var _initial = false;
 
       /**** CONSTRUCTOR ****/
-
       var Grid = kc.Modularize(function(){
           Grid.resize();
       });
@@ -39,7 +38,7 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         type:'enum',
         name:'align',
         value:'left',
-        checkAgainst:['left','middle','right']
+        checkAgainst:['left','right']
       })
       .add({
         type:'number',
@@ -48,15 +47,18 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
       })
       .add({
         type:'number',
+        name:'min',
+        value:275
+      })
+      .add({
+        type:'number',
         name:'offsetx',
         value:0,
         preprocess:function(v){
-          if((Grid.minwidth()+v < 0)){
-            v = Grid.minWidth();
-            Grid.minwidth(0);
-          }
-          else{
-            Grid.minwidth(Grid.minwidth()+v);
+          var min = Grid.minwidth();
+          Grid.min(Math.max(0,(min+v)));
+          if(((min+v) < 0)){
+            console.warn('Warning!, Your grid offset of',v,' is less than the current min-width of ',Grid.minwidth(),' Your grids will behave irratically if this is the case, please either add minwidth="'+(v*-1)+'" or decrease your offset');
           }
           return v;
         }
@@ -73,7 +75,7 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
       })
       .add({
         type:'number',
-        name:'marginleft',
+        name:'autowidth',
         value:0
       })
       .add({
@@ -81,9 +83,25 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         name:'locked',
         value:false
       })
+      .add({
+        type:'number',
+        name:'height',
+        value:100
+      })
+      /* The formula
+         1. get all rows min widths: getMin offsets already calculated by preprocessor
+         2. get split widths: getSplit
+         3. get current widths - offsets: getWidths
+         4. get varied difference widths: getdif
+         5. compare, knock off if greater, rinse repeat
+      */
+
 
       Grid.resize = function(e){
-
+        if(!Grid.node.parentElement){
+          console.log(Grid.node.innerHTML);
+          window.removeEventListener('resize',Grid.resize);
+        }
         function splitGrids(grids){
           var arr = [];
           for(var x=0;x<grids.length;x++){
@@ -102,80 +120,108 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
           return (arr.length > 0 ? arr : null);
         }
 
-        function getColTotals(grids){
-          return getColGrids(grids).length;
+        function splitfloats(row)
+        {
+          var arr = [];
+          for(var x=1;x<row.length;x++){
+            if(row[x].KC.clearfloat()){
+              var last = (!arr.length ? 0 : (arr.reduce(function(l,k){return l+k.length;},0)));
+              arr.push(row.slice(last,x));
+            }
+          }
+          if(arr.length < 1){
+            arr.push(row);
+          }
+          else{
+            loop:for(var x=(row.length-1);x>0;x--){
+              if(row[x].KC.clearfloat()){
+                arr.push(row.slice(x,row.length));
+                break loop;
+              }
+            }
+          }
+          return arr;
         }
 
-        function getColGrids(grids){
-          return grids.filter(function(k){
-            return (k.KC.col() === 0 || !k.KC.clearfloat());
-          })
-        }
-
-        function getMin(grids,colGrids){
-          return (colGrids || getColGrids(grids)).reduce(function(t,k){
-            return t+k.KC.minwidth();
+        /* 1st Step */
+        function getMin(grids){
+          return grids.reduce(function(t,k){
+            return (t+(k.KC.minwidth()+k.KC.offsetx()));
           },0);
         }
 
-        function getSplitWidth(grids,totals){ //divide
-          return Grid.width()/(totals || getColTotals(grids));
+        /* 2nd + 3rd Step */
+        function getWidths(grids){
+          var split = (Grid.autowidth()/grids.length),
+              mod = 0,
+              numbers = grids.map(function(k){
+                if(grids.length === 1){
+                  return split;
+                }
+                else{
+                  return Math.max((k.KC.minwidth()+k.KC.offsetx()),(split+k.KC.offsetx()));
+                }
+              }),
+              total = numbers.reduce(function(t,k){
+                return t+k;
+              },0);
+
+          return {numbers:numbers,total:total};
         }
 
-        function setOffsets(grids,totals){
-          var splitWidths = getSplitWidth(grids,totals),
-              mod = 0;
-          for(var x=0;x<(totals || getColTotals(grids));x++){
-            mod += (splitWidths%1);
-            var s = (~~splitWidths)+(~~mod);
-            mod = mod-(~~mod);
-            grids[x].KC.width(s+grids[x].KC.offsetx());
-          }
-          return grids;
+        /* 2nd + 3rd + 4th Step */
+        function getVaried(grids){
+          var trueWidths = getWidths(grids),
+              dif = ((trueWidths.total-Grid.autowidth())/grids.length),
+              mod = 0,
+              newWidths = trueWidths.numbers.map(function(k){
+                return (Math.max(0,(k-dif)));
+              }),
+              total = newWidths.reduce(function(t,k){
+                return t+k;
+              },0);
+          return {newWidths:newWidths,total:total};
         }
 
-        function getWidths(grids,colGrids){
-          return (colGrids || getColGrids(grids)).reduce(function(t,k){
-            return t+k.KC.width();
-          },0);
+        /* 2nd + 3rd + 4th + 5th Step */
+        function compare(grids){
+          var min = getMin(grids),
+              variedWidths = getVaried(grids);
+          return {min:(variedWidths.total > min),single:(grids.length === 1),widths:variedWidths.newWidths};
         }
 
-        function getSplitChange(grids,totals,colGrids){ //divide
-          return ((getWidths(grids,colGrids)-Grid.width())/(totals || getColTotals(grids)));
-        }
-
-        function setSplitChange(grids,totals,colGrids){
-          var splitChange = getSplitChange(grids,totals,colGrids),
-              mod = 0;
-          for(var x=0;x<(totals || getColTotals(grids));x++){
-            mod += (splitChange%1);
-            var s = (~~splitChange)+(~~mod);
-            mod = mod-(~~mod);
-            grids[x].KC.width((grids[x].KC.width()-s));
-          }
-          return grids;
-        }
-
-        function checkSize(grids,colGrids){
-          return (getMin(grids,colGrids) < Grid.width());
-        }
-
-        function getSoonestClearFloat(grids){
-          for(var x=1;x<grids.length;x++){
-            if(grids[x].KC.clearfloat()){
-              return grids[x];
+        /* iterator step, keeps tracks of placement and arrays to check */
+        function check(row){
+          var rows = splitfloats(row);
+          loop:for(var x=0;x<rows.length;x++){
+            var matched = compare(rows[x]);
+            if(!matched.min && !matched.single){
+              if(rows[x+1]){
+                for(var i=0;i<rows[x+1].length;i++){
+                  rows[x+1][i].KC.clearfloat(false);
+                }
+              }
+              rows[x][rows[x].length-1].KC.clearfloat(true);
+              return check(row);
             }
-          }
-          return null;
-        }
-
-        function getLastNonClearFloat(grids){
-          for(var x=1;x<grids.length;x++){
-            if(grids[x].KC.clearfloat()){
-              return grids[(x-1)];
+            else if(rows[x+1] && compare(rows[x].concat([rows[x+1][0]])).min){
+              if(rows[x+1]){
+                for(var i=0;i<rows[x+1].length;i++){
+                  rows[x+1][i].KC.clearfloat(false);
+                }
+              }
+              return check(row);
             }
+            var mod = 0;
+            matched.widths.forEach(function(k,i){
+              mod += (k%1);
+              var s = (~~k)+(~~mod);
+              mod = mod-(~~mod);
+              rows[x][i].KC.autowidth(s);
+            });
+
+
           }
-          return grids[(grids.length-1)];
         }
 
         /* Grids control their child grids, if no parent grid exists they also control themselves, ie topmost grid */
@@ -184,27 +230,34 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
             });
 
         if(Grid.node.parentElement.className.indexOf('Grid') < 0){
-          Grid.width(Grid.node.parentElement.clientWidth+Grid.offsetx()).clearfloat(true);
+          Grid.autowidth(Grid.node.parentElement.clientWidth+Grid.offsetx()).clearfloat(true);
           Grid.viewmodel.mainclass("Grid--left");
+          if(Grid.node.parentElement.className.indexOf('page_holder') > -1){
+            Grid.height(window.innerHeight);
+          }
+          else{
+            Grid.height(Grid.node.parentElement.clientHeight);
+          }
         }
 
+        /*
         function alignGrids(){
 
           for(var i=0;i<children.length;i++){
               if(Grid.align() === 'middle' && children[i].length > 1 && children[i][0]){
 
-                var margins = ((Grid.width()-getWidths(children[i]))/2),
-                    middle = (Grid.width()/2);
+                var margins = ((Grid.autowidth()-getWidths(children[i]))/2),
+                    middle = (Grid.autowidth()/2);
 
                 children[i][0].KC.marginleft(-Math.floor(middle-margins));
 
                 for(var x=1;x<children[i].length;x++){
                   if(children[i][x].KC.clearfloat()){
-                    children[i][x].KC.marginleft(-Math.floor(children[i][x].KC.width()/2));
+                    children[i][x].KC.marginleft(-Math.floor(children[i][x].KC.autowidth()/2));
                   }
                   else{
                     var prevMargin = parseInt(children[i][(x-1)].style.marginleft,10),
-                        prevWidth = children[i][(x-1)].KC.width();
+                        prevWidth = children[i][(x-1)].KC.autowidth();
                     if((prevMargin+prevWidth) < 0){
                       children[i][x].KC.marginleft(-Math.floor(prevMargin+prevWidth));
                     }
@@ -215,48 +268,101 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
                 }
               }
               else if(Grid.align() === 'middle'){
-                if(children[i][0]) children[i][0].KC.marginleft(-Math.floor(children[i][0].KC.width()/2));
+                if(children[i][0]) children[i][0].KC.marginleft(-Math.floor(children[i][0].KC.autowidth()/2));
               }
           }
         }
+        */
 
         if(children && children.length > 0 && children.length === children.filter(function(k){return (k.KC)}).length){
           children = splitGrids(children);
 
           for(var i=0;i<children.length;i++){
            if(children[i].length > 1){
-             children[i][0].KC.clearfloat(true);
 
              for(var x=0;x<children[i].length;x++){
-                var child = children[i][x];
-                child.KC.viewmodel.mainclass("Grid--"+Grid.align());
-               if(child.KC.row() !== 0 && child.KC.clearfloat()){
-                 child.KC.width(Grid.width());
-               }
+                children[i][x].KC.viewmodel.mainclass("Grid--"+Grid.align());
              }
-
+             children[i][0].KC.clearfloat(true);
+            /*
              var colGrids = getColGrids(children[i]);
 
              if(!checkSize(children[i],colGrids)){
                var nonclear = getLastNonClearFloat(children[i]);
-               nonclear.KC.clearfloat(true).width(Grid.width());
+               nonclear.KC.clearfloat(true).autowidth(Grid.autowidth());
              }
              else{
                var soonest = getSoonestClearFloat(children[i]);
-               if(soonest && ((getMin(children[i],colGrids)+soonest.KC.minwidth()) < Grid.width())){
+               if(soonest && ((getMin(children[i],colGrids)+soonest.KC.minwidth()) < Grid.autowidth())){
                  soonest.KC.clearfloat(false);
                }
              }
              colGrids = getColGrids(children[i]);
              setOffsets(children[i],colGrids.length);
              setSplitChange(children[i],colGrids.length,colGrids);
+
+             for(var x=0;x<children[i].length;x++){
+                var child = children[i][x];
+               if(child.KC.row() !== 0 && child.KC.clearfloat()){
+                 child.KC.autowidth(Grid.autowidth());
+               }
+             }
+             */
+             check(children[i]);
+
            }
            else{
-             children[i][0].KC.width(Grid.width());
+             children[i][0].KC.autowidth(Grid.autowidth());
            }
           }
 
-          alignGrids();
+          //alignGrids();
+        }
+        Grid.updateHeight();
+      }
+
+      Grid.updateHeight = function(){
+        var gridNode = Grid.node.querySelector('.Grid');
+        var all =  Array.prototype.slice.call(gridNode.querySelectorAll('*'))
+        .filter(function(k){
+          return (!(k instanceof HTMLUnknownElement));
+        }),
+        tallest = 0;
+
+        function getRelationTop(el){
+          return (el.getBoundingClientRect().top-gridNode.getBoundingClientRect().top);
+        }
+
+        if(all.length === 0){
+          var styles = getComputedStyle(gridNode);
+          tallest = (parseInt(styles.getPropertyValue('line-height')));
+        }
+
+        for(var x=0;x<all.length;x++){
+          var styles = getComputedStyle(all[x],null);
+          if(styles.getPropertyValue('display') === 'none'){
+            pos = 0;
+          }
+          else{
+            if(all[x].children.length === 0 || all[x].clientHeight === 0){
+              pos = getRelationTop(all[x])+parseInt(styles.getPropertyValue('line-height'))+parseInt(styles.getPropertyValue('margin-bottom'));
+            }
+            else{
+              pos = getRelationTop(all[x])+all[x].clientHeight+parseInt(styles.getPropertyValue('margin-bottom'));
+            }
+          }
+          tallest = (pos > tallest ? pos : tallest);
+        }
+        if(Grid.node.parentElement.className.indexOf('Grid') < 0){
+          if(Grid.node.parentElement.className.indexOf('page_holder') > -1){
+            Grid.height(window.innerHeight);
+          }
+          else{
+            Grid.height(Grid.node.parentElement.clientHeight);
+          }
+        }
+        else{
+          Grid.height(tallest);
         }
       }
 

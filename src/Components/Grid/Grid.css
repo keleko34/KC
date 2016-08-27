@@ -1,16 +1,11 @@
 .Grid {
   position: relative;
   display: inline-block;
+  overflow-x: hidden;
 }
 
 .Grid--left {
   float:left;
-}
-
-.Grid--middle {
-  float:left;
-  position: relative;
-  left:50%;
 }
 
 .Grid--right {
