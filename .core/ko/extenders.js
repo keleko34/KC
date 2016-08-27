@@ -6,7 +6,8 @@ function integrateExtenders(){
   },
   ko.extenders.px = function(target, isPX){
     return integrateExtenders.compute(target,function(v){
-      target((parseInt(v,10)+(isPX ? 'px' : '')));
+      if(typeof v === 'string' && v !== 'auto') v = parseInt(v,10);
+      target((v+(isPX ? (v !== 'auto' ? 'px' : '') : '')));
     });
   }
 

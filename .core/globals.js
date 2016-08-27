@@ -46,6 +46,7 @@ kc.getPercent = function(min,max,curr){
 
 kc.isType = {
   string: function(v,c){
+    if(typeof v === 'number') v = v+"";
     return (typeof v === 'string' && (c ? v !== c : true) ? v : undefined);
   },
   number: function(v,c){

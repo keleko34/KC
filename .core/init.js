@@ -1,6 +1,7 @@
 require(['./.core/ko/init', 'crossroads', 'hasher','kb','./.core/device'],function(CreateOverride, crossroads, hasher, CreateKB){
 
   kb = CreateKB();
+  kb.call();
 
   function router(){
     var routes = page_routes;

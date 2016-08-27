@@ -12,7 +12,7 @@
     "knockout-projections": "~1.1.0",
     "require-css": "^0.1.8",
     "knockout.punches": "^0.5.1",
-    "kb": "^0.3.6",
+    "kb": "^0.3.9",
     "knockout-postbox": "^0.5.2"
   },
   "resolutions": {
