@@ -52,6 +52,14 @@ kc.isType = {
     return ((typeof v === 'number' || !isNaN(parseInt(v,10))) && (((c || parseInt(c,10) === 0)) ? parseInt(v,10) !== c : true) ? parseInt(v,10) : undefined);
   },
   boolean: function(v,c){
+    if(typeof v === 'string'){
+      if(v === 'false'){
+        v = false;
+      }
+      else if(v === 'true'){
+        v = true;
+      }
+    }
     return (typeof v === 'boolean' && (c !== undefined ? v !== c : true) ? !!v : undefined);
   },
   function: function(v,c){
