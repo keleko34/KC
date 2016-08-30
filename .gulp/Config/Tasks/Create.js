@@ -93,5 +93,11 @@ module.exports = {
           },
           action:'end'
         }
+      },
+      onFinished:function(res){
+        if(res.Type === 'Components' || res.Type === 'Sections'){
+          console.log(process.argv);
+          //gulp.runTask('Build');
+        }
       }
     }

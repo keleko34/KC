@@ -7,6 +7,10 @@ var config = global.gulp.config;
 
 module.exports = function(){
 
+  function onFinished(res){
+
+  }
+
   function Exists(key,res){
     if(res.Type !== undefined && key === 'Name'){
       try
@@ -28,7 +32,8 @@ module.exports = function(){
   }
 
   function Command(res){
-    fs.readdirSync('./.gulp/Tasks/Create/Templates/'+res.Type).forEach(function(f,i){
+    var files = fs.readdirSync('./.gulp/Tasks/Create/Templates/'+res.Type);
+    files.forEach(function(f,i){
       var template = fs.readFileSync('./.gulp/Tasks/Create/Templates/' + res.Type + '/'+f,'utf8'),
           resKeys = Object.keys(res);
 
@@ -66,8 +71,12 @@ module.exports = function(){
       template = template.replace(/(\$(.*?)\[x\]\((.*?)\))/g,'');
       template = template.replace(/(\$(.*?)\[(.*?)\])/g,'');
       template = template.replace(/(\$(.*?))/g,'');
-      file('./'+f,template,{src:true})
+      var copy = file('./'+f,template,{src:true})
       .pipe(gulp.dest('./src/'+ res.Type + '/' + res.Name));
+
+      copy.on('end',function(e){
+        console.log(e);
+      })
     });
   };
 

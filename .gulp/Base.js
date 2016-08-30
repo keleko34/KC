@@ -72,30 +72,17 @@ module.exports = (function(){
         console.error('No command exists by the name of ',_currentTaskCommand);
         process.exit(1);
       }
-      runCommand(_currentTaskCommand,_taskCommands[_currentTaskCommand]);
-    }
-  }
 
-  /* Main method that is ran whenever a value is to be set */
-  function method(commandName, options, isCliSet){
-
-    /* if being set from cli and type is list check that value is in choices */
-    if(isCliSet && options.prompt.type === 'list'){
-      return function(res){
-
-        /* check to make sure that the entered cli is in fact in the choices list */
-        if(typeof options.prompt.choices === 'function' ? options.prompt.choices().indexOf(res) > -1 : options.prompt.choices.indexOf(res) > -1){
-          addValue(commandName, options, res, isCliSet);
-        }
+      if(_values[_currentTaskCommand] === undefined){
+        runCommand(_currentTaskCommand,_taskCommands[_currentTaskCommand]);
+      }
+      else{
+        toCommand(_currentTaskCommand,(typeof _taskCommands[_currentTaskCommand].action === 'function' ? _taskCommands[_currentTaskCommand].action(res,_values) : _taskCommands[_currentTaskCommand].action));
       }
     }
-    return function(res){
-      addValue(commandName, options, (isCliSet ? res : res[commandName]));
-    }
   }
 
-  function addValue(commandName,options,res,isCliSet){
-
+  function setValue(commandName,options,res){
     /* here we check if store was specified and if its an array we push the new value in */
     if(options.store && options.store === 'array'){
       if(_values[commandName] === undefined){
@@ -106,9 +93,39 @@ module.exports = (function(){
 
     /* else we just set the value straight up */
     else{
-
       _values[commandName] = (typeof options.overwrite === 'function' ? options.overwrite(res) : res);
     }
+  }
+
+  function setCliValue(commandName, options){
+    if(options.prompt.type === 'list'){
+      return function(res){
+        if(typeof options.prompt.choices === 'function' ? options.prompt.choices().indexOf(res) > -1 : options.prompt.choices.indexOf(res) > -1){
+          setValue(commandName,options,res);
+        }
+        else{
+          console.log('\033[33mValue \033[37m',res,' \033[33mdoes not exist as a choice in the list\033[37m');
+        }
+      }
+    }
+    else{
+      return function(res){
+          setValue(commandName,options,res);
+      }
+    }
+  }
+
+
+  /* Main method that is ran whenever a value is to be set */
+  function method(commandName, options){
+    return function(res){
+      addValue(commandName, options, res[commandName]);
+    }
+  }
+
+  function addValue(commandName,options,res){
+
+    setValue(commandName,options,res);
 
     /* here we allow the task to filter the current values set and do something based on that */
     _filter(commandName,_values,function(action){
@@ -127,7 +144,7 @@ module.exports = (function(){
 
     /* check if this task even exists in the config */
     if(_taskCommands === undefined){
-      console.error('Task name: '+_task+' config does not exist, please create');
+      console.error('\033[31mTask name: \033[37m'+_task+' \033[31mconfig does not exist, please create\033[37m');
       return _gulp;
     }
 
@@ -138,11 +155,9 @@ module.exports = (function(){
     /* Loop through each command and read its properties */
     _taskCommandKeys.forEach(function(commandName,i){
       var options = _taskCommands[commandName];
-
       /* filter cmd entered values first */
       if(options.cmd !== undefined){
-        cli = cli.option.apply(cli,_parseCli(options).concat(method(commandName, options,true)));
-        cli.parse(process.argv);
+        cli = cli.option.apply(cli,_parseCli(options).concat(setCliValue(commandName, options)));
       }
     });
 
@@ -150,7 +165,7 @@ module.exports = (function(){
     cli.option('-o, --options','Displays helper for options',cli.help.bind(cli)).parse(process.argv);
 
     /* run first command in the list */
-    runCommand(_currentTaskCommand,_taskCommands[_currentTaskCommand]);
+    toCommand(_currentTaskCommand,_currentTaskCommand);
 
     return _gulp;
   }
