@@ -9,6 +9,10 @@
 define(['./test_header.bp', './test_header.vm', 'text!./test_header.html', 'text!./test_header.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
+
+    /* COMPONENT BUILD SECTION */
+    /* END COMPONENT BUILD SECTION */
+
     /* BUILD SECTION */
     /* END BUILD SECTION */
 

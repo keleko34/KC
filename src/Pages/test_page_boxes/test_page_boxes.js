@@ -9,6 +9,13 @@
 define(['./test_page_boxes.bp', './test_page_boxes.vm', 'text!./test_page_boxes.html', 'text!./test_page_boxes.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
+
+    /* COMPONENT BUILD SECTION */
+    /* END COMPONENT BUILD SECTION */
+
+    /* SECTION BUILD SECTION */
+    /* END SECTION BUILD SECTION */
+
     /* BUILD SECTION */
     /* END BUILD SECTION */
 

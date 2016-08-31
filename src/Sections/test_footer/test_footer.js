@@ -9,6 +9,10 @@
 define(['./test_footer.bp', './test_footer.vm', 'text!./test_footer.html', 'text!./test_footer.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
+
+    /* COMPONENT BUILD SECTION */
+    /* END COMPONENT BUILD SECTION */
+
     /* BUILD SECTION */
     /* END BUILD SECTION */
 

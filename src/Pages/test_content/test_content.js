@@ -9,6 +9,13 @@
 define(['./test_content.bp', './test_content.vm', 'text!./test_content.html', 'text!./test_content.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
+
+    /* COMPONENT BUILD SECTION */
+    /* END COMPONENT BUILD SECTION */
+
+    /* SECTION BUILD SECTION */
+    /* END SECTION BUILD SECTION */
+
     /* BUILD SECTION */
     /* END BUILD SECTION */
 

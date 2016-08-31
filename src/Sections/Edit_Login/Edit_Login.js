@@ -9,6 +9,10 @@
 define(['./Edit_Login.bp', './Edit_Login.vm', 'text!./Edit_Login.html', 'text!./Edit_Login.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
+
+    /* COMPONENT BUILD SECTION */
+    /* END COMPONENT BUILD SECTION */
+
     /* BUILD SECTION */
     /* END BUILD SECTION */
 
