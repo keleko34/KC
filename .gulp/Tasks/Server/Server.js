@@ -67,10 +67,21 @@ module.exports = function(){
       localPass = 'pass';
 
   function init(req,res,next){
-    if(req.url.indexOf('/.core/init.js') === 0){
+    if(req.url.indexOf('/.core/.core') === 0){
       sortQuery(req,res);
       if(req.query.edit){
-        req.url = req.url.replace('init','init_cms');
+        req.url = req.url.replace('.core.js','.core-cms.js');
+      }
+      if(req.query.env === 'qa'){
+        if(req.query.debug){
+          req.url = req.url.replace('.js','.build.js');
+        }
+        else{
+          req.url = req.url.replace('.js','.min.js');
+        }
+      }
+      if(req.query.env === 'prod' || req.query.env === 'stage'){
+        req.url = req.url.replace('.js','.min.js');
       }
       fs.createReadStream(appPath+req.url).pipe(res);
     }

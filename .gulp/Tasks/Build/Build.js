@@ -30,7 +30,7 @@ module.exports = function(){
 
   function finished(res){
     return function(){
-      console.log('\033[36mFinished compiling \033[37m',res.Name,' \033[36mfor \033[37m',res.Environment);
+      console.log('\033[36mFinished compiling \033[37m',(res.Name === undefined ? res.Environment : res.Name),' \033[36mfor \033[37m',res.Environment);
     }
   }
 
@@ -51,8 +51,13 @@ module.exports = function(){
   }
 
   function Command(res){
-    console.log('\033[36mStarting to compile:\033[37m',res.Name,' \033[36mFor \033[37m',res.SubTask,' \033[36msubtask\033[37m');
-    res.currentrule = 0;
+    console.log('\033[36mStarting to compile:\033[37m',(res.Name === undefined ? res.Environment : res.Name),' \033[36mFor \033[37m',res.SubTask,' \033[36msubtask\033[37m');
+    if(res.SubTask === 'web_components'){
+      res.currentrule = 0;
+    }
+    else{
+      res.currentrule = config.Tasks.Build.subtasks[res.SubTask].indexOf(res.Environment);
+    }
     commandCallback(res).call();
   }
 

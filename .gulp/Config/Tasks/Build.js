@@ -11,10 +11,15 @@ module.exports = {
         type:'list',
         message:'What type of template would You like to build?',
         choices:function(){
-          return fs.readdirSync('./.gulp/Tasks/Create/Templates');
+          return fs.readdirSync('./.gulp/Tasks/Create/Templates').concat(['.core']);
         }
       },
-      action:'Name'
+      action:function(v){
+        if(v === '.core'){
+          return 'SubTask';
+        }
+        return 'Name';
+      }
     },
     Name:{
       prompt:{
@@ -29,9 +34,14 @@ module.exports = {
     SubTask:{
       prompt:{
         type:'list',
-        message:'Which sub task do you want to use?',
+        message:'Which sub task do you want to build?',
         choices:function(values){
-          return Object.keys(global.gulp.config.Tasks.Build.subtasks);
+          return Object.keys(global.gulp.config.Tasks.Build.subtasks).filter(function(k){
+            if(values['Type'] === '.core'){
+              return (k === '.core');
+            }
+            return (k !== '.core');
+          });
         }
       },
       action:'Environment'
@@ -51,7 +61,12 @@ module.exports = {
       action:'end'
     }
   },
-  subtasks:{
-    web_elements:['dev','qa','stage','prod']
-  }
+  subtasks:fs.readdirSync('./.gulp/Tasks/Build/Subtasks').reduce(function(obj,t){
+    if(t === 'web_elements'){
+      obj[t] = ['dev','qa','stage','prod'];
+      return obj;
+    }
+    obj[t] = fs.readdirSync('./.gulp/Tasks/Build/Subtasks/'+t);
+    return obj;
+  },{})
 }

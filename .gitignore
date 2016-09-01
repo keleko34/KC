@@ -3,6 +3,8 @@ dev
 qa
 stage
 prod
+*.build.js
+*.min.js
 
 # Logs
 logs

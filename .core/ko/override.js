@@ -157,10 +157,10 @@ define([],function(){
 
     kb.addAttrListener('innerHTML',function(e){
       if(e.value.indexOf('ignore') !== 0){
-        var node = override.getClosestNode(e.target);
-        if(node){
+        /*var node = override.getClosestNode(e.target);
+        if(node !== null && node !== undefined){
           //we need to update template here
-        }
+        }*/
       }
     })
     .addAttrUpdateListener('innerHTML',function(e){
@@ -192,6 +192,8 @@ define([],function(){
         ko.cleanNode(e.arguments[0]);
       }
     })
+
+    return override;
   }
 
   /* loads a single component or an array of components */

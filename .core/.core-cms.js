@@ -1,4 +1,7 @@
-require(['./.core/ko/init', './.core/cms/init', 'crossroads', 'hasher','kb','./.core/device'],function(CreateOverride, CMS, crossroads, hasher, CreateKB){
+require(['./.core/ko/ko', './.core/cms/cms', 'crossroads', 'hasher','kb','./.core/device'],function(Createko, Createcms, crossroads, hasher, CreateKB){
+
+  /* BUILD */
+  /* END BUILD */
 
   kb = CreateKB();
   kb.call();
@@ -65,10 +68,10 @@ require(['./.core/ko/init', './.core/cms/init', 'crossroads', 'hasher','kb','./.
   }
   ko.punches.interpolationMarkup.enable();
 
-  kc.override = CreateOverride();
+  kc.override = Createoverride();
 
   ko.applyBindings(router().bindings);
 
-  CMS.login.appendLogin();
+  Createcms.login.appendLogin();
 
-});
+})
