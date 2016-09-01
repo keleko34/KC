@@ -1,4 +1,4 @@
-.Edit_Login {
+.edit_login {
   height: 345px;
   width: 360px;
   background: #fff;
@@ -10,7 +10,7 @@
   border-radius: 10px;
 }
 
-.Edit_Login_Overlay {
+.edit_login_Overlay {
   width: 100%;
   height: 100%;
   background: rgba(70, 70, 70, 0.50);
@@ -20,7 +20,7 @@
   left: 0px;
 }
 
-.Edit_Login_Title {
+.edit_login_Title {
     height: 60px;
     text-align: center;
     line-height: 60px;
@@ -29,7 +29,7 @@
     font-family: sans-serif;
 }
 
-.Edit_Login_Form input {
+.edit_login_Form input {
   width: 260px;
   padding:15px;
   position: absolute;
@@ -43,20 +43,20 @@
   color: #a9a9a9;
 }
 
-.Edit_Login_Form_User {
+.edit_login_Form_User {
   top:60px;
 }
 
-.Edit_Login_Form_Pass {
+.edit_login_Form_Pass {
   top:135px;
 }
 
-.Edit_Login_Form input:focus {
+.edit_login_Form input:focus {
   outline:none;
   border:1px solid rgb(171, 196, 255);
 }
 
-.Edit_Login_Submit {
+.edit_login_Submit {
   width: 260px;
   position: absolute;
   bottom: 80px;
@@ -74,11 +74,11 @@
   font-family: sans-serif;
 }
 
-.Edit_Login_Submit:active {
+.edit_login_Submit:active {
   box-shadow: #000 0px 2px 9px -4px inset;
 }
 
-.Edit_Login_Remember {
+.edit_login_Remember {
   text-align: center;
   font-family: sans-serif;
   font-size: 20px;
@@ -92,11 +92,11 @@
   cursor: pointer;
 }
 
-.Edit_Login_Remember:active {
+.edit_login_Remember:active {
   color:#CCC;
 }
 
-.Edit_Login_Warning {
+.edit_login_Warning {
   display: block;
   width: 360px;
   position: fixed;
@@ -108,20 +108,20 @@
   font-family: sans-serif;
 }
 
-.Edit_Login--Warning_error .Edit_Login_Warning {
+.edit_login--Warning_error .edit_login_Warning {
   background: #ff9e9e;
 }
 
-.Edit_Login--Warning_success .Edit_Login_Warning {
+.edit_login--Warning_success .edit_login_Warning {
   background: #317432;
 }
 
-.Edit_Login_Warning_Message {
+.edit_login_Warning_Message {
     padding: 15px;
     color: #fff;
     font-size: 16px;
 }
-.Edit_Login_Warning_Close {
+.edit_login_Warning_Close {
   width: 16px;
   height: 16px;
   position: absolute;
@@ -131,18 +131,18 @@
   font-size:20px;
 }
 
-.Edit_Login--Warning_error .Edit_Login_Warning_Close {
+.edit_login--Warning_error .edit_login_Warning_Close {
   color: #cd7f7f;
 }
 
-.Edit_Login--Warning_success .Edit_Login_Warning_Close {
+.edit_login--Warning_success .edit_login_Warning_Close {
   color: #134813;
 }
 
-.Edit_Login--Warning_error .Edit_Login_Warning_Close:active {
+.edit_login--Warning_error .edit_login_Warning_Close:active {
   color: #e79090;
 }
 
-.Edit_Login--Warning_success .Edit_Login_Warning_Close:active {
+.edit_login--Warning_success .edit_login_Warning_Close:active {
   color: #358235;
 }

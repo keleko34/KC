@@ -209,8 +209,9 @@ define([],function(){
     if(components.length < 1) getCount();
 
     for(var x=0;x<components.length;x++){
+      components[x] = components[x].toLowerCase();
       if(!ko.components.isRegistered(components[x])){
-        var url = '/'+(components[x].toLowerCase().indexOf('cms') > -1 ? 'cms' : 'require')+'/'
+        var url = '/'+(components[x].indexOf('cms') > -1 ? 'cms' : 'require')+'/'
         kc.require(url+components[x],location.search,getCount);
       }
       else{
@@ -229,13 +230,13 @@ define([],function(){
   /* parses html and returns a list of components */
   override.getUnkownElements = function(template){
     var reg = /(<\/(.*?)>)/g,
-        matched = (template.match(reg) ? template.match(reg) : []);
+        matched = (template.match(reg) ? template.match(reg) : [])
+        .map(function(k,i){
+          return k.substring(2,k.length-1).toLowerCase();
+        });
 
-    return matched.map(function(k,i){
-      return k.substring(2,k.length-1);
-    })
-    .filter(function(k,i){
-      return ((matched.indexOf(k,(i+1)) < 0 && document.createElement(k) instanceof HTMLUnknownElement));
+    return matched.filter(function(k,i){
+      return ((matched.indexOf(k,(i+1)) === -1 && document.createElement(k) instanceof HTMLUnknownElement));
     });
   }
 

@@ -1,4 +1,4 @@
-# Grid
+# grid
 
 [![NPM version][npm-image]][npm-url]
 

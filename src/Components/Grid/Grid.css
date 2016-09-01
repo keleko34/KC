@@ -1,13 +1,13 @@
-.Grid {
+.grid {
   position: relative;
   display: inline-block;
   overflow: hidden;
 }
 
-.Grid--left {
+.grid--left {
   float:left;
 }
 
-.Grid--right {
+.grid--right {
   float:right;
 }

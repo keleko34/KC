@@ -7,9 +7,9 @@ define([],function(){
   kc.CMS.login.appendLogin = function(){
 
     function append(){
-      kc.override.bindings.load('Edit_Login',function(err){
+      kc.override.bindings.load('edit_login',function(err){
         if(!err){
-          var el = document.createElement('Edit_Login');
+          var el = document.createElement('edit_login');
           document.body.appendChild(el);
         }
       })
@@ -39,7 +39,7 @@ define([],function(){
       }
 
       if(io && io.socket && io.socket.post){
-        io.socket.post(Edit_Login.url('cms_login'),{},response);
+        io.socket.post(edit_login.url('cms_login'),{},response);
       }
       else{
         var io = new XMLHttpRequest();

@@ -1,16 +1,16 @@
 <div data-bind="attr:{class:mainclass}">
-  <div class="Edit_Login_Overlay"></div>
-  <div class="Edit_Login">
-    <div class="Edit_Login_Title">CMS Editor</div>
-    <div class="Edit_Login_Form">
-      <input placeholder="User" class="Edit_Login_Form_User" type="text" data-bind="value:user_binding"/>
-      <input placeholder="Pass" class="Edit_Login_Form_Pass" type="password" data-bind="event:{keyup:onkeyup_binding},value:pass_binding" />
+  <div class="edit_login_Overlay"></div>
+  <div class="edit_login">
+    <div class="edit_login_Title">CMS Editor</div>
+    <div class="edit_login_Form">
+      <input placeholder="User" class="edit_login_Form_User" type="text" data-bind="value:user_binding"/>
+      <input placeholder="Pass" class="edit_login_Form_Pass" type="password" data-bind="event:{keyup:onkeyup_binding},value:pass_binding" />
     </div>
-    <div class="Edit_Login_Submit" data-bind="event:{click:onclick_binding}">Login</div>
-    <div class="Edit_Login_Remember" data-bind="event:{click:onremember_binding},style:{color:rememberColor}">{{rememberText}}</div>
+    <div class="edit_login_Submit" data-bind="event:{click:onclick_binding}">Login</div>
+    <div class="edit_login_Remember" data-bind="event:{click:onremember_binding},style:{color:rememberColor}">{{rememberText}}</div>
   </div>
-  <div class="Edit_Login_Warning" data-bind="style:{display:warning}">
-    <div class="Edit_Login_Warning_Close" data-bind="event:{click:warningclose_binding}">X</div>
-    <div class="Edit_Login_Warning_Message">{{message_binding}}</div>
+  <div class="edit_login_Warning" data-bind="style:{display:warning}">
+    <div class="edit_login_Warning_Close" data-bind="event:{click:warningclose_binding}">X</div>
+    <div class="edit_login_Warning_Message">{{message_binding}}</div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-# Edit_Login
+# edit_login
 
 [![NPM version][npm-image]][npm-url]
 

@@ -15,6 +15,7 @@ module.exports = function(){
     if(res.Type !== undefined && key === 'Name'){
       try
       {
+        res.Name = res.Name.toLowerCase();
         var exists = fs.statSync('./src/' + res.Type + '/' + res.Name);
         if(exists){
           console.error('\033[31mThere is already something by the name: \033[37m',res.Name,' in ',res.Type);

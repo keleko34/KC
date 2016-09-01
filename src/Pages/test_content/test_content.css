@@ -3,10 +3,10 @@
 }
 
 
-#main .Grid Grid:nth-child(odd) .Grid{
+#main .grid grid:nth-child(odd) .grid{
   background: #729bc4;
 }
 
-#main .Grid Grid:nth-child(even) .Grid{
+#main .grid grid:nth-child(even) .grid{
   background: #67a350;
 }

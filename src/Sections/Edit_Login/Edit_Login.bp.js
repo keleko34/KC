@@ -1,5 +1,5 @@
 /*********************************
- *  Edit_Login
+ *  edit_login
  *  Created by Keleko34
  *  This file is a blueprint that registers the
  *  component with requirejs, knockoutjs and commonjs
@@ -10,28 +10,28 @@ if (typeof define === "function" && define.amd)
 {
   define([],function(){
     return {
-      register_Edit_Login:register_Edit_Login
+      register_edit_login:register_edit_login
     }
   });
 }
 else if (typeof module === "object" && module.exports)
 {
     module.exports = {
-      register_Edit_Login:register_Edit_Login
+      register_edit_login:register_edit_login
     }
 }
 
 /* This method is the method that will be put into the main file when it is compiled during dev build */
-function register_Edit_Login(CreateEdit_Login,viewmodel,template,css){
+function register_edit_login(Createedit_login,viewmodel,template,css){
   if(typeof define === 'function' && define.amd){
-    define('CreateEdit_Login',[],function(){return CreateEdit_Login});
+    define('Createedit_login',[],function(){return Createedit_login});
   }
   else if(typeof module === "object" && module.exports){
-    module.exports = CreateEdit_Login;
+    module.exports = Createedit_login;
   }
-  viewmodel.prototype.constructor = CreateEdit_Login;
-  if(ko && !ko.components.isRegistered(('Edit_Login').toLowerCase())){
+  viewmodel.prototype.constructor = Createedit_login;
+  if(ko && !ko.components.isRegistered(('edit_login').toLowerCase())){
     template = "<style>\r\n"+css+"\r\n</style>"+template;
-    ko.components.register(('Edit_Login').toLowerCase(),{viewModel:viewmodel,template:template});
+    ko.components.register(('edit_login').toLowerCase(),{viewModel:viewmodel,template:template});
   }
 }

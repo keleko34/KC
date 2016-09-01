@@ -1,9 +1,9 @@
 define([],function(){
 
-  function Grid_vm(params,element){
-    this.Node_Type = 'Grid';
+  function grid_vm(params,element){
+    this.Node_Type = 'grid';
     this.Node = element;
-    this.mainclass = ko.observable('Grid').extend({attach:'Grid'});
+    this.mainclass = ko.observable('grid').extend({attach:'grid'});
 
     this.autowidth_binding = ko.observable('').extend({px:true});
     this.height_binding = ko.observable('').extend({px:true});
@@ -16,5 +16,5 @@ define([],function(){
 
   /* Place Prototypes here */
 
-  return Grid_vm;
+  return grid_vm;
 })

@@ -1,16 +1,16 @@
 /*********************************
- *  Grid
+ *  grid
  *  Created by Keleko34
  *  A flexible grid box
  ********************************/
 
-define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],function(blueprint, viewmodel, template, css){
+define(['./grid.bp', './grid.vm', 'text!./grid.html', 'text!./grid.css'],function(blueprint, viewmodel, template, css){
 
     /* Do not remove!!! */
     /* BUILD SECTION */
     /* END BUILD SECTION */
 
-    function CreateGrid(){
+    function Creategrid(){
 
       /**** PRIVATE ****/
 
@@ -18,13 +18,13 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
       var _initial = false;
 
       /**** CONSTRUCTOR ****/
-      var Grid = kc.Modularize(function(){
-          Grid.resize();
+      var grid = kc.Modularize(function(){
+          grid.resize();
       });
 
       /**** PUBLIC METHODS ****/
 
-      Grid.add({
+      grid.add({
         type:'number',
         name:'col',
         value:0
@@ -55,10 +55,10 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         name:'offsetx',
         value:0,
         preprocess:function(v){
-          var min = Grid.minwidth();
-          Grid.min(Math.max(0,(min+v)));
+          var min = grid.minwidth();
+          grid.min(Math.max(0,(min+v)));
           if(((min+v) < 0)){
-            console.warn('Warning!, Your grid offset of',v,' is less than the current min-width of ',Grid.minwidth(),' Your grids will behave irratically if this is the case, please either add minwidth="'+(v*-1)+'" or decrease your offset');
+            console.warn('Warning!, Your grid offset of',v,' is less than the current min-width of ',grid.minwidth(),' Your grids will behave irratically if this is the case, please either add minwidth="'+(v*-1)+'" or decrease your offset');
           }
           return v;
         }
@@ -83,8 +83,8 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         name:'locked',
         value:false,
         preprocess:function(v){
-          /*if(Grid.width() === 0){
-            Grid.width((Grid.minwidth()+Grid.offsetx()));
+          /*if(grid.width() === 0){
+            grid.width((grid.minwidth()+grid.offsetx()));
           }*/
           return v;
         }
@@ -103,12 +103,12 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
       */
 
 
-      Grid.resize = function(e){
-        if(!Grid.node.parentElement){
-          console.log(Grid.node.innerHTML);
-          window.removeEventListener('resize',Grid.resize);
+      grid.resize = function(e){
+        if(!grid.node.parentElement){
+          console.log(grid.node.innerHTML);
+          window.removeEventListener('resize',grid.resize);
         }
-        function splitGrids(grids){
+        function splitgrids(grids){
           var arr = [];
           for(var x=0;x<grids.length;x++){
             if(grids[x].KC){
@@ -158,7 +158,7 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
 
         /* 2nd + 3rd Step */
         function getWidths(grids,lockedTotal){
-          var split = ((Grid.autowidth()-lockedTotal)/grids.length),
+          var split = ((grid.autowidth()-lockedTotal)/grids.length),
               mod = 0,
               numbers = grids.map(function(k){
                 if(grids.length === 1){
@@ -178,7 +178,7 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
         /* 2nd + 3rd + 4th Step */
         function getVaried(grids,lockedTotal){
           var trueWidths = getWidths(grids,lockedTotal),
-              dif = ((trueWidths.total-(Grid.autowidth()-lockedTotal))/grids.length),
+              dif = ((trueWidths.total-(grid.autowidth()-lockedTotal))/grids.length),
               mod = 0,
               newWidths = trueWidths.numbers.map(function(k){
                 return (Math.max(0,(k-dif)));
@@ -241,31 +241,31 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
           }
         }
 
-        /* Grids control their child grids, if no parent grid exists they also control themselves, ie topmost grid */
-        var children = Array.prototype.slice.call(Grid.node.querySelector('.Grid').children).filter(function(k){
+        /* grids control their child grids, if no parent grid exists they also control themselves, ie topmost grid */
+        var children = Array.prototype.slice.call(grid.node.querySelector('.grid').children).filter(function(k){
               return (k.nodeName.toLowerCase() === 'grid')
             });
 
-        if(Grid.node.parentElement.className.indexOf('Grid') < 0){
-          Grid.autowidth(Grid.node.parentElement.clientWidth+Grid.offsetx()).clearfloat(true);
-          Grid.viewmodel.mainclass("Grid--left");
-          if(Grid.node.parentElement.className.indexOf('page_holder') > -1){
-            Grid.height(window.innerHeight);
+        if(grid.node.parentElement.className.indexOf('grid') < 0){
+          grid.autowidth(grid.node.parentElement.clientWidth+grid.offsetx()).clearfloat(true);
+          grid.viewmodel.mainclass("grid--left");
+          if(grid.node.parentElement.className.indexOf('page_holder') > -1){
+            grid.height(window.innerHeight);
           }
           else{
-            Grid.height(Grid.node.parentElement.clientHeight);
+            grid.height(grid.node.parentElement.clientHeight);
           }
         }
 
         if(children && children.length > 0){
           children.forEach(function(k){
             if(k.KC && k.KC.viewmodel){
-              k.KC.viewmodel.mainclass('Grid--'+Grid.align());
+              k.KC.viewmodel.mainclass('grid--'+grid.align());
             }
           });
         }
         if(children && children.length > 0 && children.length === children.filter(function(k){return (k.KC)}).length){
-          children = splitGrids(children);
+          children = splitgrids(children);
 
           for(var i=0;i<children.length;i++){
            if(children[i].length > 1){
@@ -274,15 +274,15 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
 
            }
            else{
-             children[i][0].KC.autowidth(Grid.autowidth());
+             children[i][0].KC.autowidth(grid.autowidth());
            }
           }
         }
-        Grid.updateHeight();
+        grid.updateHeight();
       }
 
-      Grid.updateHeight = function(){
-        var gridNode = Grid.node.querySelector('.Grid');
+      grid.updateHeight = function(){
+        var gridNode = grid.node.querySelector('.grid');
         var all =  Array.prototype.slice.call(gridNode.querySelectorAll('*'))
         .filter(function(k){
           return (!(k instanceof HTMLUnknownElement));
@@ -313,23 +313,23 @@ define(['./Grid.bp', './Grid.vm', 'text!./Grid.html', 'text!./Grid.css'],functio
           }
           tallest = (pos > tallest ? pos : tallest);
         }
-        if(Grid.node.parentElement.className.indexOf('Grid') < 0){
-          if(Grid.node.parentElement.className.indexOf('page_holder') > -1){
-            Grid.height(window.innerHeight);
+        if(grid.node.parentElement.className.indexOf('grid') < 0){
+          if(grid.node.parentElement.className.indexOf('page_holder') > -1){
+            grid.height(window.innerHeight);
           }
           else{
-            Grid.height(Grid.node.parentElement.clientHeight);
+            grid.height(grid.node.parentElement.clientHeight);
           }
         }
         else{
-          Grid.height(tallest);
+          grid.height(tallest);
         }
       }
 
-      window.addEventListener('resize',Grid.resize.bind({fromWindow:true}));
+      window.addEventListener('resize',grid.resize.bind({fromWindow:true}));
 
-      return Grid;
+      return grid;
 	}
-    blueprint.register_Grid(CreateGrid,viewmodel,template,css);
-	return CreateGrid;
+    blueprint.register_grid(Creategrid,viewmodel,template,css);
+	return Creategrid;
 });

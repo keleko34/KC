@@ -52,7 +52,7 @@ module.exports = function(){
 
   function Command(res){
     console.log('\033[36mStarting to compile:\033[37m',(res.Name === undefined ? res.Environment : res.Name),' \033[36mFor \033[37m',res.SubTask,' \033[36msubtask\033[37m');
-    if(res.SubTask === 'web_components'){
+    if(res.SubTask === 'web_elements'){
       res.currentrule = 0;
     }
     else{

@@ -1,7 +1,7 @@
 define([],function(){
 
-  function Edit_Login_vm(params,element){
-    this.Node_Type = 'Edit_Login';
+  function edit_login_vm(params,element){
+    this.Node_Type = 'edit_login';
     this.Node = element;
     this.mainclass = ko.observable('').extend({attach:element.getAttribute('class')});
 
@@ -14,5 +14,5 @@ define([],function(){
 
   /* Place Prototypes here */
 
-  return Edit_Login_vm;
+  return edit_login_vm;
 })
