@@ -131,12 +131,35 @@ kc.require = function(url,post,cb){
   })
 }
 
-kc.appendScript = function(url){
+kc.appendScript = function(url,cb){
   var script = document.createElement('script');
   script.type = "text/javascript";
   script.src = url;
   document.body.appendChild(script);
 }
+
+/*
+
+kc.loadChain = {};
+
+kc.postLoad = function(url){
+  name = url.substring((url.lastIndexOf('/')+1),url.indexOf('?'))
+  require([name],function(mod){
+    if(typeof kc.loadChain[url] === 'function'){
+      kc.loadChain[url](null,mod);
+       kc.loadChain[url] = undefined;
+    }
+  });
+}
+
+kc.appendScript = function(url,post,cb){
+  post = (typeof post === 'string' ? ("?"+post.replace("?","")) : (kc.isObject(post) ? kc.stringifyQuery(post) : ""));
+  url = (url+post);
+  kc.loadChain[url] = cb;
+  document.write('<script type="text/javascript" src="'+url+'" onload="kc.postLoad(\''+url+'\')"></script>');
+}
+
+*/
 
 kc.parseCSS = function(css){
    return css.split(/(.*?{.*?})/g)

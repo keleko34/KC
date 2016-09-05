@@ -71,4 +71,5 @@ require(['./.core/ko/ko', 'crossroads', 'hasher','kb','./.core/device'],function
   kc.override = Createko();
 
   ko.applyBindings(router().bindings);
+
 })
