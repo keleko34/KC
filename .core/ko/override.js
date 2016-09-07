@@ -318,7 +318,7 @@ define([],function(){
       .addToViewModel(viewmodel,e.attr,module[e.attr]());
     })
     .addAttrListener('appendChild',function(e){
-      if(e.arguments[0].nodeName.toLowerCase().indexOf('cms') !== 0){
+      if(e.arguments[0].nodeName.toLowerCase().indexOf('cms') !== 0 && e.target.KC !== undefined){
         e.preventDefault();
         e.target.KC.innerHTML(e.target.KC.innerHTML()+e.arguments[0].outerHTML).call();
       }
